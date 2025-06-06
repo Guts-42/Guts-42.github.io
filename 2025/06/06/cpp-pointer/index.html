@@ -19,15 +19,15 @@
   <meta name="author" content="guts">
   <meta name="keywords" content="">
   
-    <meta name="description" content="基本概念指针本质上也是一种变量，不过它存储的不是数据本身，而是数据在内存中的地址 最佳实践 避免野指针：始终确保指针在使用前已经正确初始化，并且在不再需要时将其设置为nullptr。 避免内存泄漏：动态分配的内存在使用完毕后一定要使用free释放。 有效性检查：在解引用前检查它是否是nullptr。 使用智能指针：C++11引入的智能指针可以自动管理内存，减少内存泄露的风险。">
+    <meta name="description" content="基本概念指针本质上也是一种变量，不过它存储的数据与其他变量不同，是。之所以要有指针，是因为虽然变量本身就包含了地址的信息（不然我们也没法通过&amp;来取址），但变量和其地址之间的关系是一一对应的且无法修改的，而我们天然的有对地址本身进行处理的需求，那么定义一种变量来存放和操作地址就是很自然的。  地址   最佳实践 避免野指针：始终确保指针在使用前已经正确初始化，并且在不再需要时将其设置为nul">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C++中指针的理解">
 <meta property="og:url" content="https://guts.homes/2025/06/06/cpp-pointer/index.html">
 <meta property="og:site_name" content="guts的小屋">
-<meta property="og:description" content="基本概念指针本质上也是一种变量，不过它存储的不是数据本身，而是数据在内存中的地址 最佳实践 避免野指针：始终确保指针在使用前已经正确初始化，并且在不再需要时将其设置为nullptr。 避免内存泄漏：动态分配的内存在使用完毕后一定要使用free释放。 有效性检查：在解引用前检查它是否是nullptr。 使用智能指针：C++11引入的智能指针可以自动管理内存，减少内存泄露的风险。">
+<meta property="og:description" content="基本概念指针本质上也是一种变量，不过它存储的数据与其他变量不同，是。之所以要有指针，是因为虽然变量本身就包含了地址的信息（不然我们也没法通过&amp;来取址），但变量和其地址之间的关系是一一对应的且无法修改的，而我们天然的有对地址本身进行处理的需求，那么定义一种变量来存放和操作地址就是很自然的。  地址   最佳实践 避免野指针：始终确保指针在使用前已经正确初始化，并且在不再需要时将其设置为nul">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-06T06:37:25.000Z">
-<meta property="article:modified_time" content="2025-06-06T06:49:06.852Z">
+<meta property="article:modified_time" content="2025-06-06T07:35:38.832Z">
 <meta property="article:author" content="guts">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          154 字
+          252 字
         
       </span>
     
@@ -236,7 +236,7 @@
         
         
         
-          2 分钟
+          3 分钟
         
       </span>
     
@@ -287,7 +287,17 @@
             
               <div class="markdown-body">
                 
-                <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>指针本质上也是一种变量，不过它存储的不是数据本身，而是数据在内存中的地址</p>
+                <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>指针本质上也是一种变量，不过它存储的数据与其他变量不同，是。<br>之所以要有指针，是因为虽然变量本身就包含了地址的信息（不然我们也没法通过<code>&amp;</code>来取址），但变量和其地址之间的关系是一一对应的且无法修改的，而我们天然的有对地址本身进行处理的需求，那么定义一种变量来存放和操作地址就是很自然的。</p>
+<ul>
+<li>地址</li>
+</ul>
+<!-- 笔者在学习指针时，一直有一个疑惑，那就是变量本身就包含地址，那为什么还需要指针呢？想来如果解释了这个问题，就解释了指针在C++中发挥的作用。
+* 首先, 我们拿到地址后，我们可以用地址做什么？
+  * 修改这个地址对应内存的值
+  似乎有些脱裤子放屁了，用变量本身就可以做到
+  * 对于一些很大的变量（类和结构体），值传递会有很大的复制开销，我们可以通过传递地址来减少这部分开销。
+  * 我们可以通过地址，访问邻近的变量
+*  -->
 <h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><ul>
 <li>避免野指针：始终确保指针在使用前已经正确初始化，并且在不再需要时将其设置为<code>nullptr</code>。</li>
 <li>避免内存泄漏：动态分配的内存在使用完毕后一定要使用<code>free</code>释放。</li>
