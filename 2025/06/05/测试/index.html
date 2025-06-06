@@ -19,15 +19,15 @@
   <meta name="author" content="guts">
   <meta name="keywords" content="">
   
-    <meta name="description" content="std::cout  和  std::cerr  都是 ostream  类型的对象。 std::cin   指向std::string类型时读取一行文本    会忽略空白字符（如空格、制表符、换行符） 成员函数fail()用于判断输入流是否出错    int num; std::cin &gt;&gt; num; if (std::cin.fail()) { std::cerr &lt;&amp;lt">
+    <meta name="description" content="std::cout  和  std::cerr  都是 ostream  类型的对象。 std::cin &gt;&gt;指向std::string类型时读取一行文本 会忽略空白字符（如空格、制表符、换行符） 成员函数fail()用于判断输入流是否出错12345678910111213141516171819202122232425262728    int num;        std::c">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C++的标准输入输出">
 <meta property="og:url" content="https://guts.homes/2025/06/05/%E6%B5%8B%E8%AF%95/index.html">
 <meta property="og:site_name" content="guts的小屋">
-<meta property="og:description" content="std::cout  和  std::cerr  都是 ostream  类型的对象。 std::cin   指向std::string类型时读取一行文本    会忽略空白字符（如空格、制表符、换行符） 成员函数fail()用于判断输入流是否出错    int num; std::cin &gt;&gt; num; if (std::cin.fail()) { std::cerr &lt;&amp;lt">
+<meta property="og:description" content="std::cout  和  std::cerr  都是 ostream  类型的对象。 std::cin &gt;&gt;指向std::string类型时读取一行文本 会忽略空白字符（如空格、制表符、换行符） 成员函数fail()用于判断输入流是否出错12345678910111213141516171819202122232425262728    int num;        std::c">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-05T12:18:49.000Z">
-<meta property="article:modified_time" content="2025-06-06T05:31:12.990Z">
+<meta property="article:modified_time" content="2025-06-06T06:14:00.068Z">
 <meta property="article:author" content="guts">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          419 字
+          433 字
         
       </span>
     
@@ -288,50 +288,27 @@
               <div class="markdown-body">
                 
                 <ul>
-<li>std::cout  和  std::cerr  都是 ostream  类型的对象。</li>
-<li>std::cin<ul>
-<li><blockquote>
-<blockquote>
-<p>指向std::string类型时读取一行文本</p>
-</blockquote>
-</blockquote>
-</li>
+<li><code>std::cout</code>  和  <code>std::cerr</code>  都是 <code>ostream</code>  类型的对象。</li>
+<li><code>std::cin</code><ul>
+<li><code>&gt;&gt;</code>指向<code>std::string</code>类型时读取一行文本</li>
 <li>会忽略空白字符（如空格、制表符、换行符）</li>
-<li>成员函数fail()用于判断输入流是否出错</li>
+<li>成员函数fail()用于判断输入流是否出错<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs C++">    <span class="hljs-type">int</span> num;<br>    <br>    std::cin &gt;&gt; num;<br>    <br>    <span class="hljs-keyword">if</span> (std::cin.<span class="hljs-built_in">fail</span>()) &#123;<br>    <br>        std::cerr &lt;&lt; <span class="hljs-string">&quot;Error: invalid input&quot;</span> &lt;&lt; std::endl;<br>        std::cin.<span class="hljs-built_in">clear</span>(); <span class="hljs-comment">// 清除错误状态</span><br>        std::cin.<span class="hljs-built_in">ignore</span>(std::numeric_limits&lt;std::streamsize&gt;::<span class="hljs-built_in">max</span>(), <span class="hljs-string">&#x27;\n&#x27;</span>); <span class="hljs-comment">// 忽略错误的输入</span><br>    &#125; <br>  - 可以通过`stringstream`实现格式化输入<br>    ```C++<br>    std::string input;<br>    <br>    std::cin &gt;&gt; input;<br>    <br>    <span class="hljs-function">std::stringstream <span class="hljs-title">ss</span><span class="hljs-params">(input)</span></span>;<br>    <br>    <span class="hljs-type">int</span> a, b;<br>    <br>    ss &gt;&gt; a &gt;&gt; b;<br>- `std::cout`<br>  - `&lt;&lt; std::endl`在添加换行符的同时会刷新输出缓冲区<br>  - 支持格式化输出<br>      ```C++<br>      std::cout &lt;&lt; std::<span class="hljs-built_in">setw</span>(<span class="hljs-number">10</span>) &lt;&lt; std::left &lt;&lt; <span class="hljs-string">&quot;Name: &quot;</span> &lt;&lt; <span class="hljs-string">&quot;John Doe&quot;</span> &lt;&lt; std::endl;<br><br>      std::cout &lt;&lt; std::fixed &lt;&lt; std::<span class="hljs-built_in">setprecision</span>(<span class="hljs-number">2</span>) &lt;&lt; <span class="hljs-string">&quot;Pi: &quot;</span> &lt;&lt; pi &lt;&lt; std::endl;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>std::setw(n) </code><br>设置下一个字段的最小宽度为n， 如果实际字符串长度小于 n，会在不足的部分自动填充空格；如果实际字符串长度超过 n，则会按实际长度输出，不会截断。</li>
+<li><code>std::left</code><br>设置接下来的字段左对齐（默认是右对齐）</li>
+<li><code>std::fixed</code><br>设置浮点数的输出格式为小数点格式</li>
+<li><code>std::setprecision(n)</code><br>设置后续浮点数输出时保留的小数位数</li>
 </ul>
 </li>
-</ul>
-<p>int num;</p>
-<p>std::cin &gt;&gt; num;</p>
-<p>if (std::cin.fail()) {</p>
-<pre><code class="hljs">std::cerr &lt;&lt; &quot;Error: invalid input&quot; &lt;&lt; std::endl;
-std::cin.clear(); // 清除错误状态
-std::cin.ignore(std::numeric_limits&lt;std::streamsize&gt;::max(), &#39;\n&#39;); // 忽略错误的输入
-</code></pre>
-<p>} </p>
-<ul>
-<li>可以通过stringstream实现格式化输入<br>std::string input;</li>
-</ul>
-<p>std::cin &gt;&gt; input;</p>
-<p>std::stringstream ss(input);</p>
-<p>int a, b;</p>
-<p>ss &gt;&gt; a &gt;&gt; b;</p>
-<ul>
-<li>std::cout<ul>
-<li>&lt;&lt; std::endl在添加换行符的同时会刷新输出缓冲区</li>
-<li>支持格式化输出<br>std::cout &lt;&lt; std::setw(10) &lt;&lt; std::left &lt;&lt; “Name: “ &lt;&lt; “John Doe” &lt;&lt; std::endl;</li>
+<li>通常会缓冲输出，直到缓冲区满了或者显式地调用  <code>flush</code>  函数。<br>可以在输出后调用  <code>std::cout.flush()</code>  来立即刷新缓冲区。</li>
 </ul>
 </li>
-</ul>
-<p>std::cout &lt;&lt; std::fixed &lt;&lt; std::setprecision(2) &lt;&lt; “Pi: “ &lt;&lt; pi &lt;&lt; std::endl;<br>    - std::setw(n)<br>设置下一个字段的最小宽度为n， 如果实际字符串长度小于 n，会在不足的部分自动填充空格；如果实际字符串长度超过 n，则会按实际长度输出，不会截断。<br>    - std::left<br>设置接下来的字段左对齐（默认是右对齐）<br>    - std::fixed<br>设置浮点数的输出格式为小数点格式<br>    - std::setprecision(n)<br>设置后续浮点数输出时保留的小数位数</p>
-<ul>
-<li>通常会缓冲输出，直到缓冲区满了或者显式地调用  flush  函数。<br>可以在输出后调用  std::cout.flush()  来立即刷新缓冲区。</li>
-<li>std::cerr 标准错误输出<ul>
+<li><code>std::cerr</code> 标准错误输出<ul>
 <li>通常不缓冲输出</li>
 <li>通常不格式化</li>
 </ul>
 </li>
-<li>std::clog 输出日志信息<ul>
+<li><code>std::clog</code> 输出日志信息<ul>
 <li>通常使用输出缓存</li>
 <li>支持格式化输出</li>
 </ul>
