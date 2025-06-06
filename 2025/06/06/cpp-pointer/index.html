@@ -19,15 +19,15 @@
   <meta name="author" content="guts">
   <meta name="keywords" content="">
   
-    <meta name="description" content="std::cout  和  std::cerr  都是 ostream  类型的对象。 std::cin &gt;&gt;指向std::string类型时读取一行文本 会忽略空白字符（如空格、制表符、换行符） 成员函数fail()用于判断输入流是否出错12345678910111213141516171819202122232425262728    int num;        std::c">
+    <meta name="description" content="基本概念指针本质上也是一种变量，不过它存储的不是数据本身，而是数据在内存中的地址 最佳实践 避免野指针：始终确保指针在使用前已经正确初始化，并且在不再需要时将其设置为nullptr。 避免内存泄漏：动态分配的内存在使用完毕后一定要使用free释放。 有效性检查：在解引用前检查它是否是nullptr。 使用智能指针：C++11引入的智能指针可以自动管理内存，减少内存泄露的风险。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C++的标准输入输出">
-<meta property="og:url" content="https://guts.homes/2025/06/05/%E6%B5%8B%E8%AF%95/index.html">
+<meta property="og:title" content="C++中指针的理解">
+<meta property="og:url" content="https://guts.homes/2025/06/06/cpp-pointer/index.html">
 <meta property="og:site_name" content="guts的小屋">
-<meta property="og:description" content="std::cout  和  std::cerr  都是 ostream  类型的对象。 std::cin &gt;&gt;指向std::string类型时读取一行文本 会忽略空白字符（如空格、制表符、换行符） 成员函数fail()用于判断输入流是否出错12345678910111213141516171819202122232425262728    int num;        std::c">
+<meta property="og:description" content="基本概念指针本质上也是一种变量，不过它存储的不是数据本身，而是数据在内存中的地址 最佳实践 避免野指针：始终确保指针在使用前已经正确初始化，并且在不再需要时将其设置为nullptr。 避免内存泄漏：动态分配的内存在使用完毕后一定要使用free释放。 有效性检查：在解引用前检查它是否是nullptr。 使用智能指针：C++11引入的智能指针可以自动管理内存，减少内存泄露的风险。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-06-05T12:18:49.000Z">
-<meta property="article:modified_time" content="2025-06-06T06:14:00.068Z">
+<meta property="article:published_time" content="2025-06-06T06:37:25.000Z">
+<meta property="article:modified_time" content="2025-06-06T06:49:06.852Z">
 <meta property="article:author" content="guts">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -35,7 +35,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>C++的标准输入输出 - guts的小屋</title>
+  <title>C++中指针的理解 - guts的小屋</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -202,7 +202,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="C++的标准输入输出"></span>
+            <span id="subtitle" data-typed-text="C++中指针的理解"></span>
           
         </div>
 
@@ -213,8 +213,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-06-05 20:18" pubdate>
-          2025年6月5日 晚上
+        <time datetime="2025-06-06 14:37" pubdate>
+          2025年6月6日 下午
         </time>
       </span>
     
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          433 字
+          154 字
         
       </span>
     
@@ -236,7 +236,7 @@
         
         
         
-          4 分钟
+          2 分钟
         
       </span>
     
@@ -282,37 +282,17 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">C++的标准输入输出</h1>
+            <h1 id="seo-header">C++中指针的理解</h1>
             
             
               <div class="markdown-body">
                 
-                <ul>
-<li><code>std::cout</code>  和  <code>std::cerr</code>  都是 <code>ostream</code>  类型的对象。</li>
-<li><code>std::cin</code><ul>
-<li><code>&gt;&gt;</code>指向<code>std::string</code>类型时读取一行文本</li>
-<li>会忽略空白字符（如空格、制表符、换行符）</li>
-<li>成员函数fail()用于判断输入流是否出错<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs C++">    <span class="hljs-type">int</span> num;<br>    <br>    std::cin &gt;&gt; num;<br>    <br>    <span class="hljs-keyword">if</span> (std::cin.<span class="hljs-built_in">fail</span>()) &#123;<br>    <br>        std::cerr &lt;&lt; <span class="hljs-string">&quot;Error: invalid input&quot;</span> &lt;&lt; std::endl;<br>        std::cin.<span class="hljs-built_in">clear</span>(); <span class="hljs-comment">// 清除错误状态</span><br>        std::cin.<span class="hljs-built_in">ignore</span>(std::numeric_limits&lt;std::streamsize&gt;::<span class="hljs-built_in">max</span>(), <span class="hljs-string">&#x27;\n&#x27;</span>); <span class="hljs-comment">// 忽略错误的输入</span><br>    &#125; <br>  - 可以通过`stringstream`实现格式化输入<br>    ```C++<br>    std::string input;<br>    <br>    std::cin &gt;&gt; input;<br>    <br>    <span class="hljs-function">std::stringstream <span class="hljs-title">ss</span><span class="hljs-params">(input)</span></span>;<br>    <br>    <span class="hljs-type">int</span> a, b;<br>    <br>    ss &gt;&gt; a &gt;&gt; b;<br>- `std::cout`<br>  - `&lt;&lt; std::endl`在添加换行符的同时会刷新输出缓冲区<br>  - 支持格式化输出<br>      ```C++<br>      std::cout &lt;&lt; std::<span class="hljs-built_in">setw</span>(<span class="hljs-number">10</span>) &lt;&lt; std::left &lt;&lt; <span class="hljs-string">&quot;Name: &quot;</span> &lt;&lt; <span class="hljs-string">&quot;John Doe&quot;</span> &lt;&lt; std::endl;<br><br>      std::cout &lt;&lt; std::fixed &lt;&lt; std::<span class="hljs-built_in">setprecision</span>(<span class="hljs-number">2</span>) &lt;&lt; <span class="hljs-string">&quot;Pi: &quot;</span> &lt;&lt; pi &lt;&lt; std::endl;<br></code></pre></td></tr></table></figure>
-<ul>
-<li><code>std::setw(n) </code><br>设置下一个字段的最小宽度为n， 如果实际字符串长度小于 n，会在不足的部分自动填充空格；如果实际字符串长度超过 n，则会按实际长度输出，不会截断。</li>
-<li><code>std::left</code><br>设置接下来的字段左对齐（默认是右对齐）</li>
-<li><code>std::fixed</code><br>设置浮点数的输出格式为小数点格式</li>
-<li><code>std::setprecision(n)</code><br>设置后续浮点数输出时保留的小数位数</li>
-</ul>
-</li>
-<li>通常会缓冲输出，直到缓冲区满了或者显式地调用  <code>flush</code>  函数。<br>可以在输出后调用  <code>std::cout.flush()</code>  来立即刷新缓冲区。</li>
-</ul>
-</li>
-<li><code>std::cerr</code> 标准错误输出<ul>
-<li>通常不缓冲输出</li>
-<li>通常不格式化</li>
-</ul>
-</li>
-<li><code>std::clog</code> 输出日志信息<ul>
-<li>通常使用输出缓存</li>
-<li>支持格式化输出</li>
-</ul>
-</li>
+                <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>指针本质上也是一种变量，不过它存储的不是数据本身，而是数据在内存中的地址</p>
+<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><ul>
+<li>避免野指针：始终确保指针在使用前已经正确初始化，并且在不再需要时将其设置为<code>nullptr</code>。</li>
+<li>避免内存泄漏：动态分配的内存在使用完毕后一定要使用<code>free</code>释放。</li>
+<li>有效性检查：在解引用前检查它是否是<code>nullptr</code>。</li>
+<li>使用智能指针：C++11引入的智能指针可以自动管理内存，减少内存泄露的风险。</li>
 </ul>
 
                 
@@ -352,8 +332,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>C++的标准输入输出</div>
-      <div>https://guts.homes/2025/06/05/测试/</div>
+      <div>C++中指针的理解</div>
+      <div>https://guts.homes/2025/06/06/cpp-pointer/</div>
     </div>
     <div class="license-meta">
       
@@ -365,7 +345,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年6月5日</div>
+          <div>2025年6月6日</div>
         </div>
       
       
@@ -401,8 +381,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/06/05/hello-world/" title="C++中的指针">
-                        <span class="hidden-mobile">C++中的指针</span>
+                      <a href="/2025/06/05/cpp_io/" title="C++的标准输入输出">
+                        <span class="hidden-mobile">C++的标准输入输出</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
