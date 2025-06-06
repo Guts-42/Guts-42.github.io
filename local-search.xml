@@ -4,11 +4,11 @@
   
   
   <entry>
-    <title>测试</title>
+    <title>C++的标准输入输出</title>
     <link href="/2025/06/05/%E6%B5%8B%E8%AF%95/"/>
     <url>/2025/06/05/%E6%B5%8B%E8%AF%95/</url>
     
-    <content type="html"><![CDATA[]]></content>
+    <content type="html"><![CDATA[<ul><li>std::cout  和  std::cerr  都是 ostream  类型的对象。</li><li>std::cin<ul><li><blockquote><blockquote><p>指向std::string类型时读取一行文本</p></blockquote></blockquote></li><li>会忽略空白字符（如空格、制表符、换行符）</li><li>成员函数fail()用于判断输入流是否出错</li></ul></li></ul><p>int num;</p><p>std::cin &gt;&gt; num;</p><p>if (std::cin.fail()) {</p><pre><code class="hljs">std::cerr &lt;&lt; &quot;Error: invalid input&quot; &lt;&lt; std::endl;std::cin.clear(); // 清除错误状态std::cin.ignore(std::numeric_limits&lt;std::streamsize&gt;::max(), &#39;\n&#39;); // 忽略错误的输入</code></pre><p>} </p><ul><li>可以通过stringstream实现格式化输入<br>std::string input;</li></ul><p>std::cin &gt;&gt; input;</p><p>std::stringstream ss(input);</p><p>int a, b;</p><p>ss &gt;&gt; a &gt;&gt; b;</p><ul><li>std::cout<ul><li>&lt;&lt; std::endl在添加换行符的同时会刷新输出缓冲区</li><li>支持格式化输出<br>std::cout &lt;&lt; std::setw(10) &lt;&lt; std::left &lt;&lt; “Name: “ &lt;&lt; “John Doe” &lt;&lt; std::endl;</li></ul></li></ul><p>std::cout &lt;&lt; std::fixed &lt;&lt; std::setprecision(2) &lt;&lt; “Pi: “ &lt;&lt; pi &lt;&lt; std::endl;<br>    - std::setw(n)<br>设置下一个字段的最小宽度为n， 如果实际字符串长度小于 n，会在不足的部分自动填充空格；如果实际字符串长度超过 n，则会按实际长度输出，不会截断。<br>    - std::left<br>设置接下来的字段左对齐（默认是右对齐）<br>    - std::fixed<br>设置浮点数的输出格式为小数点格式<br>    - std::setprecision(n)<br>设置后续浮点数输出时保留的小数位数</p><ul><li>通常会缓冲输出，直到缓冲区满了或者显式地调用  flush  函数。<br>可以在输出后调用  std::cout.flush()  来立即刷新缓冲区。</li><li>std::cerr 标准错误输出<ul><li>通常不缓冲输出</li><li>通常不格式化</li></ul></li><li>std::clog 输出日志信息<ul><li>通常使用输出缓存</li><li>支持格式化输出</li></ul></li></ul>]]></content>
     
     
     <categories>
