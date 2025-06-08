@@ -19,15 +19,15 @@
   <meta name="author" content="guts">
   <meta name="keywords" content="">
   
-    <meta name="description" content="基本概念指针本质上也是一种变量，不过它存储的是对应变量类型的地址。 为什么要有指针 之所以要有指针，是因为虽然变量本身就包含了地址的信息（不然我们也没法通过&amp;来取址），但变量和其地址之间的关系是一一对应的且无法修改的，无法满足我们对地址本身进行处理的需求。例如如果我们要实现数组的数据结构，将数据放入连续的内存中，那么我们需要解决下面的问题  这块连续内存的起始地址是什么？ 访问数组中的某个">
+    <meta name="description" content="与enum的对比C++11之所以要引入enum class，是因为传统的enum  作用域不限范围，会造成命名空间的污染  123enum Color&#123;black,white,red&#125;;	&#x2F;&#x2F;black、white、red作用域和color作用域相同auto white &#x3D; false;	&#x2F;&#x2F;错误，white已经被声明过了   而enum class的枚举成员默认具有强作用域，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C++中的指针">
-<meta property="og:url" content="https://guts.homes/2025/06/06/cpp-pointer/index.html">
+<meta property="og:title" content="C++中的enum class">
+<meta property="og:url" content="https://guts.homes/2025/06/08/cpp-enum-class/index.html">
 <meta property="og:site_name" content="guts的小屋">
-<meta property="og:description" content="基本概念指针本质上也是一种变量，不过它存储的是对应变量类型的地址。 为什么要有指针 之所以要有指针，是因为虽然变量本身就包含了地址的信息（不然我们也没法通过&amp;来取址），但变量和其地址之间的关系是一一对应的且无法修改的，无法满足我们对地址本身进行处理的需求。例如如果我们要实现数组的数据结构，将数据放入连续的内存中，那么我们需要解决下面的问题  这块连续内存的起始地址是什么？ 访问数组中的某个">
+<meta property="og:description" content="与enum的对比C++11之所以要引入enum class，是因为传统的enum  作用域不限范围，会造成命名空间的污染  123enum Color&#123;black,white,red&#125;;	&#x2F;&#x2F;black、white、red作用域和color作用域相同auto white &#x3D; false;	&#x2F;&#x2F;错误，white已经被声明过了   而enum class的枚举成员默认具有强作用域，">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-06-06T06:37:25.000Z">
-<meta property="article:modified_time" content="2025-06-08T13:14:32.195Z">
+<meta property="article:published_time" content="2025-06-08T13:15:02.000Z">
+<meta property="article:modified_time" content="2025-06-08T13:15:02.356Z">
 <meta property="article:author" content="guts">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -35,7 +35,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>C++中的指针 - guts的小屋</title>
+  <title>C++中的enum class - guts的小屋</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -202,7 +202,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="C++中的指针"></span>
+            <span id="subtitle" data-typed-text="C++中的enum class"></span>
           
         </div>
 
@@ -213,8 +213,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-06-06 14:37" pubdate>
-          2025年6月6日 下午
+        <time datetime="2025-06-08 21:15" pubdate>
+          2025年6月8日 晚上
         </time>
       </span>
     
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.3k 字
+          279 字
         
       </span>
     
@@ -236,7 +236,7 @@
         
         
         
-          11 分钟
+          3 分钟
         
       </span>
     
@@ -282,81 +282,21 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">C++中的指针</h1>
+            <h1 id="seo-header">C++中的enum class</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>指针本质上也是一种变量，不过它存储的是对应变量类型的地址。</p>
-<h3 id="为什么要有指针"><a href="#为什么要有指针" class="headerlink" title="为什么要有指针"></a>为什么要有指针</h3><!-- 笔者在学习指针时，一直有一个疑惑，那就是变量本身就包含地址，那为什么还需要指针呢？想来如果解释了这个问题，就解释了指针在C++中发挥的作用。
-* 首先, 我们拿到地址后，我们可以用地址做什么？
-  * 修改这个地址对应内存的值
-  似乎有些脱裤子放屁了，用变量本身就可以做到
-  * 对于一些很大的变量（类和结构体），值传递会有很大的复制开销，我们可以通过传递地址来减少这部分开销。
-  * 我们可以通过地址，访问邻近的变量
-*  -->
-<p>之所以要有指针，是因为虽然变量本身就包含了地址的信息（不然我们也没法通过<code>&amp;</code>来取址），但变量和其地址之间的关系是一一对应的且无法修改的，无法满足我们对地址本身进行处理的需求。例如如果我们要实现数组的数据结构，将数据放入连续的内存中，那么我们需要解决下面的问题</p>
-<ol>
-<li>这块连续内存的起始地址是什么？</li>
-<li>访问数组中的某个元素时，我们该如何确定它的地址？<br>假如这个元素的索引是<code>i</code>，数组中的元素大小都是<code>T</code>，那么我们访问它的时候就需要通过<code>首地址+i*T</code>来获取它的地址。</li>
-</ol>
-<p>那么问题来了，地址本身是个整型数据，为什么我们不直接使用<code>int</code>等整型类型来存储和操作呢？</p>
+                <h2 id="与enum的对比"><a href="#与enum的对比" class="headerlink" title="与enum的对比"></a>与<code>enum</code>的对比</h2><p>C++11之所以要引入<code>enum class</code>，是因为传统的<code>enum</code></p>
 <ul>
-<li>首先，需要维护一个额外的变量来告诉我们这个地址对应的变量大小，否则我们没法对这个地址取值，也没办法进行前面提到的数组寻址操作</li>
-<li>其次，这样写的代码可读性很差</li>
-<li>再者，不同平台的地址大小不同，如果我们在32位系统中使用<code>int</code>来存储地址，那么这部分代码就无法在64位的系统中运行<br>因此，定义一种新的变量来存储和操作地址是很有必要的。</li>
+<li>作用域不限范围，会造成命名空间的污染  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">enum</span> <span class="hljs-title class_">Color</span>&#123;black,white,red&#125;;	<span class="hljs-comment">//black、white、red作用域和color作用域相同</span><br><br><span class="hljs-keyword">auto</span> white = <span class="hljs-literal">false</span>;	<span class="hljs-comment">//错误，white已经被声明过了</span><br></code></pre></td></tr></table></figure>
+  而<code>enum class</code>的枚举成员默认具有强作用域，需要通过枚举类型名来访问，能够降低命名空间的污染  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">enum class</span> <span class="hljs-title class_">Color</span>&#123;black,white,red&#125;; <span class="hljs-comment">//black、white、red作用域仅在大括号内生效</span><br><br><span class="hljs-keyword">auto</span> white = <span class="hljs-literal">false</span>;		<span class="hljs-comment">//正确，这个white并不是Color中的white</span><br><br>Color c = white;	<span class="hljs-comment">//错误，在作用域范围内没有white这个枚举量</span><br><br>Color c = Color::white;	<span class="hljs-comment">//正确</span><br><br><span class="hljs-keyword">auto</span> c = Color::white;	<span class="hljs-comment">//正确</span><br></code></pre></td></tr></table></figure></li>
+<li>会发生隐式类型转换  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">enum</span> <span class="hljs-title class_">Color</span>&#123;black,white,red&#125;;<br><span class="hljs-function">std::vector&lt;std::<span class="hljs-type">size_t</span>&gt; <span class="hljs-title">primeFactors</span><span class="hljs-params">(std::<span class="hljs-type">size_t</span> x)</span></span>;	<span class="hljs-comment">//函数返回x的质因数</span><br><br>Color c = red;<br><br><span class="hljs-keyword">if</span>(c &lt; <span class="hljs-number">14.5</span>)	<span class="hljs-comment">//将color型别和double型别比较，发生隐式转换</span><br>&#123;<br>    <span class="hljs-keyword">auto</span> factors = <span class="hljs-built_in">primeFactors</span>(c);  <span class="hljs-comment">//计算一个color型别的质因数，发生隐式转换</span><br>&#125;<br></code></pre></td></tr></table></figure>
+  而<code>enum class</code>的元素只能通过<code>static_cast</code>进行强制类型转换</li>
+<li>不能进行前置声明，而<code>enum class</code>可以  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">enum</span> <span class="hljs-title class_">Color</span>;			<span class="hljs-comment">//错误</span><br><span class="hljs-keyword">enum class</span> <span class="hljs-title class_">Color</span>;	<span class="hljs-comment">//正确</span><br></code></pre></td></tr></table></figure></li>
 </ul>
-<h3 id="指针的基本操作"><a href="#指针的基本操作" class="headerlink" title="指针的基本操作"></a>指针的基本操作</h3><ul>
-<li>赋值和初始化  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-type">int</span> a = <span class="hljs-number">10</span>;<br><span class="hljs-type">int</span>* p = &amp;a; <br></code></pre></td></tr></table></figure></li>
-<li>解引用<br>指针通过<code>*</code>操作符获取指向的内存中存储的值，值的类型由指针的类型确定</li>
-<li>指针运算<ul>
-<li>加减运算<ul>
-<li><code>T*</code>类型的指针<code>p + i</code>相当于<code>p</code>向前移动了<code>i * sizeof(T)</code>个字节</li>
-<li>支持<code>++</code>和<code>--</code></li>
-</ul>
-</li>
-<li>比较运算<br>比较两个指针的值，也就是比较两个地址是否相同</li>
-</ul>
-</li>
-</ul>
-<h2 id="指针与数组"><a href="#指针与数组" class="headerlink" title="指针与数组"></a>指针与数组</h2><p>数组名本质是指向数组首地址的、<strong>不可修改</strong>的常量指针。在作为函数参数时，它会退化为指向数组首元素的指针，这时候可以对它进行自增等运算。</p>
-<ul>
-<li><code>int (*p)[10]</code>表示这是一个指向长度为10的<code>int</code>数组的指针，其类型为<code>int (*)[]</code>。也就是说<code>p++</code>会令<code>p</code>向前移动40个字节</li>
-<li><code>int *p[10]</code>表示这是一个包含了10个<code>int*</code>变量的数组。作为函数参数退化为指针后，它的类型是<code>int**</code></li>
-</ul>
-<!-- ### 指针与动态数组 -->
-
-<h2 id="函数指针"><a href="#函数指针" class="headerlink" title="函数指针"></a>函数指针</h2><p>每个函数都有一个唯一的入口地址，函数指针存储的就是这个地址。</p>
-<h3 id="声明"><a href="#声明" class="headerlink" title="声明"></a>声明</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-comment">//返回类型 (*指针名)(函数参数列表);</span><br><span class="hljs-built_in">int</span> (*funcPtr)(<span class="hljs-type">int</span>, <span class="hljs-type">int</span>);<br></code></pre></td></tr></table></figure>
-
-<p>这里的<code>funcPtr</code>就是一个指向函数的指针，接受两个<code>int</code>参数并返回<code>int</code>值。</p>
-<h3 id="赋值与调用"><a href="#赋值与调用" class="headerlink" title="赋值与调用"></a>赋值与调用</h3><ul>
-<li>函数名在大多数情况下都会被编译器解释为函数的地址，因此可以直接用函数名给函数指针赋值。</li>
-<li>函数指针的调用方式与函数名的调用方式一致</li>
-<li>基于提高可读性的目的，可以使用<code>typedef</code>来封装函数指针</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs C++"><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> </span>&#123;​<br>    <span class="hljs-keyword">return</span> a + b;​<br>&#125;​<br>​<br><span class="hljs-comment">// 封装后的函数指针类型​</span><br><span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">int</span> <span class="hljs-params">(*FuncPtr)</span><span class="hljs-params">(<span class="hljs-type">int</span>, <span class="hljs-type">int</span>)</span></span>;​<br>​<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;​<br>    <span class="hljs-comment">// 声明一个函数指针变量​</span><br>    FuncPtr fp = add;​<br>​<br>    <span class="hljs-comment">// 通过函数指针调用函数​</span><br>    <span class="hljs-type">int</span> result = <span class="hljs-built_in">fp</span>(<span class="hljs-number">3</span>, <span class="hljs-number">4</span>);​<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Result: %d\n&quot;</span>, result);  <span class="hljs-comment">// 输出: Result: 7​</span><br>​<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;​<br>&#125;​<br></code></pre></td></tr></table></figure>
-
-<h3 id="指针函数"><a href="#指针函数" class="headerlink" title="指针函数"></a>指针函数</h3><p>指针函数是返回指针的函数。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">int</span> * <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span></span>;<br></code></pre></td></tr></table></figure>
-<p>注意和函数指针的区别在于是否有括号将*+标识符包裹起来，关于C&#x2F;C++中的声明规则，可以阅读<a target="_blank" rel="noopener" href="https://cseweb.ucsd.edu/~gbournou/CSE131/rt_lt.rule.html">C Right-Left Rule (Rick Ord’s CSE 131</a></p>
-<h3 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h3><p>通过回调函数，程序在运行时可以动态地决定调用哪个函数。这常常用于事件处理和异步编程的场景中，例如GUI编程中的按钮和ROS中对topic的订阅都会绑定对应的回调函数。在C语言中，回调函数通过函数指针来实现。</p>
-<h4 id="回调函数的实现"><a href="#回调函数的实现" class="headerlink" title="回调函数的实现"></a>回调函数的实现</h4><ol>
-<li>设计包含回调函数参数的函数接口</li>
-<li>调用1.中的函数并传递合适的回调函数</li>
-</ol>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">process</span><span class="hljs-params">(<span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y, FuncPtr callback)</span> </span>&#123;​<br>    <span class="hljs-comment">// ... 执行一些操作 ...​</span><br>    <span class="hljs-type">int</span> result = <span class="hljs-built_in">callback</span>(x, y);​<br>    <span class="hljs-comment">// ... 使用回调函数的返回值进行进一步处理 ...​</span><br>&#125;​<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;​<br>    <span class="hljs-built_in">process</span>(<span class="hljs-number">3</span>, <span class="hljs-number">4</span>, add);​ <span class="hljs-comment">//可以传递div,multi等等函数，只要函数的参数和返回值与函数指针一致即可</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;​<br>&#125;<br></code></pre></td></tr></table></figure>
-<!-- ## 指针与内存管理
-https://lb3fn675fh.feishu.cn/wiki/OVsewICczis2jlkKBgKc3Mz9n8d
-## 指针与高级数据类型
-https://lb3fn675fh.feishu.cn/wiki/QlEJwXrH4i9MxPkS1OncaPX4nze
-## 指针与常量
-https://lb3fn675fh.feishu.cn/wiki/WcSrwytf5ivjkQkWd86cEJnxnph -->
-<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><ul>
-<li>避免野指针：始终确保指针在使用前已经正确初始化，并且在不再需要时将其设置为<code>nullptr</code>。</li>
-<li>避免内存泄漏：动态分配的内存在使用完毕后一定要使用<code>free</code>释放。</li>
-<li>有效性检查：在解引用前检查它是否是<code>nullptr</code>。</li>
-<li>使用智能指针：C++11引入的智能指针可以自动管理内存，减少内存泄露的风险。</li>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42817477/article/details/109029172">[CSDN]C++11枚举类——enum class</a></li>
 </ul>
 
                 
@@ -396,8 +336,8 @@ https://lb3fn675fh.feishu.cn/wiki/WcSrwytf5ivjkQkWd86cEJnxnph -->
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>C++中的指针</div>
-      <div>https://guts.homes/2025/06/06/cpp-pointer/</div>
+      <div>C++中的enum class</div>
+      <div>https://guts.homes/2025/06/08/cpp-enum-class/</div>
     </div>
     <div class="license-meta">
       
@@ -409,7 +349,7 @@ https://lb3fn675fh.feishu.cn/wiki/WcSrwytf5ivjkQkWd86cEJnxnph -->
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年6月6日</div>
+          <div>2025年6月8日</div>
         </div>
       
       
@@ -441,15 +381,15 @@ https://lb3fn675fh.feishu.cn/wiki/WcSrwytf5ivjkQkWd86cEJnxnph -->
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/06/07/memory/" title="C++中的内存管理">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">C++中的内存管理</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2025/06/08/cpp-const/" title="C++中的const关键字">
+                        <span class="hidden-mobile">C++中的const关键字</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
