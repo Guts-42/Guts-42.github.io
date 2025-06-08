@@ -1,0 +1,738 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/guts.png">
+  <link rel="icon" href="/img/guts.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="guts">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="const关键字的使用const关键字可以修饰C++的内置变量、指针、自定义对象、成员函数、返回值和函数参数，以告诉编译器某些值需要保持不变的。也就是说，const关键字是在编译过程中发挥作用的。 const修饰普通类型的变量当一个变量被const修饰时，程序不能改变这个变量的值 const修饰指针变量const修饰指针变量时，情况会变复杂，有三种情况  const修饰指针指向的内容此时该指针指向">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++中的const关键字">
+<meta property="og:url" content="https://guts.homes/2025/06/08/cpp-const/index.html">
+<meta property="og:site_name" content="guts的小屋">
+<meta property="og:description" content="const关键字的使用const关键字可以修饰C++的内置变量、指针、自定义对象、成员函数、返回值和函数参数，以告诉编译器某些值需要保持不变的。也就是说，const关键字是在编译过程中发挥作用的。 const修饰普通类型的变量当一个变量被const修饰时，程序不能改变这个变量的值 const修饰指针变量const修饰指针变量时，情况会变复杂，有三种情况  const修饰指针指向的内容此时该指针指向">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-08T11:37:04.000Z">
+<meta property="article:modified_time" content="2025-06-08T11:37:04.924Z">
+<meta property="article:author" content="guts">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>C++中的const关键字 - guts的小屋</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"guts.homes","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"FkNpNoCOCKAFaE0xepwfi5bb-gzGzoHsz","app_key":"5g5TFpe1p9FCDfz4G0CPPxx2","server_url":"https://fknpnoco.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>guts的小屋</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="C++中的const关键字"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-06-08 19:37" pubdate>
+          2025年6月8日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          12 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">C++中的const关键字</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="const关键字的使用"><a href="#const关键字的使用" class="headerlink" title="const关键字的使用"></a><code>const</code>关键字的使用</h2><p><code>const</code>关键字可以修饰C++的内置变量、指针、自定义对象、成员函数、返回值和函数参数，以告诉编译器某些值需要保持不变的。也就是说，<code>const</code>关键字是在编译过程中发挥作用的。</p>
+<h3 id="const修饰普通类型的变量"><a href="#const修饰普通类型的变量" class="headerlink" title="const修饰普通类型的变量"></a><code>const</code>修饰普通类型的变量</h3><p>当一个变量被<code>const</code>修饰时，程序不能改变这个变量的值</p>
+<h3 id="const修饰指针变量"><a href="#const修饰指针变量" class="headerlink" title="const修饰指针变量"></a><code>const</code>修饰指针变量</h3><p><code>const</code>修饰指针变量时，情况会变复杂，有三种情况</p>
+<ol>
+<li><code>const</code>修饰指针指向的内容<br>此时该指针指向的内容是不可修改的，更准确的说，是<strong>不能通过这个指针来修改它指向的内容</strong> <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-type">int</span> a = <span class="hljs-number">8</span>;<br><span class="hljs-type">const</span> <span class="hljs-type">int</span> * p = &amp;a;<br><span class="hljs-type">int</span> <span class="hljs-type">const</span> * p = &amp;a;<span class="hljs-comment">//两种写法等价</span><br>*p = <span class="hljs-number">9</span>; <span class="hljs-comment">//错误的</span><br>a = <span class="hljs-number">9</span>;<span class="hljs-comment">//正确的</span><br></code></pre></td></tr></table></figure></li>
+<li><code>const</code>修饰指针<br>即指针常量，指针不能修改 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-type">int</span> a = <span class="hljs-number">8</span>;<br><span class="hljs-type">int</span>* <span class="hljs-type">const</span> p = &amp;a;<br>*p = <span class="hljs-number">9</span>; <span class="hljs-comment">// 正确</span><br><span class="hljs-type">int</span>  b = <span class="hljs-number">7</span>;<br>p = &amp;b; <span class="hljs-comment">// 错误</span><br></code></pre></td></tr></table></figure></li>
+<li><code>const</code>修饰指针和指针指向的内容<br>则既不能通过指针修改指向的内容，也不能修改指针本身 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-type">int</span> a = <span class="hljs-number">8</span>;<br><span class="hljs-type">const</span> <span class="hljs-type">int</span> * <span class="hljs-type">const</span>  p = &amp;a;<br></code></pre></td></tr></table></figure>
+为了更好地理解上述的三种情况为什么这样声明，推荐阅读<a target="_blank" rel="noopener" href="https://cseweb.ucsd.edu/~gbournou/CSE131/rt_lt.rule.html">C Right-Left Rule (Rick Ord’s CSE 131</a></li>
+</ol>
+<h3 id="const修饰函数参数和返回值"><a href="#const修饰函数参数和返回值" class="headerlink" title="const修饰函数参数和返回值"></a><code>const</code>修饰函数参数和返回值</h3><p><code>const</code>修饰函数参数时，参数在函数体内无法被修改。最常见的情况是用<code>const</code>修饰指针防止其被意外篡改，以及<code>const</code>+引用传递以免去自定义类型在值传递时构造临时对象的开销。</p>
+<!-- 要理清`const`修饰函数返回值对返回值的影响，首先要明白在C/C++中，函数的返回值总是**按值**返回的，函数会把返回值复制到一个外部的临时变量`a`，这个变量时可以被拷贝的。如果有在函数被调用后，有外部变量`b`能够“接住”`a`，那么`a`会被拷贝到`b`（对于自定义的变量，则会调用赋值构造函数），然后将`a`释放，如果没有变量“接住”`a`，则直接释放。接下来我们分析`const`修饰函数返回值时，三种不同的情况 -->
+<p><code>const</code>修饰函数返回值时，有下面三种不同的情况</p>
+<ol>
+<li>修饰内置类型的返回值<br>返回的是一个临时变量，<code>const</code>修饰没有实际意义，与不修饰时一样</li>
+<li>修饰自定义类型的返回值<br>则返回值不能作为左值使用，既不能被赋值也不能被修改.同时也不能调用返回对象的非<code>const</code>成员函数</li>
+<li>修饰指针或引用类型的返回值<ul>
+<li>函数返回指向常量的指针   <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">const</span> <span class="hljs-type">int</span> * <span class="hljs-title">func</span><span class="hljs-params">()</span></span>;<br><span class="hljs-type">const</span> <span class="hljs-type">int</span> * p =<span class="hljs-built_in">func</span>();<br>*p = <span class="hljs-number">10</span>;       <span class="hljs-comment">// 错误</span><br>p++; <span class="hljs-comment">//正确</span><br></code></pre></td></tr></table></figure></li>
+<li>函数返回指针常量  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">int</span>* <span class="hljs-type">const</span> <span class="hljs-title">func</span><span class="hljs-params">()</span></span>;<br><span class="hljs-type">int</span>* <span class="hljs-type">const</span> p = <span class="hljs-built_in">func</span>();<br>*p = <span class="hljs-number">10</span>;       <span class="hljs-comment">//正确</span><br>p++;  <span class="hljs-comment">//错误</span><br></code></pre></td></tr></table></figure></li>
+<li>函数返回指向常量的指针常量  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">const</span> <span class="hljs-type">int</span>* <span class="hljs-type">const</span> <span class="hljs-title">func</span><span class="hljs-params">()</span></span>;<br><span class="hljs-type">const</span> <span class="hljs-type">int</span>* <span class="hljs-type">const</span> p = <span class="hljs-built_in">func</span>();<br>*p = <span class="hljs-number">10</span>;       <span class="hljs-comment">//错误</span><br>p++;  <span class="hljs-comment">//错误</span><br></code></pre></td></tr></table></figure></li>
+<li><code>const</code>修饰引用返回值<br> 返回一个只读的引用  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">const</span> MyClass&amp; <span class="hljs-title">func</span><span class="hljs-params">()</span></span>;<br><span class="hljs-type">const</span> MyClass&amp; ref = <span class="hljs-built_in">func</span>();<br>ref.<span class="hljs-built_in">setValue</span>(<span class="hljs-number">10</span>); <span class="hljs-comment">//错误</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+<h3 id="const修饰类的成员函数"><a href="#const修饰类的成员函数" class="headerlink" title="const修饰类的成员函数"></a><code>const</code>修饰类的成员函数</h3><p>在成员函数的标识符后面修饰，保证在调用过程中不会修改对象中任何没有<code>mutable</code>修饰的成员变量。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Test</span><br>&#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-built_in">Test</span>()&#123;&#125;<br>    <span class="hljs-built_in">Test</span>(<span class="hljs-type">int</span> _m):_cm(_m)&#123;&#125;<br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">get_cm</span><span class="hljs-params">()</span><span class="hljs-type">const</span></span><br><span class="hljs-function">    </span>&#123;<br>       <span class="hljs-keyword">return</span> _cm;<br>    &#125;<br> <br><span class="hljs-keyword">private</span>:<br>    <span class="hljs-type">int</span> _cm;<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>注意：<code>const</code>关键字不能与<code>static</code>关键字同时使用，因为<code>static</code>关键字修饰静态成员函数，静态成员函数不含有<code>this</code>指针，即不能实例化，<code>const</code>成员函数必须具体到某一实例。</p>
+<h2 id="volatile关键字"><a href="#volatile关键字" class="headerlink" title="volatile关键字"></a><code>volatile</code>关键字</h2><p><code>volatile</code>修饰的变量表示其可以被某些编译器未知的因素修改。例如</p>
+<ul>
+<li>操作系统</li>
+<li>硬件</li>
+<li>其他的线程<br>这样编译器就不会对<code>volatile</code>修饰的变量进行优化。例如</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">volatile</span> <span class="hljs-type">int</span> i=<span class="hljs-number">10</span>;<br><span class="hljs-type">int</span> a = i;<br>...<br><span class="hljs-comment">// 其他代码，并未明确告诉编译器，对 i 进行过操作</span><br><span class="hljs-type">int</span> b = i;<br></code></pre></td></tr></table></figure>
+<p>在上面的代码中，无论是将<code>i</code>赋值给<code>a</code>还是<code>b</code>，都要从<code>i</code>的地址中读取值，而如果<code>i</code>没有被<code>volatile</code>修饰，那么编译器就会优化对<code>b</code>的赋值，直接将上次从<code>i</code>的地址中读取的值赋值给<code>b</code>,而不是重新读取<code>i</code>的地址中的值。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-type">const</span> <span class="hljs-keyword">volatile</span> <span class="hljs-type">int</span> a = <span class="hljs-number">10</span>;<br></code></pre></td></tr></table></figure>
+<p>上面的代码也是合法的，·且<code>const</code>和<code>volatile</code>关键字都能发挥作用</p>
+<ul>
+<li>在<code>a</code>的作用域内，无法对<code>a</code>进行修改，因为它是<code>const</code>修饰的</li>
+<li>但是<code>a</code>的值可能被其他线程或者别的外部事件改变，因为它是<code>volatile</code>修饰的</li>
+</ul>
+<h2 id="mutable关键字"><a href="#mutable关键字" class="headerlink" title="mutable关键字"></a><code>mutable</code>关键字</h2><p><code>mutable</code>关键字用于修饰类的成员变量。</p>
+<ul>
+<li>当成员变量被<code>mutable</code>修饰时，表示该变量时可变的，即使包含它的对象被声明为<code>const</code>类型</li>
+<li><code>mutable</code>修饰成员变量不会影响其在类外部的可见状态</li>
+</ul>
+<h2 id="const与-define的区别"><a href="#const与-define的区别" class="headerlink" title="const与#define的区别"></a><code>const</code>与<code>#define</code>的区别</h2><ul>
+<li><code>#define</code>是预处理指令，在预处理阶段对宏定义进行分析和替换，而<code>const</code>是关键字，是由编译器在编译阶段处理的</li>
+<li><code>#define</code>没有作用域的限制（但也得在<code>#define</code>后使用啊不然就违反因果律了），宏可以被定义在当前程序的任意位置或者被其包含的头文件中，只有遇到对应的<code>#undef</code>才失效。而<code>const</code>修饰的变量有作用域的限制。  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">namespace</span> definePI &#123;<br>    <span class="hljs-meta">#<span class="hljs-keyword">define</span> PI 3.1415926</span><br>    <span class="hljs-type">const</span> <span class="hljs-type">float</span> pi = <span class="hljs-number">3.1415926</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%f\n&quot;</span>, PI);      <span class="hljs-comment">// 输出3.1415926</span><br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%f\n&quot;</span>, pi);      <span class="hljs-comment">// 编译错误</span><br>    <span class="hljs-meta">#<span class="hljs-keyword">undef</span> PI</span><br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%f\n&quot;</span>, PI);      <span class="hljs-comment">// 编译错误</span><br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%f\n&quot;</span>, E);       <span class="hljs-comment">// 编译错误</span><br>&#125;<br><br><span class="hljs-keyword">namespace</span> defineE &#123;<br>    <span class="hljs-meta">#<span class="hljs-keyword">define</span> E 2.7182818</span><br>&#125;<br><br></code></pre></td></tr></table></figure></li>
+<li><code>#define</code>可以重定义（需要先<code>#undef</code>取消定义）但是<code>const</code>不行  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">define</span> X 30</span><br><span class="hljs-type">const</span> <span class="hljs-type">int</span> Y=<span class="hljs-number">10</span>;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    cout&lt;&lt;<span class="hljs-string">&quot;Value of X: &quot;</span>&lt;&lt;X&lt;&lt;endl; <span class="hljs-comment">//输出30</span><br>    <span class="hljs-meta">#<span class="hljs-keyword">undef</span> X</span><br>    <span class="hljs-meta">#<span class="hljs-keyword">define</span> X 300</span><br>    cout&lt;&lt;<span class="hljs-string">&quot;Value of X: &quot;</span>&lt;&lt;X&lt;&lt;endl; <span class="hljs-comment">//输出300</span><br>    <br>    cout&lt;&lt;<span class="hljs-string">&quot;Value of Y: &quot;</span>&lt;&lt;Y&lt;&lt;endl; <span class="hljs-comment">//输出10</span><br>    Y=<span class="hljs-number">100</span>;	<span class="hljs-comment">//error, we can not assign value to const</span><br>    cout&lt;&lt;<span class="hljs-string">&quot;Value of Y: &quot;</span>&lt;&lt;Y&lt;&lt;endl;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li></li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.runoob.com/w3cnote/cpp-const-keyword.html">[RUNOOB] C++ const 关键字小结</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.runoob.com/w3cnote/c-volatile-keyword.html">[RUNOOB] C&#x2F;C++ 中 volatile 关键字详解</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/keyword/const.html">[cppreference.com] C++ keyword: const</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/language/cv.html">[cppreference.com] cv (const and volatile) type qualifiers</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/keyword/volatile.html">[cppreference.com] C++ keyword: volatile</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/C/" class="category-chain-item">C++</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>C++中的const关键字</div>
+      <div>https://guts.homes/2025/06/08/cpp-const/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>guts</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年6月8日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/06/08/cpp-inline/" title="C++中的inline关键字">
+                        <span class="hidden-mobile">C++中的inline关键字</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"FkNpNoCOCKAFaE0xepwfi5bb-gzGzoHsz","appKey":"5g5TFpe1p9FCDfz4G0CPPxx2","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
