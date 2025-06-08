@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://guts.homes/2025/06/07/memory/memory.jpg">
 <meta property="article:published_time" content="2025-06-07T07:36:17.000Z">
-<meta property="article:modified_time" content="2025-06-08T13:19:17.956Z">
+<meta property="article:modified_time" content="2025-06-08T13:22:10.354Z">
 <meta property="article:author" content="guts">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://guts.homes/2025/06/07/memory/memory.jpg">
@@ -355,7 +355,8 @@
 <h3 id="为什么malloc时候需要传递长度信息，而free时候却不需要传递长度信息呢"><a href="#为什么malloc时候需要传递长度信息，而free时候却不需要传递长度信息呢" class="headerlink" title="为什么malloc时候需要传递长度信息，而free时候却不需要传递长度信息呢?"></a>为什么malloc时候需要传递长度信息，而free时候却不需要传递长度信息呢?</h3><p>因为<code>malloc(size)</code>在分配内存时，除了会分配一部分大小为<code>size</code>的内存供程序员使用外，还会在这部分内存头部添加这块内存的元数据，例如</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">mem_control_block</span> &#123;<br>  <span class="hljs-type">int</span> is_available; <br>  <span class="hljs-type">int</span> size;        <br>&#125;;<br></code></pre></td></tr></table></figure>
 <p>这样<code>free</code>这块内存的时候就可以访问这块区域进而获取需要free的内存大小。</p>
-<h3 id="malloc的底层实现"><a href="#malloc的底层实现" class="headerlink" title="malloc的底层实现"></a>malloc的底层实现</h3>
+<!-- ### malloc的底层实现 -->
+
                 
               </div>
             
