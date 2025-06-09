@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://guts.homes/2025/06/07/memory/memory.jpg">
 <meta property="article:published_time" content="2025-06-07T07:36:17.000Z">
-<meta property="article:modified_time" content="2025-06-08T13:22:10.354Z">
+<meta property="article:modified_time" content="2025-06-08T13:23:38.542Z">
 <meta property="article:author" content="guts">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://guts.homes/2025/06/07/memory/memory.jpg">
@@ -329,7 +329,7 @@
 <h2 id="堆内存的使用"><a href="#堆内存的使用" class="headerlink" title="堆内存的使用"></a>堆内存的使用</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/memory/c/malloc">std::malloc</a><br>用于在堆上分配指定大小的内存块  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">void</span> * <span class="hljs-title">malloc</span><span class="hljs-params">(<span class="hljs-type">size_t</span> size)</span></span>; <br></code></pre></td></tr></table></figure>
 返回指向分配的内存的指针，若分配失败，则返回<code>nullptr</code></li>
-<li><code>calloc</code><br>分配内存并初始化   <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">void</span> * <span class="hljs-title">calloc</span><span class="hljs-params">(<span class="hljs-type">size_t</span> num, <span class="hljs-type">size_t</span> size)</span></span>; <br></code></pre></td></tr></table></figure>
+<li><code>calloc</code><br>分配内存并初始化（将所有的字节都置0）   <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">void</span> * <span class="hljs-title">calloc</span><span class="hljs-params">(<span class="hljs-type">size_t</span> num, <span class="hljs-type">size_t</span> size)</span></span>; <br></code></pre></td></tr></table></figure>
 <ul>
 <li><code>num</code>要分配的元素的个数</li>
 <li><code>size</code>元素的大小（字节数）</li>
