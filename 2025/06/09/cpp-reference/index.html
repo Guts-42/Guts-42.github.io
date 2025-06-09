@@ -19,15 +19,15 @@
   <meta name="author" content="guts">
   <meta name="keywords" content="">
   
-    <meta name="description" content="与enum的对比C++11之所以要引入enum class，是因为传统的enum  作用域不限范围，会造成命名空间的污染  123enum Color&#123;black,white,red&#125;;	&#x2F;&#x2F;black、white、red作用域和color作用域相同auto white &#x3D; false;	&#x2F;&#x2F;错误，white已经被声明过了   而enum class的枚举成员默认具有强作用域，">
+    <meta name="description" content="引用是一种特殊的变量别名机制，它  是变量的别名，既不是变量本身，也不是变量的拷贝。 在定义时必须被初始化，且一旦被绑定到一个变量上，就不能再被绑定到另一个变量上，与指针相比更加安全（但也并非完全安全，引用也依赖于绑定对象的有效性，如果绑定的对象内存被释放，则引用的行为是未定义的）。 必须被绑定到有效的对象，不能为nullptr，这就可以天然地避免空指针的问题。 操作简单。  引用的作用 作为别名">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C++中的enum class">
-<meta property="og:url" content="https://guts.homes/2025/06/08/cpp-enum-class/index.html">
+<meta property="og:title" content="C++中的引用">
+<meta property="og:url" content="https://guts.homes/2025/06/09/cpp-reference/index.html">
 <meta property="og:site_name" content="guts的小屋">
-<meta property="og:description" content="与enum的对比C++11之所以要引入enum class，是因为传统的enum  作用域不限范围，会造成命名空间的污染  123enum Color&#123;black,white,red&#125;;	&#x2F;&#x2F;black、white、red作用域和color作用域相同auto white &#x3D; false;	&#x2F;&#x2F;错误，white已经被声明过了   而enum class的枚举成员默认具有强作用域，">
+<meta property="og:description" content="引用是一种特殊的变量别名机制，它  是变量的别名，既不是变量本身，也不是变量的拷贝。 在定义时必须被初始化，且一旦被绑定到一个变量上，就不能再被绑定到另一个变量上，与指针相比更加安全（但也并非完全安全，引用也依赖于绑定对象的有效性，如果绑定的对象内存被释放，则引用的行为是未定义的）。 必须被绑定到有效的对象，不能为nullptr，这就可以天然地避免空指针的问题。 操作简单。  引用的作用 作为别名">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-06-08T13:15:02.000Z">
-<meta property="article:modified_time" content="2025-06-08T13:15:02.356Z">
+<meta property="article:published_time" content="2025-06-09T07:14:59.000Z">
+<meta property="article:modified_time" content="2025-06-09T07:14:59.724Z">
 <meta property="article:author" content="guts">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -35,7 +35,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>C++中的enum class - guts的小屋</title>
+  <title>C++中的引用 - guts的小屋</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -202,7 +202,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="C++中的enum class"></span>
+            <span id="subtitle" data-typed-text="C++中的引用"></span>
           
         </div>
 
@@ -213,8 +213,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-06-08 21:15" pubdate>
-          2025年6月8日 晚上
+        <time datetime="2025-06-09 15:14" pubdate>
+          2025年6月9日 下午
         </time>
       </span>
     
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          279 字
+          869 字
         
       </span>
     
@@ -236,7 +236,7 @@
         
         
         
-          3 分钟
+          8 分钟
         
       </span>
     
@@ -282,23 +282,81 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">C++中的enum class</h1>
+            <h1 id="seo-header">C++中的引用</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="与enum的对比"><a href="#与enum的对比" class="headerlink" title="与enum的对比"></a>与<code>enum</code>的对比</h2><p>C++11之所以要引入<code>enum class</code>，是因为传统的<code>enum</code></p>
+                <p>引用是一种特殊的变量别名机制，它</p>
 <ul>
-<li>作用域不限范围，会造成命名空间的污染  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">enum</span> <span class="hljs-title class_">Color</span>&#123;black,white,red&#125;;	<span class="hljs-comment">//black、white、red作用域和color作用域相同</span><br><br><span class="hljs-keyword">auto</span> white = <span class="hljs-literal">false</span>;	<span class="hljs-comment">//错误，white已经被声明过了</span><br></code></pre></td></tr></table></figure>
-  而<code>enum class</code>的枚举成员默认具有强作用域，需要通过枚举类型名来访问，能够降低命名空间的污染  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">enum class</span> <span class="hljs-title class_">Color</span>&#123;black,white,red&#125;; <span class="hljs-comment">//black、white、red作用域仅在大括号内生效</span><br><br><span class="hljs-keyword">auto</span> white = <span class="hljs-literal">false</span>;		<span class="hljs-comment">//正确，这个white并不是Color中的white</span><br><br>Color c = white;	<span class="hljs-comment">//错误，在作用域范围内没有white这个枚举量</span><br><br>Color c = Color::white;	<span class="hljs-comment">//正确</span><br><br><span class="hljs-keyword">auto</span> c = Color::white;	<span class="hljs-comment">//正确</span><br></code></pre></td></tr></table></figure></li>
-<li>会发生隐式类型转换  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">enum</span> <span class="hljs-title class_">Color</span>&#123;black,white,red&#125;;<br><span class="hljs-function">std::vector&lt;std::<span class="hljs-type">size_t</span>&gt; <span class="hljs-title">primeFactors</span><span class="hljs-params">(std::<span class="hljs-type">size_t</span> x)</span></span>;	<span class="hljs-comment">//函数返回x的质因数</span><br><br>Color c = red;<br><br><span class="hljs-keyword">if</span>(c &lt; <span class="hljs-number">14.5</span>)	<span class="hljs-comment">//将color型别和double型别比较，发生隐式转换</span><br>&#123;<br>    <span class="hljs-keyword">auto</span> factors = <span class="hljs-built_in">primeFactors</span>(c);  <span class="hljs-comment">//计算一个color型别的质因数，发生隐式转换</span><br>&#125;<br></code></pre></td></tr></table></figure>
-  而<code>enum class</code>的元素只能通过<code>static_cast</code>进行强制类型转换</li>
-<li>不能进行前置声明，而<code>enum class</code>可以  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">enum</span> <span class="hljs-title class_">Color</span>;			<span class="hljs-comment">//错误</span><br><span class="hljs-keyword">enum class</span> <span class="hljs-title class_">Color</span>;	<span class="hljs-comment">//正确</span><br></code></pre></td></tr></table></figure></li>
+<li>是变量的别名，既不是变量本身，也不是变量的拷贝。</li>
+<li>在定义时必须被初始化，且一旦被绑定到一个变量上，就不能再被绑定到另一个变量上，与指针相比更加安全（但也并非完全安全，引用也依赖于绑定对象的有效性，如果绑定的对象内存被释放，则引用的行为是未定义的）。</li>
+<li>必须被绑定到有效的对象，不能为<code>nullptr</code>，这就可以天然地避免空指针的问题。</li>
+<li>操作简单。</li>
 </ul>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42817477/article/details/109029172">[CSDN]C++11枚举类——enum class</a></li>
+<h2 id="引用的作用"><a href="#引用的作用" class="headerlink" title="引用的作用"></a>引用的作用</h2><ul>
+<li>作为别名<br>  可以简化复杂数据的访问  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Person</span>&#123;<br>    std::string name;<br>    std::vector&lt;<span class="hljs-type">int</span>&gt; grades;<br>&#125;<br>Person guts&#123;<span class="hljs-string">&quot;Guts&quot;</span>,&#123;<span class="hljs-number">80</span>,<span class="hljs-number">99</span>,<span class="hljs-number">59</span>&#125;&#125;;<br>std::string &amp; english_grade = guts.grades[<span class="hljs-number">2</span>];<br>english_grade++;<br></code></pre></td></tr></table></figure></li>
+<li>作为参数传递<ul>
+<li>避免拷贝开销</li>
+<li>允许修改实参</li>
+<li><code>const</code>引用作为参数也是有意义的，可以避免拷贝开销，并且<code>const</code>引用还可以绑定右值</li>
 </ul>
-
+</li>
+<li>作为函数返回值<ul>
+<li>可以用于链式调用，函数返回引用，引用又调用函数<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C++">std::ostream&amp; <span class="hljs-keyword">operator</span>&lt;&lt;(std::ostream&amp; os, <span class="hljs-type">const</span> MyClass&amp; obj) &#123;​<br>    os &lt;&lt; obj.<span class="hljs-built_in">data</span>();​<br>    <span class="hljs-keyword">return</span> os;  <span class="hljs-comment">// 允许链式调用</span><br>&#125;<br>std::cout &lt;&lt; obj1 &lt;&lt; obj2;<span class="hljs-comment">//等价于std::cout &lt;&lt; obj1.data() &lt;&lt; obj2.data();</span><br></code></pre></td></tr></table></figure></li>
+<li>用于实现运算符的重载<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs C++">MyClass&amp; MyClass::<span class="hljs-keyword">operator</span>=(<span class="hljs-type">const</span> MyClass&amp; other) &#123;​<br>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span> != &amp;other) &#123;​<br>        <span class="hljs-comment">// 赋值操作​</span><br>    &#125;​<br>    <span class="hljs-keyword">return</span> *<span class="hljs-keyword">this</span>;  <span class="hljs-comment">// 返回当前对象的引用​</span><br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>右值引用<br>右值引用<code>T&amp;&amp;</code>可以绑定右值(<code>const</code>引用也可以)，通常用于移动语义，避免深拷贝。  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-type">int</span>&amp;&amp; x = <span class="hljs-number">42</span>;     <span class="hljs-comment">// 合法，右值引用绑定字面量（右值）</span><br><span class="hljs-type">int</span>&amp; y = <span class="hljs-number">42</span>;      <span class="hljs-comment">// 错误，左值引用不能绑定右值</span><br><span class="hljs-type">const</span> <span class="hljs-type">int</span>&amp; z = <span class="hljs-number">42</span>;<span class="hljs-comment">// 合法，const引用也可以绑定右值</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyString</span> &#123;​<br><span class="hljs-keyword">public</span>:​<br>    <span class="hljs-built_in">MyString</span>(MyString&amp;&amp; other) <span class="hljs-keyword">noexcept</span> ​<br>        : <span class="hljs-built_in">data_</span>(other.data_), <span class="hljs-built_in">size_</span>(other.size_) &#123;​<br>        other.data_ = <span class="hljs-literal">nullptr</span>;  <span class="hljs-comment">// 转移资源所有权​</span><br>    &#125;​<br>&#125;;<br></code></pre></td></tr></table></figure></li>
+<li><code>const</code>引用<br><code>const</code>引用也可以绑定右值<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">func1</span><span class="hljs-params">(string&amp; a)</span> </span>&#123;<br>	<br>&#125;<br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">func2</span><span class="hljs-params">(<span class="hljs-type">const</span> string&amp; a)</span> </span>&#123;<br>&#125;<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">func1</span>(<span class="hljs-string">&quot;12323&quot;</span>);<span class="hljs-comment">//变异失败，因为string &amp;作为一个引用类型，必须要知道它绑定对象的地址才行，而输入值是const char*类型的右值</span><br>    <span class="hljs-built_in">func2</span>(<span class="hljs-string">&quot;12323&quot;</span>);<br>&#125; <br><br></code></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="与指针的区别"><a href="#与指针的区别" class="headerlink" title="与指针的区别"></a>与指针的区别</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span>​</span><br>​<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;​<br>    <span class="hljs-type">int</span> x = <span class="hljs-number">10</span>;​<br>    <span class="hljs-comment">//代码段1</span><br>    <span class="hljs-type">int</span>&amp; ref = x;  <span class="hljs-comment">// 编译器等价处理为 int* const ref = &amp;x;​</span><br>    ref = <span class="hljs-number">20</span>;      <span class="hljs-comment">// 等价于 *ref = 20;​</span><br>    ​<span class="hljs-comment">//代码段2</span><br>    <span class="hljs-type">int</span>* ptr = &amp;x;​<br>    *ptr = <span class="hljs-number">30</span>;​<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;​<br>&#125;​<br></code></pre></td></tr></table></figure>
+<p>代码段1和代码段2在生成的汇编代码中除了数字外完全一样，因为引用本质上是通过指针常量来实现的。</p>
+<table>
+<thead>
+<tr>
+<th align="left">特性</th>
+<th align="left">引用</th>
+<th align="left">指针</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">初始化要求</td>
+<td align="left">必须初始化，且不可重新绑定到其他对象</td>
+<td align="left">可以声明为空指针（<code>nullptr</code>），后续可修改指向</td>
+</tr>
+<tr>
+<td align="left">空值合法性</td>
+<td align="left">不允许空引用</td>
+<td align="left">允许空指针（<code>nullptr</code>）</td>
+</tr>
+<tr>
+<td align="left">内存占用</td>
+<td align="left">不占用显式内存（编译器优化）</td>
+<td align="left">占用独立内存（存储地址值）</td>
+</tr>
+<tr>
+<td align="left">操作语法</td>
+<td align="left">直接使用对象语法（无<code>＊</code>或 <code>-&gt;</code> ）</td>
+<td align="left">需用<code>＊</code>解引用或 <code>-&gt;</code> 访问成员</td>
+</tr>
+<tr>
+<td align="left">类型安全性</td>
+<td align="left">强类型绑定，无类型转换风险</td>
+<td align="left">允许 <code>void＊</code>和危险的类型转换</td>
+</tr>
+<tr>
+<td align="left">多级间接访问</td>
+<td align="left">仅支持单层引用（无引用的引用）</td>
+<td align="left">支持多级指针（<code>int＊＊</code>）</td>
+</tr>
+<tr>
+<td align="left">内存地址可见性</td>
+<td align="left">无法直接获取引用的地址（<code>＆ref</code> 返回原对象地址）</td>
+<td align="left">可直接获取指针变量的地址（<code>＆ptr</code>）</td>
+</tr>
+</tbody></table>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3>
                 
               </div>
             
@@ -336,8 +394,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>C++中的enum class</div>
-      <div>https://guts.homes/2025/06/08/cpp-enum-class/</div>
+      <div>C++中的引用</div>
+      <div>https://guts.homes/2025/06/09/cpp-reference/</div>
     </div>
     <div class="license-meta">
       
@@ -349,7 +407,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年6月8日</div>
+          <div>2025年6月9日</div>
         </div>
       
       
@@ -381,18 +439,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/06/09/cpp-reference/" title="C++中的引用">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">C++中的引用</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/06/08/cpp-const/" title="C++中的const关键字">
-                        <span class="hidden-mobile">C++中的const关键字</span>
+                      <a href="/2025/06/08/cpp-enum-class/" title="C++中的enum class">
+                        <span class="hidden-mobile">C++中的enum class</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
