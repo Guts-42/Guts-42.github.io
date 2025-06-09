@@ -27,7 +27,7 @@
 <meta property="og:description" content="const关键字的使用const关键字可以修饰C++的内置变量、指针、自定义对象、成员函数、返回值和函数参数，以告诉编译器某些值需要保持不变的。也就是说，const关键字是在编译过程中发挥作用的。 const修饰普通类型的变量当一个变量被const修饰时，程序不能改变这个变量的值 const修饰指针变量const修饰指针变量时，情况会变复杂，有三种情况  const修饰指针指向的内容此时该指针指向">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-08T11:37:04.000Z">
-<meta property="article:modified_time" content="2025-06-09T05:16:04.317Z">
+<meta property="article:modified_time" content="2025-06-09T05:45:41.126Z">
 <meta property="article:author" content="guts">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.2k 字
+          2.3k 字
         
       </span>
     
@@ -236,7 +236,7 @@
         
         
         
-          19 分钟
+          20 分钟
         
       </span>
     
@@ -379,10 +379,11 @@
 <h3 id="constexpr指针"><a href="#constexpr指针" class="headerlink" title="constexpr指针"></a><code>constexpr</code>指针</h3><p><code>constexpr</code>只对指针本身有效，而不会对指针指向的对象生效</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-type">const</span> <span class="hljs-type">int</span> *p = <span class="hljs-literal">nullptr</span>;            <span class="hljs-comment">//正确，p是一个指向整型常量的指针, p本身可以被修改，但是p指向的内存无法通过p来修改</span><br><span class="hljs-keyword">constexpr</span> <span class="hljs-type">int</span> *q = <span class="hljs-literal">nullptr</span>;        <span class="hljs-comment">//正确，但q是一个指向  整数  的  常量指针，q无法被修改</span><br></code></pre></td></tr></table></figure>
 <p>一个<code>constexpr</code>指针的初始值必须是<code>nullptr</code>或者<code>0</code>，或者是指向存储于某个固定地址中的对象。</p>
-<h3 id="constexpr函数"><a href="#constexpr函数" class="headerlink" title="constexpr函数"></a><code>constexpr</code>函数</h3><p><code>constexpr</code>修饰的函数要求其返回类型以及所有的形参都是<code>literal type</code>，且函数体中必须有且仅有一条<code>return</code>语句。这样在它们被调用时，编译期会把它们直接展开替换为结果值。</p>
+<h3 id="constexpr函数"><a href="#constexpr函数" class="headerlink" title="constexpr函数"></a><code>constexpr</code>函数</h3><p><code>constexpr</code>修饰的函数要求其返回类型以及所有的形参都是<code>literal type</code>，且函数体中必须有且仅有一条<code>return</code>语句(除非函数的返回值是<code>void</code>)。这样在它们被调用时，编译期会把它们直接展开替换为结果值。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-keyword">constexpr</span> <span class="hljs-type">int</span> <span class="hljs-title">new_sz</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-keyword">return</span> <span class="hljs-number">42</span>; &#125;<span class="hljs-comment">//constexpr函数</span><br><span class="hljs-keyword">constexpr</span> <span class="hljs-type">int</span> foo = <span class="hljs-built_in">new_sz</span>();<br><span class="hljs-comment">//在对变量foo初始化时，编译器把对constexpr函数的调用替换成其结果值。为了能在编译过程中随时展开，constexpr函数被隐式地指定为内联函数。</span><br></code></pre></td></tr></table></figure>
 <p>有意思的是，C++允许<code>constexpr</code>返回的值不是常量</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-comment">//如果cnt是常量表达式，则scale(cnt)也是常量表达式</span><br><span class="hljs-function"><span class="hljs-keyword">constexpr</span> <span class="hljs-type">size_t</span> <span class="hljs-title">scale</span><span class="hljs-params">(<span class="hljs-type">size_t</span> cnt)</span></span>&#123; <span class="hljs-keyword">return</span> <span class="hljs-built_in">new_sz</span>() * cnt; &#125;<br><br><span class="hljs-comment">//当scale的实参是常量表达式时，它的表达式也是常量表达式，反之则不然</span><br><span class="hljs-type">int</span> arr[<span class="hljs-built_in">scale</span>(<span class="hljs-number">2</span>)];	<span class="hljs-comment">//正确：scale(2)是常量表达式</span><br><span class="hljs-type">int</span> i = <span class="hljs-number">2</span>;			<span class="hljs-comment">//i不是常量表达式</span><br><span class="hljs-type">int</span> a2[<span class="hljs-built_in">scale</span>(i)];	<span class="hljs-comment">//错误：scale(i)不是常量表达式</span><br></code></pre></td></tr></table></figure>
+<p>前面提到返回值类型为<code>void</code>的函数也可以用<code>constexpr</code>来修饰，乍一看这样的函数没有任何意义，但实际上<code>constexpr</code>修饰的函数除了返回值是编译期常量外，还在编译期运行，这样就能在编译期执行一些操作。</p>
 <h3 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h3><p>数组大小、模板参数和<code>switch</code>语句都要求编译期常量，使用<code>constexpr</code>修饰的变量或函数可以用于这些场景。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">constexpr</span> <span class="hljs-type">int</span> n = <span class="hljs-number">10</span>;<br><span class="hljs-type">const</span> <span class="hljs-type">int</span> cn = <span class="hljs-number">10</span>;<br><span class="hljs-type">int</span> arr[n]; <span class="hljs-comment">//正确</span><br><span class="hljs-type">int</span> arr[cn]; <span class="hljs-comment">//报错</span><br></code></pre></td></tr></table></figure>
 
