@@ -164,10 +164,83 @@ const volatile int a = 10;
         return 0;
     }
     ```
-* 
+## `constexpr`
+`constexpr`在C++11中被引进，字面意思是`const expression`。`constexpr`修饰的变量是编译期常量，且必须用常量表达式初始化。
+```C++
+constexpr int mf = 20;              //正确，20是常量表达式
+constexpr int limit = mf + 1;       //正确，mf + 1是常量表达式
+constexpr int sz = size();         //未知，若size()函数是一个constexpr函数时即正确，反之错误。
+
+int i = 10;
+constexpr int t = i;                //错误，i不是常量
+```
+### `literal type`
+`constexpr`只能用于修饰`literal type`的变量，一个变量是`literal type`当且仅当它属于下面的类型
+* 标量类型 [scalar type](https://en.cppreference.com/w/cpp/named_req/ScalarType.html)
+包含
+  * 算数类型
+  * 枚举类型
+  * 指针类型
+  * 指向类成员的指针类型
+  * `std::nullptr_t`
+  * 以上类型的`cv`限定版本（即用`const`或`volatile`修饰的版本）
+* 引用
+* `literal type`的数组
+* 具有以下所有性质的`cv-qualified`类
+  * 拥有平凡(`trivial`)析构函数（即默认析构函数）（C++20前的版本）或`constexpr`析构函数(C++20)
+  * 所有非静态且非`variant`的成员（`variant`变量在编译时无法确定变量的具体类型）和基类都不是`volatile`修饰的`literal type`, 并且是下面几种类型之一
+    * `lambda`类型
+    * 满足下列条件的聚合`union`
+      * 没有`variant`成员
+      * 或者至少有一个非`volatile`修饰的`literal type`的`variant`成员
+    * 非`union`的聚合类型，并且每个匿名联合体成员也都满足
+      * 没有`variant`成员
+      * 或者至少有一个非`volatile`修饰的`literal type`的`variant`成员
+    * 具有至少一个`constexpr`构造函数的类型，且该构造函数不是拷贝或移动构造函数
+  
+### 与`const`的区别
+* `const`修饰的变量可以在运行时才初始化，而`constexpr`则一定会在编译期初始化。​
+* 而`const`表示的是read only的语义，只保证修饰的变量运行时不可以被直接更改，并未区分是编译期常量还是运行期常量。​
+### `constexpr`指针
+`constexpr`只对指针本身有效，而不会对指针指向的对象生效
+```C++
+const int *p = nullptr;            //正确，p是一个指向整型常量的指针, p本身可以被修改，但是p指向的内存无法通过p来修改
+constexpr int *q = nullptr;        //正确，但q是一个指向  整数  的  常量指针，q无法被修改
+```
+一个`constexpr`指针的初始值必须是`nullptr`或者`0`，或者是指向存储于某个固定地址中的对象。
+### `constexpr`函数
+`constexpr`修饰的函数要求其返回类型以及所有的形参都是`literal type`，且函数体中必须有且仅有一条`return`语句(除非函数的返回值是`void`)。这样在它们被调用时，编译期会把它们直接展开替换为结果值。
+```C++
+constexpr int new_sz() { return 42; }//constexpr函数
+constexpr int foo = new_sz();
+//在对变量foo初始化时，编译器把对constexpr函数的调用替换成其结果值。为了能在编译过程中随时展开，constexpr函数被隐式地指定为内联函数。
+```
+有意思的是，C++允许`constexpr`返回的值不是常量
+```C++
+//如果cnt是常量表达式，则scale(cnt)也是常量表达式
+constexpr size_t scale(size_t cnt){ return new_sz() * cnt; }
+
+//当scale的实参是常量表达式时，它的表达式也是常量表达式，反之则不然
+int arr[scale(2)];	//正确：scale(2)是常量表达式
+int i = 2;			//i不是常量表达式
+int a2[scale(i)];	//错误：scale(i)不是常量表达式
+```
+前面提到返回值类型为`void`的函数也可以用`constexpr`来修饰，乍一看这样的函数没有任何意义，但实际上`constexpr`修饰的函数除了返回值是编译期常量外，还在编译期运行，这样就能在编译期执行一些操作。
+### 使用场景
+数组大小、模板参数和`switch`语句都要求编译期常量，使用`constexpr`修饰的变量或函数可以用于这些场景。
+```C++
+constexpr int n = 10;
+const int cn = 10;
+int arr[n]; //正确
+int arr[cn]; //报错
+```
+
+
 ## 参考
 * [[RUNOOB] C++ const 关键字小结](https://www.runoob.com/w3cnote/cpp-const-keyword.html)
 * [[RUNOOB] C/C++ 中 volatile 关键字详解](https://www.runoob.com/w3cnote/c-volatile-keyword.html)
 * [[cppreference.com] C++ keyword: const](https://en.cppreference.com/w/cpp/keyword/const.html)
 * [[cppreference.com] cv (const and volatile) type qualifiers](https://en.cppreference.com/w/cpp/language/cv.html)
 * [[cppreference.com] C++ keyword: volatile](https://en.cppreference.com/w/cpp/keyword/volatile.html)
+* [[cppreference.com] C++ named requirements: LiteralType (since C++11)](https://en.cppreference.com/w/cpp/named_req/LiteralType)
+* [[cnblog] C++11新特性：constexpr变量和constexpr函数](https://www.cnblogs.com/ljwgis/p/13095739.html)

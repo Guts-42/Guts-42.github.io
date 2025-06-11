@@ -108,6 +108,13 @@ https://lb3fn675fh.feishu.cn/wiki/OVsewICczis2jlkKBgKc3Mz9n8d
 https://lb3fn675fh.feishu.cn/wiki/QlEJwXrH4i9MxPkS1OncaPX4nze
 ## 指针与常量
 https://lb3fn675fh.feishu.cn/wiki/WcSrwytf5ivjkQkWd86cEJnxnph -->
+
+## `void *`
+* 任何类型的指针都可以直接赋值给`void`指针，且无需进行强制类型转换
+* 而`void`指针不能直接赋值给其它指针，必须进行显示类型转换
+* `void`指针可以和其他指针比较存放的地址是否相同
+* `void`指针只有在进行强制类型转换后才可以对其进行正常的指针操作
+  
 ## 最佳实践
 
 - 避免野指针：始终确保指针在使用前已经正确初始化，并且在不再需要时将其设置为`nullptr`。
