@@ -27,7 +27,7 @@
 <meta property="og:description" content="基本概念指针本质上也是一种变量，不过它存储的是对应变量类型的地址。 为什么要有指针 之所以要有指针，是因为虽然变量本身就包含了地址的信息（不然我们也没法通过&amp;来取址），但变量和其地址之间的关系是一一对应的且无法修改的，无法满足我们对地址本身进行处理的需求。例如如果我们要实现数组的数据结构，将数据放入连续的内存中，那么我们需要解决下面的问题  这块连续内存的起始地址是什么？ 访问数组中的某个">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-06T06:37:25.000Z">
-<meta property="article:modified_time" content="2025-06-08T13:14:32.195Z">
+<meta property="article:modified_time" content="2025-06-11T01:41:06.685Z">
 <meta property="article:author" content="guts">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.3k 字
+          1.4k 字
         
       </span>
     
@@ -236,7 +236,7 @@
         
         
         
-          11 分钟
+          12 分钟
         
       </span>
     
@@ -352,6 +352,13 @@ https://lb3fn675fh.feishu.cn/wiki/OVsewICczis2jlkKBgKc3Mz9n8d
 https://lb3fn675fh.feishu.cn/wiki/QlEJwXrH4i9MxPkS1OncaPX4nze
 ## 指针与常量
 https://lb3fn675fh.feishu.cn/wiki/WcSrwytf5ivjkQkWd86cEJnxnph -->
+
+<h2 id="void"><a href="#void" class="headerlink" title="void *"></a><code>void *</code></h2><ul>
+<li>任何类型的指针都可以直接赋值给<code>void</code>指针，且无需进行强制类型转换</li>
+<li>而<code>void</code>指针不能直接赋值给其它指针，必须进行显示类型转换</li>
+<li><code>void</code>指针可以和其他指针比较存放的地址是否相同</li>
+<li><code>void</code>指针只有在进行强制类型转换后才可以对其进行正常的指针操作</li>
+</ul>
 <h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><ul>
 <li>避免野指针：始终确保指针在使用前已经正确初始化，并且在不再需要时将其设置为<code>nullptr</code>。</li>
 <li>避免内存泄漏：动态分配的内存在使用完毕后一定要使用<code>free</code>释放。</li>
