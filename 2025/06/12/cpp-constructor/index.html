@@ -1,0 +1,735 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/guts.png">
+  <link rel="icon" href="/guts.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="guts">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="深拷贝和浅拷贝 浅拷贝  就是对变量的简单按位复制内存 在C++中，默认的拷贝构造函数制作按位复制，也就是浅拷贝   深拷贝  深拷贝除了将所有的成员变量拷贝给新对象外，对于指针等指向外部资源的成员变量，还会为新对象分配一块新的内存，将指针指向的内容也拷贝一份，这样原有对象和新对象的内存都是互相独立的，避免两个对象互相影响和double free的错误。 在C++中，深拷贝必须由程序员显式地实现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++构造函数">
+<meta property="og:url" content="https://guts.homes/2025/06/12/cpp-constructor/index.html">
+<meta property="og:site_name" content="guts的小屋">
+<meta property="og:description" content="深拷贝和浅拷贝 浅拷贝  就是对变量的简单按位复制内存 在C++中，默认的拷贝构造函数制作按位复制，也就是浅拷贝   深拷贝  深拷贝除了将所有的成员变量拷贝给新对象外，对于指针等指向外部资源的成员变量，还会为新对象分配一块新的内存，将指针指向的内容也拷贝一份，这样原有对象和新对象的内存都是互相独立的，避免两个对象互相影响和double free的错误。 在C++中，深拷贝必须由程序员显式地实现">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-12T05:58:55.000Z">
+<meta property="article:modified_time" content="2025-06-12T05:58:55.101Z">
+<meta property="article:author" content="guts">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>C++构造函数 - guts的小屋</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"guts.homes","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"FkNpNoCOCKAFaE0xepwfi5bb-gzGzoHsz","app_key":"5g5TFpe1p9FCDfz4G0CPPxx2","server_url":"https://fknpnoco.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>guts的小屋</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="C++构造函数"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-06-12 13:58" pubdate>
+          2025年6月12日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          11 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">C++构造函数</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="深拷贝和浅拷贝"><a href="#深拷贝和浅拷贝" class="headerlink" title="深拷贝和浅拷贝"></a>深拷贝和浅拷贝</h3><ul>
+<li><strong>浅拷贝</strong> <ul>
+<li>就是对变量的简单按位复制内存</li>
+<li>在C++中，默认的拷贝构造函数制作按位复制，也就是浅拷贝</li>
+</ul>
+</li>
+<li><strong>深拷贝</strong> <ul>
+<li>深拷贝除了将所有的成员变量拷贝给新对象外，对于指针等指向外部资源的成员变量，还会为新对象分配一块新的内存，将指针指向的内容也拷贝一份，这样原有对象和新对象的内存都是互相独立的，避免两个对象互相影响和<code>double free</code>的错误。</li>
+<li>在C++中，深拷贝必须由程序员显式地实现</li>
+</ul>
+</li>
+</ul>
+<h3 id="拷贝构造函数和赋值构造函数"><a href="#拷贝构造函数和赋值构造函数" class="headerlink" title="拷贝构造函数和赋值构造函数"></a>拷贝构造函数和赋值构造函数</h3><ul>
+<li>拷贝构造函数<ul>
+<li>是对构造函数的重载，函数原型为 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-built_in">myClass</span>(<span class="hljs-type">const</span> myClass &amp; obj)&#123;&#125;<br></code></pre></td></tr></table></figure></li>
+<li>会在下面的情况被调用<ul>
+<li>用类的一个对象去初始化另一个对象时(<code>myClass obj2(obj1)</code>和<code>myClass obj3 = obj1</code>两种写法都是)</li>
+<li>当函数的形参是类的对象时（也就是值传递），引用传递不会调用拷贝构造函数</li>
+<li>当函数返回值是类的对象时</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>赋值构造函数<ul>
+<li>是赋值操作符的重载，函数原型为 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++">myClass&amp; <span class="hljs-keyword">operator</span>=(<span class="hljs-type">const</span> myClass &amp; obj) &#123;<br>   ...<br>   <span class="hljs-keyword">return</span> *<span class="hljs-keyword">this</span>;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li>会在用一个已有对象来给另一个已经创建好的对象赋值时被调用</li>
+</ul>
+</li>
+</ul>
+<p><strong>示例</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;cstring&gt;</span></span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-built_in">A</span>() &#123;<br>        data = <span class="hljs-keyword">new</span> <span class="hljs-type">char</span>[<span class="hljs-number">100</span>];<br>        std::cout &lt;&lt; <span class="hljs-string">&quot;构造函数 \n&quot;</span>;<br>    &#125;<br><br>    ~<span class="hljs-built_in">A</span>() &#123;<br>        <span class="hljs-keyword">delete</span>[] data;<br>        std::cout &lt;&lt; <span class="hljs-string">&quot;析构函数 \n&quot;</span>;<br>    &#125;<br><br>    <span class="hljs-built_in">A</span>(<span class="hljs-type">const</span> A&amp; a) &#123;<br>        data = <span class="hljs-keyword">new</span> <span class="hljs-type">char</span>[<span class="hljs-number">100</span>];<br>        <span class="hljs-built_in">memcpy</span>(data, a.data, <span class="hljs-number">100</span>);<br>        std::cout &lt;&lt; <span class="hljs-string">&quot;拷贝构造函数 \n&quot;</span>;<br>    &#125;<br><br>    A&amp; <span class="hljs-keyword">operator</span>=(<span class="hljs-type">const</span> A&amp; a) &#123;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span> != &amp;a) &#123;<br>            <span class="hljs-keyword">if</span> (!data) &#123;<br>                data = <span class="hljs-keyword">new</span> <span class="hljs-type">char</span>[<span class="hljs-number">100</span>];<br>            &#125;<br>            <span class="hljs-built_in">memcpy</span>(data, a.data, <span class="hljs-number">100</span>);<br>        &#125;<br>        std::cout &lt;&lt; <span class="hljs-string">&quot;赋值构造函数 \n&quot;</span>;<br>        <span class="hljs-keyword">return</span> *<span class="hljs-keyword">this</span>;<br>    &#125;<br><span class="hljs-keyword">private</span>:<br>    <span class="hljs-type">char</span>* data&#123;<span class="hljs-literal">nullptr</span>&#125;;<br>&#125;;<br><br><span class="hljs-function">A <span class="hljs-title">copyTest</span><span class="hljs-params">(A a)</span> </span>&#123;<span class="hljs-comment">// 这里会调用拷贝构造函数</span><br>    std::cout &lt;&lt; <span class="hljs-string">&quot;in copyTest \n&quot;</span>;<br>    <span class="hljs-keyword">return</span> a; <span class="hljs-comment">// 这里也会调用拷贝构造函数</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    A a; <span class="hljs-comment">// 构造函数</span><br>    <span class="hljs-function">A <span class="hljs-title">b</span><span class="hljs-params">(a)</span></span>; <span class="hljs-comment">// 拷贝构造函数</span><br>    std::cout &lt;&lt; <span class="hljs-string">&quot;=== \n&quot;</span>;<br>    A c = b; <span class="hljs-comment">// 拷贝构造函数</span><br>    std::cout &lt;&lt; <span class="hljs-string">&quot;=== \n&quot;</span>;<br>    <span class="hljs-built_in">copyTest</span>(c); <span class="hljs-comment">// 拷贝构造函数</span><br>    std::cout &lt;&lt; <span class="hljs-string">&quot;=== \n&quot;</span>;<br>    c = a; <span class="hljs-comment">// 赋值构造函数</span><br>&#125;<br><span class="hljs-comment">/* 完整的输出为</span><br><span class="hljs-comment">构造函数 </span><br><span class="hljs-comment">拷贝构造函数 </span><br><span class="hljs-comment">=== </span><br><span class="hljs-comment">拷贝构造函数 </span><br><span class="hljs-comment">=== </span><br><span class="hljs-comment">拷贝构造函数 </span><br><span class="hljs-comment">in copyTest </span><br><span class="hljs-comment">拷贝构造函数 </span><br><span class="hljs-comment">析构函数 </span><br><span class="hljs-comment">析构函数 </span><br><span class="hljs-comment">=== </span><br><span class="hljs-comment">赋值构造函数 </span><br><span class="hljs-comment">析构函数 </span><br><span class="hljs-comment">析构函数 </span><br><span class="hljs-comment">析构函数 </span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure>
+<h3 id="移动构造函数和移动赋值函数"><a href="#移动构造函数和移动赋值函数" class="headerlink" title="移动构造函数和移动赋值函数"></a>移动构造函数和移动赋值函数</h3><p>与拷贝构造函数和赋值构造函数的区别在于输入的参数为右值引用，且移动构造和移动赋值函数会<strong>直接将资源的所有权转移到当前对象</strong>，省去拷贝的步骤，能够大幅提升效率。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-built_in">A</span>() &#123;<br>        data = <span class="hljs-keyword">new</span> <span class="hljs-type">char</span>[<span class="hljs-number">100</span>];<br>        std::cout &lt;&lt; <span class="hljs-string">&quot;构造函数 \n&quot;</span>;<br>    &#125;<br><br>    ~<span class="hljs-built_in">A</span>() &#123;<br>        <span class="hljs-keyword">delete</span>[] data;<br>        std::cout &lt;&lt; <span class="hljs-string">&quot;析构函数 \n&quot;</span>;<br>    &#125;<br><br>    <span class="hljs-built_in">A</span>(A&amp;&amp; a) &#123;<br>        data = a.data;<span class="hljs-comment">// 直接将资源的所有权转移给当前对象</span><br>        a.data = <span class="hljs-literal">nullptr</span>;<br>        std::cout &lt;&lt; <span class="hljs-string">&quot;移动构造函数 \n&quot;</span>;<br>    &#125;<br><br>    A&amp; <span class="hljs-keyword">operator</span>=(A&amp;&amp; a) &#123;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span> != &amp;a) &#123;<br>            data = a.data; <span class="hljs-comment">// 直接将资源的所有权转移给当前对象</span><br>            a.data = <span class="hljs-literal">nullptr</span>;<br>        &#125;<br>        std::cout &lt;&lt; <span class="hljs-string">&quot;移动赋值函数 \n&quot;</span>;<br>        <span class="hljs-keyword">return</span> *<span class="hljs-keyword">this</span>;<br>    &#125;<br><br><span class="hljs-keyword">private</span>:<br>    <span class="hljs-type">char</span>* data&#123;<span class="hljs-literal">nullptr</span>&#125;;<br>&#125;;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>     A a; <span class="hljs-comment">// 构造函数</span><br>     A d; <span class="hljs-comment">// 构造函数</span><br>     <span class="hljs-function">A <span class="hljs-title">b</span><span class="hljs-params">(std::move(a))</span></span>; <span class="hljs-comment">// 移动构造函数</span><br>     std::cout &lt;&lt; <span class="hljs-string">&quot;=== \n&quot;</span>;<br>     A c = std::<span class="hljs-built_in">move</span>(b); <span class="hljs-comment">// 移动构造函数</span><br>     std::cout &lt;&lt; <span class="hljs-string">&quot;--- \n&quot;</span>;<br>     c = std::<span class="hljs-built_in">move</span>(d); <span class="hljs-comment">// 移动赋值函数</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="delete-explicit和default"><a href="#delete-explicit和default" class="headerlink" title="delete,explicit和default"></a><code>delete</code>,<code>explicit</code>和<code>default</code></h3><ul>
+<li><code>delet</code>是C++11引入的新特性，在成员函数后面使用<code>=delete</code>修饰，表示禁用该函数。智能指针<code>unique_ptr</code>就是通过禁用拷贝构造函数来实现的。  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++">A&amp; <span class="hljs-keyword">operator</span>=(<span class="hljs-type">const</span> A&amp; a) = <span class="hljs-keyword">delete</span>;<br></code></pre></td></tr></table></figure></li>
+<li><code>explicit</code>则在函数前面修饰，用于禁止隐式类型转换<ul>
+<li>在 C++ 中，任何只有一个参数（或者除了第一个参数外，其它参数都有默认值）的构造函数，默认就是一个<strong>转换构造函数</strong>（converting constructor），它允许编译器在需要的时候把那个参数类型 <strong>隐式</strong> 地转换成该类的对象，例如<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-built_in">A</span>(<span class="hljs-type">int</span> a) &#123; a_ = a; &#125;<br>    ~<span class="hljs-built_in">A</span>() &#123;&#125;<br><br><span class="hljs-keyword">private</span>:<br>    <span class="hljs-type">int</span> a_;<br>&#125;;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-function">A <span class="hljs-title">a</span><span class="hljs-params">(<span class="hljs-number">1</span>)</span></span>;<br>    A b = <span class="hljs-number">100</span>; <span class="hljs-comment">// 会触发隐式类型转换</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li>但这样的隐式有时候并不是我们所期望的，可能只是代码写错了，为了避免这种情况，可以用<code>explicit</code>修饰构造函数<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">A</span><span class="hljs-params">(<span class="hljs-type">int</span> a)</span> </span>&#123; a_ = a; &#125;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li>除了构造函数外，<code>explicit</code>还可以用于修饰类型转换函数（C++11）<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">B</span> &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-keyword">operator</span> <span class="hljs-title">bool</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>&#123; <span class="hljs-keyword">return</span> some_flag; &#125;<br>&#125;;<br><br>B b;<br><span class="hljs-keyword">if</span> (b) &#123;      <span class="hljs-comment">// 错误：operator bool() 是 explicit 的，不能隐式转换</span><br>&#125;<br><span class="hljs-type">bool</span> x = <span class="hljs-built_in">static_cast</span>&lt;<span class="hljs-type">bool</span>&gt;(b);  <span class="hljs-comment">// OK：显式转换</span><br><br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><code>default</code>一般用于修饰构造函数，要求编译器生成默认的构造函数。  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;​<br><span class="hljs-keyword">public</span>:​<br>    <span class="hljs-built_in">A</span>(<span class="hljs-type">int</span> a) &#123; a_ = a; &#125;​<br>    ~<span class="hljs-built_in">A</span>() &#123;&#125;​<br>    ​<br><span class="hljs-keyword">private</span>:​<br>    <span class="hljs-type">int</span> a_;​<br>&#125;;​<br>​<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    A a;<br>&#125;<br></code></pre></td></tr></table></figure>
+  上面的代码会由于<code>A</code>没有无参数的构造函数而导致报错，可以在<code>A</code>中添加  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-built_in">A</span>() = <span class="hljs-keyword">default</span>;<br></code></pre></td></tr></table></figure>
+  解决，但是默认的构造函数并不会将<code>a_</code>初始化。<br>  此外<code>default</code>也可以修饰拷贝构造函数。</li>
+</ul>
+<!-- ### 自赋值问题的解决
+C++允许一个变量有多个别名（指针和引用），因此可能会导致自赋值的问题
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C++">Widget&amp; Widget::<span class="hljs-keyword">operator</span>=(<span class="hljs-type">const</span> Widget&amp; rhs)&#123;<br>    <span class="hljs-keyword">delete</span> pb;                   <span class="hljs-comment">// stop using current bitmap</span><br>    pb = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Bitmap</span>(*rhs.pb);    <span class="hljs-comment">// start using a copy of rhs&#x27;s bitmap</span><br>    <span class="hljs-keyword">return</span> *<span class="hljs-keyword">this</span>;                <span class="hljs-comment">// see Item 10</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>例如上面的代码，当<code>rhs == *this</code>时，<code>delete pb</code>使得<code>rhs.pb</code>成为空值，接下来<code>new</code>的数据便是空的。自赋值问题的解决有三种方法</p>
+<ol>
+<li>检查传入的参数是否是<code>*this</code><br>这个方法是最直接也是组容易想到的，但却不是<strong>异常安全</strong>的 –&gt;</li>
+</ol>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/myrosy/p/17377409.html">[cnblog.com] C++ 深拷贝、浅拷贝及拷贝构造函数</a></li>
+</ul>
+<!-- * [Effective C++ 11：赋值运算符的自赋值问题](https://harttle.land/2015/07/30/effective-cpp-11.html)  -->
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/C/" class="category-chain-item">C++</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>C++构造函数</div>
+      <div>https://guts.homes/2025/06/12/cpp-constructor/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>guts</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年6月12日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/06/11/cpp-lrval/" title="C++中的值类型">
+                        <span class="hidden-mobile">C++中的值类型</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"FkNpNoCOCKAFaE0xepwfi5bb-gzGzoHsz","appKey":"5g5TFpe1p9FCDfz4G0CPPxx2","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
