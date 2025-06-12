@@ -1,0 +1,692 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/guts.png">
+  <link rel="icon" href="/guts.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="guts">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="C++11中引入了auto和decltype，他们可以在编译期推导出出变量或表达式的类型，大幅简化了代码。 autoauto关键字允许编译器在编译期间自动推导出变量的类型。 1234auto a &#x3D; 10;       &#x2F;&#x2F; a是int型​int i &#x3D; 10;​auto b &#x3D; i;        &#x2F;&#x2F; b是int型​auto d &#x3D; 2.0;      &#x2F;&#x2F; d是double型 推导规则 au">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++中的类型推断">
+<meta property="og:url" content="https://guts.homes/2025/06/12/cpp-auto-decltype/index.html">
+<meta property="og:site_name" content="guts的小屋">
+<meta property="og:description" content="C++11中引入了auto和decltype，他们可以在编译期推导出出变量或表达式的类型，大幅简化了代码。 autoauto关键字允许编译器在编译期间自动推导出变量的类型。 1234auto a &#x3D; 10;       &#x2F;&#x2F; a是int型​int i &#x3D; 10;​auto b &#x3D; i;        &#x2F;&#x2F; b是int型​auto d &#x3D; 2.0;      &#x2F;&#x2F; d是double型 推导规则 au">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-12T08:06:31.000Z">
+<meta property="article:modified_time" content="2025-06-12T09:43:59.078Z">
+<meta property="article:author" content="guts">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>C++中的类型推断 - guts的小屋</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"guts.homes","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"FkNpNoCOCKAFaE0xepwfi5bb-gzGzoHsz","app_key":"5g5TFpe1p9FCDfz4G0CPPxx2","server_url":"https://fknpnoco.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>guts的小屋</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="C++中的类型推断"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-06-12 16:06" pubdate>
+          2025年6月12日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          959 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          8 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">C++中的类型推断</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>C++11中引入了<code>auto</code>和<code>decltype</code>，他们可以在编译期推导出出变量或表达式的类型，大幅简化了代码。</p>
+<h2 id="auto"><a href="#auto" class="headerlink" title="auto"></a><code>auto</code></h2><p><code>auto</code>关键字允许编译器在编译期间自动推导出变量的类型。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">auto</span> a = <span class="hljs-number">10</span>;       <span class="hljs-comment">// a是int型​</span><br><span class="hljs-type">int</span> i = <span class="hljs-number">10</span>;​<br><span class="hljs-keyword">auto</span> b = i;        <span class="hljs-comment">// b是int型​</span><br><span class="hljs-keyword">auto</span> d = <span class="hljs-number">2.0</span>;      <span class="hljs-comment">// d是double型</span><br></code></pre></td></tr></table></figure>
+<h3 id="推导规则"><a href="#推导规则" class="headerlink" title="推导规则"></a>推导规则</h3><ul>
+<li><code>auto</code>变量必须在声明时立即初始化</li>
+<li>当一行中声明了多个<code>auto</code>变量时，他们必须能够从一个共同的初始化表达式中推导出相同类型。</li>
+<li>在推导类型时，<code>auto</code>会忽略等号右边的<code>const</code>、<code>volatile</code>（cv）属性和引用类型，除非显式地声明为引用或指针。</li>
+<li><code>auto</code>不能用作函数的参数</li>
+<li><code>auto</code>无法作为模板</li>
+<li><code>auto</code>在类中不能用作非静态的成员变量</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">func</span><span class="hljs-params">(<span class="hljs-keyword">auto</span> value)</span> </span>&#123;&#125; <span class="hljs-comment">// error，auto不能用作函数参数​</span><br>​<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;​<br>    <span class="hljs-keyword">auto</span> a = <span class="hljs-number">1</span>; <span class="hljs-comment">// error，在类中auto不能用作非静态成员变量​</span><br>    <span class="hljs-type">static</span> <span class="hljs-keyword">auto</span> b = <span class="hljs-number">1</span>; <span class="hljs-comment">// error，这里与auto无关，正常static int b = 1也不可以​</span><br>    <span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-keyword">auto</span> c = <span class="hljs-number">1</span>; <span class="hljs-comment">// ok​</span><br>&#125;;​<br>​<br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">func2</span><span class="hljs-params">()</span> </span>&#123;​<br>    <span class="hljs-type">int</span> a[<span class="hljs-number">10</span>] = &#123;<span class="hljs-number">0</span>&#125;;​<br>    <span class="hljs-keyword">auto</span> b = a; <span class="hljs-comment">// ok​</span><br>    <span class="hljs-keyword">auto</span> c[<span class="hljs-number">10</span>] = a; <span class="hljs-comment">// error，auto不能定义数组，可以定义指针​</span><br><br>    vector&lt;<span class="hljs-type">int</span>&gt; d;​ <br>    vector&lt;<span class="hljs-keyword">auto</span>&gt; f = d; <span class="hljs-comment">// error，auto无法推导出模板参数​</span><br>    <br>    <span class="hljs-keyword">auto</span> e; <span class="hljs-comment">// error，使用auto必须马上初始化</span><br>    <br>    <span class="hljs-type">int</span> i = <span class="hljs-number">10</span>;​<br>    <span class="hljs-keyword">auto</span> ai = i, &amp;bi = i, *ci = &amp;i; <span class="hljs-comment">// a是int，b是int的引用，c是int的指针​</span><br>    <br>    <span class="hljs-type">int</span> j = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">auto</span> di = i, aj = j; <span class="hljs-comment">//error, </span><br><br><br>    <span class="hljs-keyword">auto</span> f = <span class="hljs-number">0</span>, g = <span class="hljs-number">1.0</span>; <span class="hljs-comment">// error，0和1.0类型不同，编译器懵了，无法推导</span><br>    <br>    <span class="hljs-type">const</span> <span class="hljs-type">int</span> x = <span class="hljs-number">10</span>;​<br>    <span class="hljs-keyword">auto</span> y = x; <span class="hljs-comment">// y是int，忽略了const属性​</span><br>    <span class="hljs-keyword">auto</span>&amp; z = x; <span class="hljs-comment">// z是const int&amp;，保留了引用和const属性</span><br>&#125;​<br></code></pre></td></tr></table></figure>
+
+<h2 id="decltype"><a href="#decltype" class="headerlink" title="decltype"></a><code>decltype</code></h2><p>与<code>auto</code>不同，<code>decltype</code>用于推导表达式的类型而非变量的类型。其在编译期间发挥分析表达式的类型，但是表达式本身不会进行运算。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">func</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>; &#125;​<br><span class="hljs-keyword">decltype</span>(<span class="hljs-built_in">func</span>()) i; <span class="hljs-comment">// i为int类型，与func()返回值类型相同​</span><br><span class="hljs-type">int</span> x = <span class="hljs-number">0</span>;​<br><span class="hljs-keyword">decltype</span>(x) y; <span class="hljs-comment">// y是int类型，与x类型相同​</span><br><span class="hljs-keyword">decltype</span>(x + y) z; <span class="hljs-comment">// z是int类型，与表达式x + y的类型相同</span><br></code></pre></td></tr></table></figure>
+<h3 id="推导规则-1"><a href="#推导规则-1" class="headerlink" title="推导规则"></a>推导规则</h3><ul>
+<li>如果<code>exp</code>是一个没有圆括号的标识符表达式（id-expression），例如变量名、函数名和枚举常量名，那么<code>decltype(exp)</code>的类型与<code>exp</code>的类型相同。例如上面代码中的<code>decltype(x)</code>推导出的类型是<code>int</code>，这是因为<code>decltype(x)</code>和<code>decltype((x))</code>是不同的类型<ul>
+<li>当<code>x</code>是变量名时，<code>decltype</code> 直接获取该变量的声明类型，结果包含原始的 <code>const</code> 限定符、引用类型等修饰符。</li>
+<li>当表达式是 <code>(x)</code>（带括号）时，C++ 将其视为普通左值表达式，<code>decltype</code> 会推导出表达式结果类型和值类别，对命名变量使用括号会添加引用。</li>
+</ul>
+</li>
+<li>如果<code>exp</code>是函数调用，则<code>decltype(exp)</code>的类型与函数返回值的类型相同。</li>
+<li>如果<code>exp</code>是左值，则<code>decltype(exp)</code>是<code>exp</code>类型的左值引用</li>
+<li>与<code>auto</code>不同，<code>decltype</code>会保留<code>exp</code>的cv属性和引用类型</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-type">int</span> a = <span class="hljs-number">0</span>, b = <span class="hljs-number">0</span>;​<br><span class="hljs-keyword">decltype</span>(a + b) c = <span class="hljs-number">0</span>; <span class="hljs-comment">// c是int，因为(a+b)返回一个右值​</span><br><span class="hljs-keyword">decltype</span>(a += b) d = a; <span class="hljs-comment">// d是int&amp;，因为(a+=b)返回一个左值​</span><br>d = <span class="hljs-number">20</span>; <span class="hljs-comment">// 修改d实际上修改了a的值​</span><br><br><span class="hljs-type">const</span> <span class="hljs-type">int</span>&amp; ref = a;​<br><span class="hljs-keyword">decltype</span>(ref) e = <span class="hljs-number">20</span>; <span class="hljs-comment">// e是const int&amp;，保留了const引用属性</span><br></code></pre></td></tr></table></figure>
+<p><code>decltype</code>常和<code>auto</code>一起配合使用。比如处理复杂的类型和模板编程</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs C++">std::vector&lt;<span class="hljs-type">int</span>&gt; vec = &#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>&#125;;​<br><span class="hljs-keyword">auto</span> it = vec.<span class="hljs-built_in">begin</span>(); <span class="hljs-comment">// 使用auto简化迭代器类型声明​</span><br><span class="hljs-keyword">decltype</span>(*it) value = *it; <span class="hljs-comment">// 使用decltype推导迭代器指向的元素的类型</span><br></code></pre></td></tr></table></figure>
+<p>以及推导函数返回值的类型</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">typename</span> U&gt;​<br><span class="hljs-function"><span class="hljs-keyword">auto</span> <span class="hljs-title">add</span><span class="hljs-params">(T t, U u)</span> -&gt; <span class="hljs-title">decltype</span><span class="hljs-params">(t + u)</span> </span>&#123;​<br>    <span class="hljs-keyword">return</span> t + u;​<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>需要注意</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">typename</span> U&gt;​<br><span class="hljs-keyword">decltype</span>(t + u) <span class="hljs-built_in">add</span>(T t, U u) &#123; <span class="hljs-comment">// t和u尚未定义​</span><br>    <span class="hljs-keyword">return</span> t + u;​<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这段代码在C++11上是编译不过的，因为在<code>decltype(t + u)</code>推导时，<code>t</code>和<code>u</code>尚未定义，就会编译出错。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>C++中的类型推断</div>
+      <div>https://guts.homes/2025/06/12/cpp-auto-decltype/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>guts</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年6月12日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/06/12/cpp-constructor/" title="C++构造函数">
+                        <span class="hidden-mobile">C++构造函数</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"FkNpNoCOCKAFaE0xepwfi5bb-gzGzoHsz","appKey":"5g5TFpe1p9FCDfz4G0CPPxx2","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
