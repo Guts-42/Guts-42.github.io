@@ -19,15 +19,15 @@
   <meta name="author" content="guts">
   <meta name="keywords" content="">
   
-    <meta name="description" content="C++11中引入了auto和decltype，他们可以在编译期推导出出变量或表达式的类型，大幅简化了代码。 autoauto关键字允许编译器在编译期间自动推导出变量的类型。 1234auto a &#x3D; 10;       &#x2F;&#x2F; a是int型​int i &#x3D; 10;​auto b &#x3D; i;        &#x2F;&#x2F; b是int型​auto d &#x3D; 2.0;      &#x2F;&#x2F; d是double型 推导规则 au">
+    <meta name="description" content="基本概念列表初始化是C++11引入的新特性，通过&#123;&#125;来初始化对象，其优点在于  统一的初始化语法，内置类型、数组、类和标准库容器都可以列表初始化 类型安全，可以防止窄化转换。窄化转换是指将较大的类型转换为较小的类型，这可能会导致数据的丢失。例如从double到int就是窄化的类型转换，如果用double类型列表初始化int类型的变量，会发生编译错误，而传统的&#x3D;初始化则不会  应">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C++中的类型推断">
-<meta property="og:url" content="https://guts.homes/2025/06/12/cpp-auto-decltype/index.html">
+<meta property="og:title" content="C++列表初始化">
+<meta property="og:url" content="https://guts.homes/2025/06/13/cpp-list-initialization/index.html">
 <meta property="og:site_name" content="guts的小屋">
-<meta property="og:description" content="C++11中引入了auto和decltype，他们可以在编译期推导出出变量或表达式的类型，大幅简化了代码。 autoauto关键字允许编译器在编译期间自动推导出变量的类型。 1234auto a &#x3D; 10;       &#x2F;&#x2F; a是int型​int i &#x3D; 10;​auto b &#x3D; i;        &#x2F;&#x2F; b是int型​auto d &#x3D; 2.0;      &#x2F;&#x2F; d是double型 推导规则 au">
+<meta property="og:description" content="基本概念列表初始化是C++11引入的新特性，通过&#123;&#125;来初始化对象，其优点在于  统一的初始化语法，内置类型、数组、类和标准库容器都可以列表初始化 类型安全，可以防止窄化转换。窄化转换是指将较大的类型转换为较小的类型，这可能会导致数据的丢失。例如从double到int就是窄化的类型转换，如果用double类型列表初始化int类型的变量，会发生编译错误，而传统的&#x3D;初始化则不会  应">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-06-12T08:06:31.000Z">
-<meta property="article:modified_time" content="2025-06-13T05:18:49.663Z">
+<meta property="article:published_time" content="2025-06-13T06:31:01.000Z">
+<meta property="article:modified_time" content="2025-06-13T06:31:01.040Z">
 <meta property="article:author" content="guts">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -35,7 +35,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>C++中的类型推断 - guts的小屋</title>
+  <title>C++列表初始化 - guts的小屋</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -202,7 +202,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="C++中的类型推断"></span>
+            <span id="subtitle" data-typed-text="C++列表初始化"></span>
           
         </div>
 
@@ -213,8 +213,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-06-12 16:06" pubdate>
-          2025年6月12日 下午
+        <time datetime="2025-06-13 14:31" pubdate>
+          2025年6月13日 下午
         </time>
       </span>
     
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          959 字
+          482 字
         
       </span>
     
@@ -236,7 +236,7 @@
         
         
         
-          8 分钟
+          5 分钟
         
       </span>
     
@@ -282,44 +282,29 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">C++中的类型推断</h1>
+            <h1 id="seo-header">C++列表初始化</h1>
             
             
               <div class="markdown-body">
                 
-                <p>C++11中引入了<code>auto</code>和<code>decltype</code>，他们可以在编译期推导出出变量或表达式的类型，大幅简化了代码。</p>
-<h2 id="auto"><a href="#auto" class="headerlink" title="auto"></a><code>auto</code></h2><p><code>auto</code>关键字允许编译器在编译期间自动推导出变量的类型。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">auto</span> a = <span class="hljs-number">10</span>;       <span class="hljs-comment">// a是int型​</span><br><span class="hljs-type">int</span> i = <span class="hljs-number">10</span>;​<br><span class="hljs-keyword">auto</span> b = i;        <span class="hljs-comment">// b是int型​</span><br><span class="hljs-keyword">auto</span> d = <span class="hljs-number">2.0</span>;      <span class="hljs-comment">// d是double型</span><br></code></pre></td></tr></table></figure>
-<h3 id="推导规则"><a href="#推导规则" class="headerlink" title="推导规则"></a>推导规则</h3><ul>
-<li><code>auto</code>变量必须在声明时立即初始化</li>
-<li>当一行中声明了多个<code>auto</code>变量时，他们必须能够从一个共同的初始化表达式中推导出相同类型。</li>
-<li>在推导类型时，<code>auto</code>会忽略等号右边的<code>const</code>、<code>volatile</code>（cv）属性和引用类型，除非显式地声明为引用或指针。</li>
-<li><code>auto</code>不能用作函数的参数</li>
-<li><code>auto</code>无法作为模板</li>
-<li><code>auto</code>在类中不能用作非静态的成员变量</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">func</span><span class="hljs-params">(<span class="hljs-keyword">auto</span> value)</span> </span>&#123;&#125; <span class="hljs-comment">// error，auto不能用作函数参数​</span><br>​<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;​<br>    <span class="hljs-keyword">auto</span> a = <span class="hljs-number">1</span>; <span class="hljs-comment">// error，在类中auto不能用作非静态成员变量​</span><br>    <span class="hljs-type">static</span> <span class="hljs-keyword">auto</span> b = <span class="hljs-number">1</span>; <span class="hljs-comment">// error，这里与auto无关，正常static int b = 1也不可以​</span><br>    <span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-keyword">auto</span> c = <span class="hljs-number">1</span>; <span class="hljs-comment">// ok​</span><br>&#125;;​<br>​<br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">func2</span><span class="hljs-params">()</span> </span>&#123;​<br>    <span class="hljs-type">int</span> a[<span class="hljs-number">10</span>] = &#123;<span class="hljs-number">0</span>&#125;;​<br>    <span class="hljs-keyword">auto</span> b = a; <span class="hljs-comment">// ok​</span><br>    <span class="hljs-keyword">auto</span> c[<span class="hljs-number">10</span>] = a; <span class="hljs-comment">// error，auto不能定义数组，可以定义指针​</span><br><br>    vector&lt;<span class="hljs-type">int</span>&gt; d;​ <br>    vector&lt;<span class="hljs-keyword">auto</span>&gt; f = d; <span class="hljs-comment">// error，auto无法推导出模板参数​</span><br>    <br>    <span class="hljs-keyword">auto</span> e; <span class="hljs-comment">// error，使用auto必须马上初始化</span><br>    <br>    <span class="hljs-type">int</span> i = <span class="hljs-number">10</span>;​<br>    <span class="hljs-keyword">auto</span> ai = i, &amp;bi = i, *ci = &amp;i; <span class="hljs-comment">// a是int，b是int的引用，c是int的指针​</span><br>    <br>    <span class="hljs-type">int</span> j = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">auto</span> di = i, aj = j; <span class="hljs-comment">//error, </span><br><br><br>    <span class="hljs-keyword">auto</span> f = <span class="hljs-number">0</span>, g = <span class="hljs-number">1.0</span>; <span class="hljs-comment">// error，0和1.0类型不同，编译器懵了，无法推导</span><br>    <br>    <span class="hljs-type">const</span> <span class="hljs-type">int</span> x = <span class="hljs-number">10</span>;​<br>    <span class="hljs-keyword">auto</span> y = x; <span class="hljs-comment">// y是int，忽略了const属性​</span><br>    <span class="hljs-keyword">auto</span>&amp; z = x; <span class="hljs-comment">// z是const int&amp;，保留了引用和const属性</span><br>&#125;​<br></code></pre></td></tr></table></figure>
+                <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>列表初始化是C++11引入的新特性，通过<code>&#123;&#125;</code>来初始化对象，其优点在于</p>
+<ol>
+<li>统一的初始化语法，内置类型、数组、类和标准库容器都可以列表初始化</li>
+<li>类型安全，可以防止窄化转换。窄化转换是指将较大的类型转换为较小的类型，这可能会导致数据的丢失。例如从<code>double</code>到<code>int</code>就是<strong>窄化</strong>的类型转换，如果用<code>double</code>类型列表初始化<code>int</code>类型的变量，会发生编译错误，而传统的<code>=</code>初始化则不会</li>
+</ol>
+<h2 id="应用实例"><a href="#应用实例" class="headerlink" title="应用实例"></a>应用实例</h2><h3 id="1-初始化内置类型"><a href="#1-初始化内置类型" class="headerlink" title="1. 初始化内置类型"></a>1. 初始化内置类型</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-type">int</span> a = &#123;<span class="hljs-number">10</span>&#125;;   <span class="hljs-comment">// 使用列表初始化</span><br><span class="hljs-type">int</span> b&#123;<span class="hljs-number">20</span>&#125;;      <span class="hljs-comment">// 另一种写法</span><br></code></pre></td></tr></table></figure>
 
-<h2 id="decltype"><a href="#decltype" class="headerlink" title="decltype"></a><code>decltype</code></h2><p>与<code>auto</code>不同，<code>decltype</code>用于推导表达式的类型而非变量的类型。其在编译期间发挥分析表达式的类型，但是表达式本身不会进行运算。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">func</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>; &#125;​<br><span class="hljs-keyword">decltype</span>(<span class="hljs-built_in">func</span>()) i; <span class="hljs-comment">// i为int类型，与func()返回值类型相同​</span><br><span class="hljs-type">int</span> x = <span class="hljs-number">0</span>;​<br><span class="hljs-keyword">decltype</span>(x) y; <span class="hljs-comment">// y是int类型，与x类型相同​</span><br><span class="hljs-keyword">decltype</span>(x + y) z; <span class="hljs-comment">// z是int类型，与表达式x + y的类型相同</span><br></code></pre></td></tr></table></figure>
-<h3 id="推导规则-1"><a href="#推导规则-1" class="headerlink" title="推导规则"></a>推导规则</h3><ul>
-<li>如果<code>exp</code>是一个没有圆括号的标识符表达式（id-expression），例如变量名、函数名和枚举常量名，那么<code>decltype(exp)</code>的类型与<code>exp</code>的类型相同。例如上面代码中的<code>decltype(x)</code>推导出的类型是<code>int</code>，这是因为<code>decltype(x)</code>和<code>decltype((x))</code>是不同的类型<ul>
-<li>当<code>x</code>是变量名时，<code>decltype</code> 直接获取该变量的声明类型，结果包含原始的 <code>const</code> 限定符、引用类型等修饰符。</li>
-<li>当表达式是 <code>(x)</code>（带括号）时，C++ 将其视为普通左值表达式，<code>decltype</code> 会推导出表达式结果类型和值类别，对命名变量使用括号会添加引用。</li>
-</ul>
-</li>
-<li>如果<code>exp</code>是函数调用，则<code>decltype(exp)</code>的类型与函数返回值的类型相同。</li>
-<li>如果<code>exp</code>是左值，则<code>decltype(exp)</code>是<code>exp</code>类型的左值引用</li>
-<li>与<code>auto</code>不同，<code>decltype</code>会保留<code>exp</code>的cv属性和引用类型</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-type">int</span> a = <span class="hljs-number">0</span>, b = <span class="hljs-number">0</span>;​<br><span class="hljs-keyword">decltype</span>(a + b) c = <span class="hljs-number">0</span>; <span class="hljs-comment">// c是int，因为(a+b)返回一个右值​</span><br><span class="hljs-keyword">decltype</span>(a += b) d = a; <span class="hljs-comment">// d是int&amp;，因为(a+=b)返回一个左值​</span><br>d = <span class="hljs-number">20</span>; <span class="hljs-comment">// 修改d实际上修改了a的值​</span><br><br><span class="hljs-type">const</span> <span class="hljs-type">int</span>&amp; ref = a;​<br><span class="hljs-keyword">decltype</span>(ref) e = <span class="hljs-number">20</span>; <span class="hljs-comment">// e是const int&amp;，保留了const引用属性</span><br></code></pre></td></tr></table></figure>
-<p><code>decltype</code>常和<code>auto</code>一起配合使用。比如处理复杂的类型和模板编程</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs C++">std::vector&lt;<span class="hljs-type">int</span>&gt; vec = &#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>&#125;;​<br><span class="hljs-keyword">auto</span> it = vec.<span class="hljs-built_in">begin</span>(); <span class="hljs-comment">// 使用auto简化迭代器类型声明​</span><br><span class="hljs-keyword">decltype</span>(*it) value = *it; <span class="hljs-comment">// 使用decltype推导迭代器指向的元素的类型</span><br></code></pre></td></tr></table></figure>
-<p>以及推导函数返回值的类型</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">typename</span> U&gt;​<br><span class="hljs-function"><span class="hljs-keyword">auto</span> <span class="hljs-title">add</span><span class="hljs-params">(T t, U u)</span> -&gt; <span class="hljs-title">decltype</span><span class="hljs-params">(t + u)</span> </span>&#123;​<br>    <span class="hljs-keyword">return</span> t + u;​<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>需要注意</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">typename</span> U&gt;​<br><span class="hljs-keyword">decltype</span>(t + u) <span class="hljs-built_in">add</span>(T t, U u) &#123; <span class="hljs-comment">// t和u尚未定义​</span><br>    <span class="hljs-keyword">return</span> t + u;​<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>这段代码在C++11上是编译不过的，因为在<code>decltype(t + u)</code>推导时，<code>t</code>和<code>u</code>尚未定义，就会编译出错。</p>
+<h3 id="2-初始化数组"><a href="#2-初始化数组" class="headerlink" title="2. 初始化数组"></a>2. 初始化数组</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-type">int</span> arr[<span class="hljs-number">3</span>] = &#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>&#125;; <span class="hljs-comment">// 数组初始化</span><br><span class="hljs-type">int</span> arr2[] = &#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>&#125;;  <span class="hljs-comment">// 自动推导数组大小</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-初始化类对象"><a href="#3-初始化类对象" class="headerlink" title="3. 初始化类对象"></a>3. 初始化类对象</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Person</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    std::string name;<br>    <span class="hljs-type">int</span> age;<br><br>    <span class="hljs-built_in">Person</span>(<span class="hljs-type">const</span> std::string&amp; n, <span class="hljs-type">int</span> a) : <span class="hljs-built_in">name</span>(n), <span class="hljs-built_in">age</span>(a) &#123;&#125;<br>&#125;;<br>Person p1&#123;<span class="hljs-string">&quot;John&quot;</span>, <span class="hljs-number">30</span>&#125;;  <span class="hljs-comment">// 使用列表初始化类的成员变量，需要与成员变量的声明顺序一致</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="4-初始化标准库容器"><a href="#4-初始化标准库容器" class="headerlink" title="4. 初始化标准库容器"></a>4. 初始化标准库容器</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs C++">std::vector&lt;<span class="hljs-type">int</span>&gt; vec = &#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>&#125;; <span class="hljs-comment">// 初始化 vector</span><br>std::vector&lt;<span class="hljs-type">int</span>&gt; vec2&#123;<span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>&#125;;      <span class="hljs-comment">// 另一种写法</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="5-初始化结构体"><a href="#5-初始化结构体" class="headerlink" title="5. 初始化结构体"></a>5. 初始化结构体</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Point</span> &#123;<br>    <span class="hljs-type">int</span> x, y;<br>&#125;;<br><br>Point p1 = &#123;<span class="hljs-number">10</span>, <span class="hljs-number">20</span>&#125;;  <span class="hljs-comment">// 使用列表初始化</span><br>Point p2&#123;<span class="hljs-number">30</span>, <span class="hljs-number">40</span>&#125;;     <span class="hljs-comment">// 另一种写法</span><br></code></pre></td></tr></table></figure>
+<h2 id="列表初始化与重载"><a href="#列表初始化与重载" class="headerlink" title="列表初始化与重载"></a>列表初始化与重载</h2><p>函数可以使用列表初始化作为输入来重载</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">foo</span><span class="hljs-params">(<span class="hljs-type">int</span> a)</span></span>;  <br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">foo</span><span class="hljs-params">(<span class="hljs-type">const</span> std::initializer_list&lt;<span class="hljs-type">int</span>&gt;&amp; list)</span></span>;  <br>  <br><span class="hljs-built_in">foo</span>(&#123;<span class="hljs-number">10</span>&#125;); <span class="hljs-comment">// 调用接受 initializer_list 的 foo 版本  </span><br><span class="hljs-built_in">foo</span>(<span class="hljs-number">10</span>);   <span class="hljs-comment">// 调用接受 int 的 foo 版本</span><br></code></pre></td></tr></table></figure>
+<p>类的构造函数也可以通过列表初始化来重载</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyClass</span> &#123;  <br><span class="hljs-keyword">public</span>:  <br>    <span class="hljs-built_in">MyClass</span>(<span class="hljs-type">const</span> std::initializer_list&lt;<span class="hljs-type">int</span>&gt;&amp; values) &#123;  <br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> value : values) &#123;  <br>            <span class="hljs-comment">// 使用values初始化对象的状态...  </span><br>        &#125;  <br>    &#125;  <br>    <span class="hljs-comment">// ... 其他成员函数 ...  </span><br>&#125;;  <br>  <br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;  <br>    MyClass obj&#123;<span class="hljs-number">10</span>, <span class="hljs-number">20</span>, <span class="hljs-number">30</span>&#125;; <span class="hljs-comment">// 使用列表初始化创建对象  </span><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;  <br>&#125;<br></code></pre></td></tr></table></figure>
 
                 
               </div>
@@ -358,8 +343,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>C++中的类型推断</div>
-      <div>https://guts.homes/2025/06/12/cpp-auto-decltype/</div>
+      <div>C++列表初始化</div>
+      <div>https://guts.homes/2025/06/13/cpp-list-initialization/</div>
     </div>
     <div class="license-meta">
       
@@ -371,7 +356,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年6月12日</div>
+          <div>2025年6月13日</div>
         </div>
       
       
@@ -403,9 +388,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/06/13/cpp-list-initialization/" title="C++列表初始化">
+                      <a href="/2025/06/13/cpp-type-conversion/" title="C++类型转换">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">C++列表初始化</span>
+                        <span class="hidden-mobile">C++类型转换</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -413,8 +398,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/06/12/cpp-constructor/" title="C++构造函数">
-                        <span class="hidden-mobile">C++构造函数</span>
+                      <a href="/2025/06/12/cpp-auto-decltype/" title="C++中的类型推断">
+                        <span class="hidden-mobile">C++中的类型推断</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

@@ -19,15 +19,15 @@
   <meta name="author" content="guts">
   <meta name="keywords" content="">
   
-    <meta name="description" content="C++11中引入了auto和decltype，他们可以在编译期推导出出变量或表达式的类型，大幅简化了代码。 autoauto关键字允许编译器在编译期间自动推导出变量的类型。 1234auto a &#x3D; 10;       &#x2F;&#x2F; a是int型​int i &#x3D; 10;​auto b &#x3D; i;        &#x2F;&#x2F; b是int型​auto d &#x3D; 2.0;      &#x2F;&#x2F; d是double型 推导规则 au">
+    <meta name="description" content="C风格强制类型转换C语言中强制类型转换的方式为 1(type_name) expression 例如 1234567891011#include &lt;stdio.h&gt; int main()&#123;   int sum &#x3D; 17, count &#x3D; 5;   double mean;    mean &#x3D; (double) sum &#x2F; count;   printf(&quot;Value">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C++中的类型推断">
-<meta property="og:url" content="https://guts.homes/2025/06/12/cpp-auto-decltype/index.html">
+<meta property="og:title" content="C++类型转换">
+<meta property="og:url" content="https://guts.homes/2025/06/13/cpp-type-conversion/index.html">
 <meta property="og:site_name" content="guts的小屋">
-<meta property="og:description" content="C++11中引入了auto和decltype，他们可以在编译期推导出出变量或表达式的类型，大幅简化了代码。 autoauto关键字允许编译器在编译期间自动推导出变量的类型。 1234auto a &#x3D; 10;       &#x2F;&#x2F; a是int型​int i &#x3D; 10;​auto b &#x3D; i;        &#x2F;&#x2F; b是int型​auto d &#x3D; 2.0;      &#x2F;&#x2F; d是double型 推导规则 au">
+<meta property="og:description" content="C风格强制类型转换C语言中强制类型转换的方式为 1(type_name) expression 例如 1234567891011#include &lt;stdio.h&gt; int main()&#123;   int sum &#x3D; 17, count &#x3D; 5;   double mean;    mean &#x3D; (double) sum &#x2F; count;   printf(&quot;Value">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-06-12T08:06:31.000Z">
-<meta property="article:modified_time" content="2025-06-13T05:18:49.663Z">
+<meta property="article:published_time" content="2025-06-13T06:31:13.000Z">
+<meta property="article:modified_time" content="2025-06-13T07:16:08.425Z">
 <meta property="article:author" content="guts">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -35,7 +35,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>C++中的类型推断 - guts的小屋</title>
+  <title>C++类型转换 - guts的小屋</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -202,7 +202,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="C++中的类型推断"></span>
+            <span id="subtitle" data-typed-text="C++类型转换"></span>
           
         </div>
 
@@ -213,8 +213,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-06-12 16:06" pubdate>
-          2025年6月12日 下午
+        <time datetime="2025-06-13 14:31" pubdate>
+          2025年6月13日 下午
         </time>
       </span>
     
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          959 字
+          553 字
         
       </span>
     
@@ -236,7 +236,7 @@
         
         
         
-          8 分钟
+          5 分钟
         
       </span>
     
@@ -282,44 +282,31 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">C++中的类型推断</h1>
+            <h1 id="seo-header">C++类型转换</h1>
             
             
               <div class="markdown-body">
                 
-                <p>C++11中引入了<code>auto</code>和<code>decltype</code>，他们可以在编译期推导出出变量或表达式的类型，大幅简化了代码。</p>
-<h2 id="auto"><a href="#auto" class="headerlink" title="auto"></a><code>auto</code></h2><p><code>auto</code>关键字允许编译器在编译期间自动推导出变量的类型。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">auto</span> a = <span class="hljs-number">10</span>;       <span class="hljs-comment">// a是int型​</span><br><span class="hljs-type">int</span> i = <span class="hljs-number">10</span>;​<br><span class="hljs-keyword">auto</span> b = i;        <span class="hljs-comment">// b是int型​</span><br><span class="hljs-keyword">auto</span> d = <span class="hljs-number">2.0</span>;      <span class="hljs-comment">// d是double型</span><br></code></pre></td></tr></table></figure>
-<h3 id="推导规则"><a href="#推导规则" class="headerlink" title="推导规则"></a>推导规则</h3><ul>
-<li><code>auto</code>变量必须在声明时立即初始化</li>
-<li>当一行中声明了多个<code>auto</code>变量时，他们必须能够从一个共同的初始化表达式中推导出相同类型。</li>
-<li>在推导类型时，<code>auto</code>会忽略等号右边的<code>const</code>、<code>volatile</code>（cv）属性和引用类型，除非显式地声明为引用或指针。</li>
-<li><code>auto</code>不能用作函数的参数</li>
-<li><code>auto</code>无法作为模板</li>
-<li><code>auto</code>在类中不能用作非静态的成员变量</li>
+                <h3 id="C风格强制类型转换"><a href="#C风格强制类型转换" class="headerlink" title="C风格强制类型转换"></a>C风格强制类型转换</h3><p>C语言中强制类型转换的方式为</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++">(type_name) expression<br></code></pre></td></tr></table></figure>
+<p>例如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br> <br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>   <span class="hljs-type">int</span> sum = <span class="hljs-number">17</span>, count = <span class="hljs-number">5</span>;<br>   <span class="hljs-type">double</span> mean;<br> <br>   mean = (<span class="hljs-type">double</span>) sum / count;<br>   <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Value of mean : %f\n&quot;</span>, mean );<br> <br>&#125;<br></code></pre></td></tr></table></figure>
+<p>C风格的强制类型转换虽然方式简单，可以在任意类型之间转换，但这同时也导致了C风格强制类型转换极其不安全，需要严格的代码审查。</p>
+<h3 id="C-风格强制类型转换"><a href="#C-风格强制类型转换" class="headerlink" title="C++风格强制类型转换"></a>C++风格强制类型转换</h3><p>因此C++在完全兼容C的基础上，引入了新的强制类型转换。</p>
+<h4 id="static-cast"><a href="#static-cast" class="headerlink" title="static_cast"></a><code>static_cast</code></h4><p>用于基本数据类型之间的转换，例如</p>
+<ul>
+<li><code>float</code>转<code>int</code>，<code>int</code>转<code>char</code>等</li>
+<li>在有类型指针和<code>void*</code>之间转换使用,但<strong>不能</strong>使用<code>static_cast</code>在<strong>有类型指针之间</strong>进行类型转换。</li>
+<li><strong>子类对象指针转换成父类对象指针</strong>也可以使用<code>static_cast</code>。​</li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">func</span><span class="hljs-params">(<span class="hljs-keyword">auto</span> value)</span> </span>&#123;&#125; <span class="hljs-comment">// error，auto不能用作函数参数​</span><br>​<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;​<br>    <span class="hljs-keyword">auto</span> a = <span class="hljs-number">1</span>; <span class="hljs-comment">// error，在类中auto不能用作非静态成员变量​</span><br>    <span class="hljs-type">static</span> <span class="hljs-keyword">auto</span> b = <span class="hljs-number">1</span>; <span class="hljs-comment">// error，这里与auto无关，正常static int b = 1也不可以​</span><br>    <span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-keyword">auto</span> c = <span class="hljs-number">1</span>; <span class="hljs-comment">// ok​</span><br>&#125;;​<br>​<br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">func2</span><span class="hljs-params">()</span> </span>&#123;​<br>    <span class="hljs-type">int</span> a[<span class="hljs-number">10</span>] = &#123;<span class="hljs-number">0</span>&#125;;​<br>    <span class="hljs-keyword">auto</span> b = a; <span class="hljs-comment">// ok​</span><br>    <span class="hljs-keyword">auto</span> c[<span class="hljs-number">10</span>] = a; <span class="hljs-comment">// error，auto不能定义数组，可以定义指针​</span><br><br>    vector&lt;<span class="hljs-type">int</span>&gt; d;​ <br>    vector&lt;<span class="hljs-keyword">auto</span>&gt; f = d; <span class="hljs-comment">// error，auto无法推导出模板参数​</span><br>    <br>    <span class="hljs-keyword">auto</span> e; <span class="hljs-comment">// error，使用auto必须马上初始化</span><br>    <br>    <span class="hljs-type">int</span> i = <span class="hljs-number">10</span>;​<br>    <span class="hljs-keyword">auto</span> ai = i, &amp;bi = i, *ci = &amp;i; <span class="hljs-comment">// a是int，b是int的引用，c是int的指针​</span><br>    <br>    <span class="hljs-type">int</span> j = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">auto</span> di = i, aj = j; <span class="hljs-comment">//error, </span><br><br><br>    <span class="hljs-keyword">auto</span> f = <span class="hljs-number">0</span>, g = <span class="hljs-number">1.0</span>; <span class="hljs-comment">// error，0和1.0类型不同，编译器懵了，无法推导</span><br>    <br>    <span class="hljs-type">const</span> <span class="hljs-type">int</span> x = <span class="hljs-number">10</span>;​<br>    <span class="hljs-keyword">auto</span> y = x; <span class="hljs-comment">// y是int，忽略了const属性​</span><br>    <span class="hljs-keyword">auto</span>&amp; z = x; <span class="hljs-comment">// z是const int&amp;，保留了引用和const属性</span><br>&#125;​<br></code></pre></td></tr></table></figure>
+<p>非多态类型转换一般都使用<code>static_cast</code>，而且最好把所有的隐式类型转换都用<code>static_cast</code>进行显式替换，但不能使用<code>static_cast</code>在有类型指针之间进行类型转换。</p>
+<h4 id="dynamic-cast"><a href="#dynamic-cast" class="headerlink" title="dynamic_cast"></a><code>dynamic_cast</code></h4><p>一般用于将<strong>父类的指针转换为子类的指针</strong>，此场景下父类<strong>必须要有虚函数</strong>，因为<code>dynamic_cast</code>是运行时检查，检查需要有运行时信息<code>RTTI</code>，而<code>RTTI</code>存储在虚函数表中</p>
+<p>如果父类没有虚函数，或者转换的双方不是父子关系，<code>dynamic_cast</code>会返回<code>nullptr</code>。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Base</span> &#123;​<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">Func</span><span class="hljs-params">()</span> </span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;Base Func \n&quot;</span>; &#125;​<br>&#125;;​<br>​<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Derive</span> : <span class="hljs-keyword">public</span> Base &#123;​<br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">Func</span><span class="hljs-params">()</span> <span class="hljs-keyword">override</span> </span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;Derive Func \n&quot;</span>; &#125;​<br>&#125;;​<br>​<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;​<br>    Derive d;​<br>    d.<span class="hljs-built_in">Func</span>();​<br>    Base *b = <span class="hljs-built_in">dynamic_cast</span>&lt;Base *&gt;(&amp;d);​<br>    b-&gt;<span class="hljs-built_in">Func</span>();​<br>    Derive *dd = <span class="hljs-built_in">dynamic_cast</span>&lt;Derive *&gt;(b);​<br>    dd-&gt;<span class="hljs-built_in">Func</span>();​<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;​<br>&#125;​<br></code></pre></td></tr></table></figure>
+<h4 id="const-cast"><a href="#const-cast" class="headerlink" title="const_cast"></a><code>const_cast</code></h4><p>一般用于<strong>常量指针与非常量指针之间</strong>的转换，只有<code>const_cast</code>才可以对常量进行操作，一般用它来<strong>去除常量性</strong>(也能够去除<code>volatile</code>)，但去除常量性是危险操作，还是要谨慎使用。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;​<br>    <span class="hljs-type">int</span> data = <span class="hljs-number">10</span>;​<br>    <span class="hljs-type">const</span> <span class="hljs-type">int</span> *cpi = &amp;data;​<br>    <span class="hljs-type">int</span> *pi = <span class="hljs-built_in">const_cast</span>&lt;<span class="hljs-type">int</span> *&gt;(cpi);​<br>    <span class="hljs-type">const</span> <span class="hljs-type">int</span> *cpii = <span class="hljs-built_in">const_cast</span>&lt;<span class="hljs-type">const</span> <span class="hljs-type">int</span> *&gt;(pi);​<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;​<br>&#125;​<br></code></pre></td></tr></table></figure>
 
-<h2 id="decltype"><a href="#decltype" class="headerlink" title="decltype"></a><code>decltype</code></h2><p>与<code>auto</code>不同，<code>decltype</code>用于推导表达式的类型而非变量的类型。其在编译期间发挥分析表达式的类型，但是表达式本身不会进行运算。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">func</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>; &#125;​<br><span class="hljs-keyword">decltype</span>(<span class="hljs-built_in">func</span>()) i; <span class="hljs-comment">// i为int类型，与func()返回值类型相同​</span><br><span class="hljs-type">int</span> x = <span class="hljs-number">0</span>;​<br><span class="hljs-keyword">decltype</span>(x) y; <span class="hljs-comment">// y是int类型，与x类型相同​</span><br><span class="hljs-keyword">decltype</span>(x + y) z; <span class="hljs-comment">// z是int类型，与表达式x + y的类型相同</span><br></code></pre></td></tr></table></figure>
-<h3 id="推导规则-1"><a href="#推导规则-1" class="headerlink" title="推导规则"></a>推导规则</h3><ul>
-<li>如果<code>exp</code>是一个没有圆括号的标识符表达式（id-expression），例如变量名、函数名和枚举常量名，那么<code>decltype(exp)</code>的类型与<code>exp</code>的类型相同。例如上面代码中的<code>decltype(x)</code>推导出的类型是<code>int</code>，这是因为<code>decltype(x)</code>和<code>decltype((x))</code>是不同的类型<ul>
-<li>当<code>x</code>是变量名时，<code>decltype</code> 直接获取该变量的声明类型，结果包含原始的 <code>const</code> 限定符、引用类型等修饰符。</li>
-<li>当表达式是 <code>(x)</code>（带括号）时，C++ 将其视为普通左值表达式，<code>decltype</code> 会推导出表达式结果类型和值类别，对命名变量使用括号会添加引用。</li>
-</ul>
-</li>
-<li>如果<code>exp</code>是函数调用，则<code>decltype(exp)</code>的类型与函数返回值的类型相同。</li>
-<li>如果<code>exp</code>是左值，则<code>decltype(exp)</code>是<code>exp</code>类型的左值引用</li>
-<li>与<code>auto</code>不同，<code>decltype</code>会保留<code>exp</code>的cv属性和引用类型</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-type">int</span> a = <span class="hljs-number">0</span>, b = <span class="hljs-number">0</span>;​<br><span class="hljs-keyword">decltype</span>(a + b) c = <span class="hljs-number">0</span>; <span class="hljs-comment">// c是int，因为(a+b)返回一个右值​</span><br><span class="hljs-keyword">decltype</span>(a += b) d = a; <span class="hljs-comment">// d是int&amp;，因为(a+=b)返回一个左值​</span><br>d = <span class="hljs-number">20</span>; <span class="hljs-comment">// 修改d实际上修改了a的值​</span><br><br><span class="hljs-type">const</span> <span class="hljs-type">int</span>&amp; ref = a;​<br><span class="hljs-keyword">decltype</span>(ref) e = <span class="hljs-number">20</span>; <span class="hljs-comment">// e是const int&amp;，保留了const引用属性</span><br></code></pre></td></tr></table></figure>
-<p><code>decltype</code>常和<code>auto</code>一起配合使用。比如处理复杂的类型和模板编程</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs C++">std::vector&lt;<span class="hljs-type">int</span>&gt; vec = &#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>&#125;;​<br><span class="hljs-keyword">auto</span> it = vec.<span class="hljs-built_in">begin</span>(); <span class="hljs-comment">// 使用auto简化迭代器类型声明​</span><br><span class="hljs-keyword">decltype</span>(*it) value = *it; <span class="hljs-comment">// 使用decltype推导迭代器指向的元素的类型</span><br></code></pre></td></tr></table></figure>
-<p>以及推导函数返回值的类型</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">typename</span> U&gt;​<br><span class="hljs-function"><span class="hljs-keyword">auto</span> <span class="hljs-title">add</span><span class="hljs-params">(T t, U u)</span> -&gt; <span class="hljs-title">decltype</span><span class="hljs-params">(t + u)</span> </span>&#123;​<br>    <span class="hljs-keyword">return</span> t + u;​<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>需要注意</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">typename</span> U&gt;​<br><span class="hljs-keyword">decltype</span>(t + u) <span class="hljs-built_in">add</span>(T t, U u) &#123; <span class="hljs-comment">// t和u尚未定义​</span><br>    <span class="hljs-keyword">return</span> t + u;​<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>这段代码在C++11上是编译不过的，因为在<code>decltype(t + u)</code>推导时，<code>t</code>和<code>u</code>尚未定义，就会编译出错。</p>
+<h4 id="reinterpret-cast"><a href="#reinterpret-cast" class="headerlink" title="reinterpret_cast"></a><code>reinterpret_cast</code></h4><p>类似C语言中的强制类型转换，基本上什么都可以转,有安全风险。如果其他的强制转换无法解决问题，再考虑<code>reinterpret_cast</code></p>
 
                 
               </div>
@@ -358,8 +345,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>C++中的类型推断</div>
-      <div>https://guts.homes/2025/06/12/cpp-auto-decltype/</div>
+      <div>C++类型转换</div>
+      <div>https://guts.homes/2025/06/13/cpp-type-conversion/</div>
     </div>
     <div class="license-meta">
       
@@ -371,7 +358,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年6月12日</div>
+          <div>2025年6月13日</div>
         </div>
       
       
@@ -403,9 +390,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/06/13/cpp-list-initialization/" title="C++列表初始化">
+                      <a href="/2025/06/13/cpp-static/" title="C++中的static关键字">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">C++列表初始化</span>
+                        <span class="hidden-mobile">C++中的static关键字</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -413,8 +400,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/06/12/cpp-constructor/" title="C++构造函数">
-                        <span class="hidden-mobile">C++构造函数</span>
+                      <a href="/2025/06/13/cpp-list-initialization/" title="C++列表初始化">
+                        <span class="hidden-mobile">C++列表初始化</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

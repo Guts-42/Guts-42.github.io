@@ -19,15 +19,15 @@
   <meta name="author" content="guts">
   <meta name="keywords" content="">
   
-    <meta name="description" content="C++11中引入了auto和decltype，他们可以在编译期推导出出变量或表达式的类型，大幅简化了代码。 autoauto关键字允许编译器在编译期间自动推导出变量的类型。 1234auto a &#x3D; 10;       &#x2F;&#x2F; a是int型​int i &#x3D; 10;​auto b &#x3D; i;        &#x2F;&#x2F; b是int型​auto d &#x3D; 2.0;      &#x2F;&#x2F; d是double型 推导规则 au">
+    <meta name="description" content="static的引入static是C++中的修饰符，可以修饰变量和函数，用来控制变量的存储方式和可见性。 一般情况下，函数内部的变量，在程序运行到它的定义时，会在栈内为其分配内存，在函数执行结束后释放。如果我们想要某些变量（例如记录函数调用次数的变量）的生命周期不局限于函数执行期间，在执行结束后不释放而是继续保留，并且在同时确保将其作用域限制在函数内部，那么一般的变量和全局变量（虽然生命周期不局限于">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C++中的类型推断">
-<meta property="og:url" content="https://guts.homes/2025/06/12/cpp-auto-decltype/index.html">
+<meta property="og:title" content="C++中的static关键字">
+<meta property="og:url" content="https://guts.homes/2025/06/13/cpp-static/index.html">
 <meta property="og:site_name" content="guts的小屋">
-<meta property="og:description" content="C++11中引入了auto和decltype，他们可以在编译期推导出出变量或表达式的类型，大幅简化了代码。 autoauto关键字允许编译器在编译期间自动推导出变量的类型。 1234auto a &#x3D; 10;       &#x2F;&#x2F; a是int型​int i &#x3D; 10;​auto b &#x3D; i;        &#x2F;&#x2F; b是int型​auto d &#x3D; 2.0;      &#x2F;&#x2F; d是double型 推导规则 au">
+<meta property="og:description" content="static的引入static是C++中的修饰符，可以修饰变量和函数，用来控制变量的存储方式和可见性。 一般情况下，函数内部的变量，在程序运行到它的定义时，会在栈内为其分配内存，在函数执行结束后释放。如果我们想要某些变量（例如记录函数调用次数的变量）的生命周期不局限于函数执行期间，在执行结束后不释放而是继续保留，并且在同时确保将其作用域限制在函数内部，那么一般的变量和全局变量（虽然生命周期不局限于">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-06-12T08:06:31.000Z">
-<meta property="article:modified_time" content="2025-06-13T05:18:49.663Z">
+<meta property="article:published_time" content="2025-06-13T07:58:08.000Z">
+<meta property="article:modified_time" content="2025-06-13T09:24:29.838Z">
 <meta property="article:author" content="guts">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -35,7 +35,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>C++中的类型推断 - guts的小屋</title>
+  <title>C++中的static关键字 - guts的小屋</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -202,7 +202,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="C++中的类型推断"></span>
+            <span id="subtitle" data-typed-text="C++中的static关键字"></span>
           
         </div>
 
@@ -213,8 +213,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-06-12 16:06" pubdate>
-          2025年6月12日 下午
+        <time datetime="2025-06-13 15:58" pubdate>
+          2025年6月13日 下午
         </time>
       </span>
     
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          959 字
+          1.2k 字
         
       </span>
     
@@ -236,7 +236,7 @@
         
         
         
-          8 分钟
+          11 分钟
         
       </span>
     
@@ -282,44 +282,52 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">C++中的类型推断</h1>
+            <h1 id="seo-header">C++中的static关键字</h1>
             
             
               <div class="markdown-body">
                 
-                <p>C++11中引入了<code>auto</code>和<code>decltype</code>，他们可以在编译期推导出出变量或表达式的类型，大幅简化了代码。</p>
-<h2 id="auto"><a href="#auto" class="headerlink" title="auto"></a><code>auto</code></h2><p><code>auto</code>关键字允许编译器在编译期间自动推导出变量的类型。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">auto</span> a = <span class="hljs-number">10</span>;       <span class="hljs-comment">// a是int型​</span><br><span class="hljs-type">int</span> i = <span class="hljs-number">10</span>;​<br><span class="hljs-keyword">auto</span> b = i;        <span class="hljs-comment">// b是int型​</span><br><span class="hljs-keyword">auto</span> d = <span class="hljs-number">2.0</span>;      <span class="hljs-comment">// d是double型</span><br></code></pre></td></tr></table></figure>
-<h3 id="推导规则"><a href="#推导规则" class="headerlink" title="推导规则"></a>推导规则</h3><ul>
-<li><code>auto</code>变量必须在声明时立即初始化</li>
-<li>当一行中声明了多个<code>auto</code>变量时，他们必须能够从一个共同的初始化表达式中推导出相同类型。</li>
-<li>在推导类型时，<code>auto</code>会忽略等号右边的<code>const</code>、<code>volatile</code>（cv）属性和引用类型，除非显式地声明为引用或指针。</li>
-<li><code>auto</code>不能用作函数的参数</li>
-<li><code>auto</code>无法作为模板</li>
-<li><code>auto</code>在类中不能用作非静态的成员变量</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">func</span><span class="hljs-params">(<span class="hljs-keyword">auto</span> value)</span> </span>&#123;&#125; <span class="hljs-comment">// error，auto不能用作函数参数​</span><br>​<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;​<br>    <span class="hljs-keyword">auto</span> a = <span class="hljs-number">1</span>; <span class="hljs-comment">// error，在类中auto不能用作非静态成员变量​</span><br>    <span class="hljs-type">static</span> <span class="hljs-keyword">auto</span> b = <span class="hljs-number">1</span>; <span class="hljs-comment">// error，这里与auto无关，正常static int b = 1也不可以​</span><br>    <span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-keyword">auto</span> c = <span class="hljs-number">1</span>; <span class="hljs-comment">// ok​</span><br>&#125;;​<br>​<br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">func2</span><span class="hljs-params">()</span> </span>&#123;​<br>    <span class="hljs-type">int</span> a[<span class="hljs-number">10</span>] = &#123;<span class="hljs-number">0</span>&#125;;​<br>    <span class="hljs-keyword">auto</span> b = a; <span class="hljs-comment">// ok​</span><br>    <span class="hljs-keyword">auto</span> c[<span class="hljs-number">10</span>] = a; <span class="hljs-comment">// error，auto不能定义数组，可以定义指针​</span><br><br>    vector&lt;<span class="hljs-type">int</span>&gt; d;​ <br>    vector&lt;<span class="hljs-keyword">auto</span>&gt; f = d; <span class="hljs-comment">// error，auto无法推导出模板参数​</span><br>    <br>    <span class="hljs-keyword">auto</span> e; <span class="hljs-comment">// error，使用auto必须马上初始化</span><br>    <br>    <span class="hljs-type">int</span> i = <span class="hljs-number">10</span>;​<br>    <span class="hljs-keyword">auto</span> ai = i, &amp;bi = i, *ci = &amp;i; <span class="hljs-comment">// a是int，b是int的引用，c是int的指针​</span><br>    <br>    <span class="hljs-type">int</span> j = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">auto</span> di = i, aj = j; <span class="hljs-comment">//error, </span><br><br><br>    <span class="hljs-keyword">auto</span> f = <span class="hljs-number">0</span>, g = <span class="hljs-number">1.0</span>; <span class="hljs-comment">// error，0和1.0类型不同，编译器懵了，无法推导</span><br>    <br>    <span class="hljs-type">const</span> <span class="hljs-type">int</span> x = <span class="hljs-number">10</span>;​<br>    <span class="hljs-keyword">auto</span> y = x; <span class="hljs-comment">// y是int，忽略了const属性​</span><br>    <span class="hljs-keyword">auto</span>&amp; z = x; <span class="hljs-comment">// z是const int&amp;，保留了引用和const属性</span><br>&#125;​<br></code></pre></td></tr></table></figure>
+                <h2 id="static的引入"><a href="#static的引入" class="headerlink" title="static的引入"></a><code>static</code>的引入</h2><p><code>static</code>是C++中的修饰符，可以修饰变量和函数，用来控制变量的存储方式和可见性。</p>
+<p>一般情况下，函数内部的变量，在程序运行到它的定义时，会在栈内为其分配内存，在函数执行结束后释放。如果我们想要某些变量（例如记录函数调用次数的变量）的生命周期不局限于函数执行期间，在执行结束后不释放而是继续保留，并且在同时确保将其作用域限制在函数内部，那么一般的变量和全局变量（虽然生命周期不局限于函数执行期间，但是其作用域也不局限于函数内部）都无法满足我们的需求，因此引入了<code>static</code>关键字来解决这个问题。</p>
+<h2 id="static的使用"><a href="#static的使用" class="headerlink" title="static的使用"></a><code>static</code>的使用</h2><h3 id="静态局部变量"><a href="#静态局部变量" class="headerlink" title="静态局部变量"></a>静态局部变量</h3><p>如前文所述，函数内的局部变量可以用<code>static</code>修饰，将其声明为静态局部变量，这样它的生命周期贯穿整个函数运行期间的同时作用域也能限制在函数内部。</p>
+<p>C++11 标准规定，<strong>静态局部变量的初始化只会发生一次</strong>，因此在多线程环境下，初始化过程是线程安全的。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">func</span><span class="hljs-params">()</span> </span>&#123;​<br>    <span class="hljs-type">static</span> <span class="hljs-type">int</span> count = <span class="hljs-number">0</span>;  <span class="hljs-comment">// 静态局部变量​</span><br>    count++;​<br>    std::cout &lt;&lt; <span class="hljs-string">&quot;Count: &quot;</span> &lt;&lt; count &lt;&lt; std::endl;​<br>&#125;​<br>​<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;​<br>    <span class="hljs-built_in">func</span>();  <span class="hljs-comment">// 输出: Count: 1​</span><br>    <span class="hljs-built_in">func</span>();  <span class="hljs-comment">// 输出: Count: 2​</span><br>    <span class="hljs-built_in">func</span>();  <span class="hljs-comment">// 输出: Count: 3​</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;​<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="静态全局变量"><a href="#静态全局变量" class="headerlink" title="静态全局变量"></a>静态全局变量</h3><p>在全局作用域中，<code>static</code> 关键字可以用来限制变量的<strong>链接性</strong>、<strong>可见性</strong>。​<br>​静态全局变量只能在定义它的文件中访问，<strong>其他文件无法访问该变量</strong>。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-comment">// file1.cpp​</span><br><span class="hljs-type">static</span> <span class="hljs-type">int</span> globalVar = <span class="hljs-number">42</span>;  <span class="hljs-comment">// 静态全局变量​</span><br>​<br><span class="hljs-comment">// file2.cpp​</span><br><span class="hljs-keyword">extern</span> <span class="hljs-type">int</span> globalVar;  <span class="hljs-comment">// 错误: globalVar 在 file2.cpp 中不可见</span><br></code></pre></td></tr></table></figure>
 
-<h2 id="decltype"><a href="#decltype" class="headerlink" title="decltype"></a><code>decltype</code></h2><p>与<code>auto</code>不同，<code>decltype</code>用于推导表达式的类型而非变量的类型。其在编译期间发挥分析表达式的类型，但是表达式本身不会进行运算。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">func</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>; &#125;​<br><span class="hljs-keyword">decltype</span>(<span class="hljs-built_in">func</span>()) i; <span class="hljs-comment">// i为int类型，与func()返回值类型相同​</span><br><span class="hljs-type">int</span> x = <span class="hljs-number">0</span>;​<br><span class="hljs-keyword">decltype</span>(x) y; <span class="hljs-comment">// y是int类型，与x类型相同​</span><br><span class="hljs-keyword">decltype</span>(x + y) z; <span class="hljs-comment">// z是int类型，与表达式x + y的类型相同</span><br></code></pre></td></tr></table></figure>
-<h3 id="推导规则-1"><a href="#推导规则-1" class="headerlink" title="推导规则"></a>推导规则</h3><ul>
-<li>如果<code>exp</code>是一个没有圆括号的标识符表达式（id-expression），例如变量名、函数名和枚举常量名，那么<code>decltype(exp)</code>的类型与<code>exp</code>的类型相同。例如上面代码中的<code>decltype(x)</code>推导出的类型是<code>int</code>，这是因为<code>decltype(x)</code>和<code>decltype((x))</code>是不同的类型<ul>
-<li>当<code>x</code>是变量名时，<code>decltype</code> 直接获取该变量的声明类型，结果包含原始的 <code>const</code> 限定符、引用类型等修饰符。</li>
-<li>当表达式是 <code>(x)</code>（带括号）时，C++ 将其视为普通左值表达式，<code>decltype</code> 会推导出表达式结果类型和值类别，对命名变量使用括号会添加引用。</li>
+<h3 id="类的静态成员变量"><a href="#类的静态成员变量" class="headerlink" title="类的静态成员变量"></a>类的静态成员变量</h3><ul>
+<li>类的静态成员变量属于类本身，而不是某个对象</li>
+<li>静态成员变量在所有对象间共享</li>
+<li>静态成员变量一定要在类外初始化<ul>
+<li>因为静态成员属于整个类，而不属于某个对象，如果在类内初始化，则该类再一次创建对象时静态成员将再一次被“初始化”（变成初始值），会修改其他对象对该静态变量操作的意图，可能发生意外。</li>
+<li>C++11 起，允许对常量静态成员变量在类内部进行初始化</li>
 </ul>
 </li>
-<li>如果<code>exp</code>是函数调用，则<code>decltype(exp)</code>的类型与函数返回值的类型相同。</li>
-<li>如果<code>exp</code>是左值，则<code>decltype(exp)</code>是<code>exp</code>类型的左值引用</li>
-<li>与<code>auto</code>不同，<code>decltype</code>会保留<code>exp</code>的cv属性和引用类型</li>
+<li>静态成员变量可以直接通过类名访问，因为它本身就位于类空间而不是普通成员空间</li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-type">int</span> a = <span class="hljs-number">0</span>, b = <span class="hljs-number">0</span>;​<br><span class="hljs-keyword">decltype</span>(a + b) c = <span class="hljs-number">0</span>; <span class="hljs-comment">// c是int，因为(a+b)返回一个右值​</span><br><span class="hljs-keyword">decltype</span>(a += b) d = a; <span class="hljs-comment">// d是int&amp;，因为(a+=b)返回一个左值​</span><br>d = <span class="hljs-number">20</span>; <span class="hljs-comment">// 修改d实际上修改了a的值​</span><br><br><span class="hljs-type">const</span> <span class="hljs-type">int</span>&amp; ref = a;​<br><span class="hljs-keyword">decltype</span>(ref) e = <span class="hljs-number">20</span>; <span class="hljs-comment">// e是const int&amp;，保留了const引用属性</span><br></code></pre></td></tr></table></figure>
-<p><code>decltype</code>常和<code>auto</code>一起配合使用。比如处理复杂的类型和模板编程</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs C++">std::vector&lt;<span class="hljs-type">int</span>&gt; vec = &#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>&#125;;​<br><span class="hljs-keyword">auto</span> it = vec.<span class="hljs-built_in">begin</span>(); <span class="hljs-comment">// 使用auto简化迭代器类型声明​</span><br><span class="hljs-keyword">decltype</span>(*it) value = *it; <span class="hljs-comment">// 使用decltype推导迭代器指向的元素的类型</span><br></code></pre></td></tr></table></figure>
-<p>以及推导函数返回值的类型</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">typename</span> U&gt;​<br><span class="hljs-function"><span class="hljs-keyword">auto</span> <span class="hljs-title">add</span><span class="hljs-params">(T t, U u)</span> -&gt; <span class="hljs-title">decltype</span><span class="hljs-params">(t + u)</span> </span>&#123;​<br>    <span class="hljs-keyword">return</span> t + u;​<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>需要注意</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">typename</span> U&gt;​<br><span class="hljs-keyword">decltype</span>(t + u) <span class="hljs-built_in">add</span>(T t, U u) &#123; <span class="hljs-comment">// t和u尚未定义​</span><br>    <span class="hljs-keyword">return</span> t + u;​<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>这段代码在C++11上是编译不过的，因为在<code>decltype(t + u)</code>推导时，<code>t</code>和<code>u</code>尚未定义，就会编译出错。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyClass</span> &#123;​<br><span class="hljs-keyword">public</span>:​<br>    <span class="hljs-type">static</span> <span class="hljs-type">int</span> staticVar;  <span class="hljs-comment">// 静态成员变量声明​</span><br>&#125;;​<br>​<br><span class="hljs-type">int</span> MyClass::staticVar = <span class="hljs-number">0</span>;  <span class="hljs-comment">// 静态成员变量定义​,注意这里需要有类型标识符</span><br>​<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;​<br>    MyClass obj1;​<br>    MyClass obj2;​<br>​<br>    obj<span class="hljs-number">1.</span>staticVar = <span class="hljs-number">10</span>;​<br>    std::cout &lt;&lt; <span class="hljs-string">&quot;obj2.staticVar: &quot;</span> &lt;&lt; obj<span class="hljs-number">2.</span>staticVar &lt;&lt; std::endl;  <span class="hljs-comment">// 输出: 10​</span><br>​<br>    MyClass::staticVar = <span class="hljs-number">20</span>;​<br>    std::cout &lt;&lt; <span class="hljs-string">&quot;obj1.staticVar: &quot;</span> &lt;&lt; obj<span class="hljs-number">1.</span>staticVar &lt;&lt; std::endl;  <span class="hljs-comment">// 输出: 20​</span><br>​<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;​<br>&#125;​<br></code></pre></td></tr></table></figure>
+
+<h3 id="类的静态成员函数"><a href="#类的静态成员函数" class="headerlink" title="类的静态成员函数"></a>类的静态成员函数</h3><ul>
+<li>静态成员函数属于类本身，而不是某个对象。</li>
+<li>由于<code>this</code>指针指向的是某个具体的对象，因此静态成员函数没有<code>this</code>指针</li>
+<li>静态成员函数只能访问静态成员变量和静态成员函数，因为它没有<code>this</code>指针</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyClass</span> &#123;​<br><span class="hljs-keyword">public</span>:​<br>    <span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">staticFunc</span><span class="hljs-params">()</span> </span>&#123;  <span class="hljs-comment">// 静态成员函数​</span><br>        std::cout &lt;&lt; <span class="hljs-string">&quot;Static function called.&quot;</span> &lt;&lt; std::endl;​<br>    &#125;​<br>&#125;;​<br>​<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;​<br>    MyClass::<span class="hljs-built_in">staticFunc</span>();  <span class="hljs-comment">// 通过类名调用静态成员函数​</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;​<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="修饰普通函数"><a href="#修饰普通函数" class="headerlink" title="修饰普通函数"></a>修饰普通函数</h3><p>当<code>static</code>用来修饰普通函数时，其作用是限制函数的链接性，当一个普通函数被 <code>static</code> 修饰时，它的符号（函数名）不会被导出到全局符号表中，因此其他文件无法通过 <code>extern</code> 声明来引用该函数。这种特性可以用于隐藏函数的实现细节，避免命名冲突，或者限制函数的作用域。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-comment">// file1.cpp​</span><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">hiddenFunction</span><span class="hljs-params">()</span> </span>&#123;  <span class="hljs-comment">// static 修饰的普通函数​</span><br>    std::cout &lt;&lt; <span class="hljs-string">&quot;This function is hidden from other files.&quot;</span> &lt;&lt; std::endl;​<br>&#125;​<br>​<br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">publicFunction</span><span class="hljs-params">()</span> </span>&#123;​<br>    <span class="hljs-built_in">hiddenFunction</span>();  <span class="hljs-comment">// 可以在本文件中调用​</span><br>&#125;​<br>​<br><span class="hljs-comment">// file2.cpp​</span><br><span class="hljs-function"><span class="hljs-keyword">extern</span> <span class="hljs-type">void</span> <span class="hljs-title">hiddenFunction</span><span class="hljs-params">()</span></span>;  <span class="hljs-comment">// 错误: hiddenFunction 在 file2.cpp 中不可见​</span><br>​<br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">anotherFunction</span><span class="hljs-params">()</span> </span>&#123;​<br>    <span class="hljs-built_in">hiddenFunction</span>();  <span class="hljs-comment">// 错误: hiddenFunction 在 file2.cpp 中不可见​</span><br>&#125;​<br></code></pre></td></tr></table></figure>
+<h2 id="匿名空间"><a href="#匿名空间" class="headerlink" title="匿名空间"></a>匿名空间</h2><p>要想实现将符号的作用域限制在本文件中，除了用<code>static</code>修饰外，还可以使用匿名空间来实现</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-comment">// file1.cpp​</span><br><span class="hljs-keyword">namespace</span> &#123;  <span class="hljs-comment">// 匿名命名空间​</span><br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">hiddenFunction</span><span class="hljs-params">()</span> </span>&#123;​<br>        std::cout &lt;&lt; <span class="hljs-string">&quot;This function is hidden from other files.&quot;</span> &lt;&lt; std::endl;​<br>    &#125;​<br>&#125;​<br>​<br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">publicFunction</span><span class="hljs-params">()</span> </span>&#123;​<br>    <span class="hljs-built_in">hiddenFunction</span>();  <span class="hljs-comment">// 可以在本文件中调用​</span><br>&#125;​<br>​<br><span class="hljs-comment">// file2.cpp​</span><br><span class="hljs-function"><span class="hljs-keyword">extern</span> <span class="hljs-type">void</span> <span class="hljs-title">hiddenFunction</span><span class="hljs-params">()</span></span>;  <span class="hljs-comment">// 错误: hiddenFunction 在 file2.cpp 中不可见​</span><br></code></pre></td></tr></table></figure>
+<p>与<code>static</code>的区别在于</p>
+<ul>
+<li><code>static</code> 是 C 语言风格的用法，而匿名命名空间是 C++ 特有的特性。​</li>
+<li>匿名命名空间可以隐藏类、变量、函数等多种符号，而 <code>static</code> 只能用于函数和变量。​</li>
+<li>匿名命名空间更符合 C++ 的现代编程风格，推荐优先使用。</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/33debug/p/7223869.html">C&#x2F;C++中static的用法全局变量与局部变量
+</a></li>
+</ul>
 
                 
               </div>
@@ -358,8 +366,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>C++中的类型推断</div>
-      <div>https://guts.homes/2025/06/12/cpp-auto-decltype/</div>
+      <div>C++中的static关键字</div>
+      <div>https://guts.homes/2025/06/13/cpp-static/</div>
     </div>
     <div class="license-meta">
       
@@ -371,7 +379,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年6月12日</div>
+          <div>2025年6月13日</div>
         </div>
       
       
@@ -403,9 +411,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/06/13/cpp-list-initialization/" title="C++列表初始化">
+                      <a href="/2025/06/13/cpp-operator-overload/" title="cpp_operator_overload">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">C++列表初始化</span>
+                        <span class="hidden-mobile">cpp_operator_overload</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -413,8 +421,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/06/12/cpp-constructor/" title="C++构造函数">
-                        <span class="hidden-mobile">C++构造函数</span>
+                      <a href="/2025/06/13/cpp-type-conversion/" title="C++类型转换">
+                        <span class="hidden-mobile">C++类型转换</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

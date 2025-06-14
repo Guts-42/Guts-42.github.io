@@ -1,0 +1,731 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/guts.png">
+  <link rel="icon" href="/guts.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="guts">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="概念C++中运算符可以通过下面的方式重载，从而为自定义类型定义运算。 1返回类型 operator运算符(参数列表); 可以重载的运算符包括  算术运算符（+、-、*、&#x2F;） 关系运算符（&#x3D;&#x3D;、!&#x3D;、&lt;、&gt;） 赋值运算符（&#x3D;） 插入流和提取流运算符（&lt;&lt;、&gt;&gt;）  等。 运算符重载实例1. 算术运算符（+、-、*、&#x2F;）12345678910111213141516">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cpp_operator_overload">
+<meta property="og:url" content="https://guts.homes/2025/06/13/cpp-operator-overload/index.html">
+<meta property="og:site_name" content="guts的小屋">
+<meta property="og:description" content="概念C++中运算符可以通过下面的方式重载，从而为自定义类型定义运算。 1返回类型 operator运算符(参数列表); 可以重载的运算符包括  算术运算符（+、-、*、&#x2F;） 关系运算符（&#x3D;&#x3D;、!&#x3D;、&lt;、&gt;） 赋值运算符（&#x3D;） 插入流和提取流运算符（&lt;&lt;、&gt;&gt;）  等。 运算符重载实例1. 算术运算符（+、-、*、&#x2F;）12345678910111213141516">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-13T09:24:57.000Z">
+<meta property="article:modified_time" content="2025-06-14T07:06:12.898Z">
+<meta property="article:author" content="guts">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>cpp_operator_overload - guts的小屋</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"guts.homes","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"FkNpNoCOCKAFaE0xepwfi5bb-gzGzoHsz","app_key":"5g5TFpe1p9FCDfz4G0CPPxx2","server_url":"https://fknpnoco.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>guts的小屋</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="cpp_operator_overload"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-06-13 17:24" pubdate>
+          2025年6月13日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          11 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">cpp_operator_overload</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>C++中运算符可以通过下面的方式重载，从而为自定义类型定义运算。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++">返回类型 <span class="hljs-keyword">operator</span>运算符(参数列表);<br></code></pre></td></tr></table></figure>
+<p>可以重载的运算符包括</p>
+<ul>
+<li>算术运算符（<code>+</code>、<code>-</code>、<code>*</code>、<code>/</code>）</li>
+<li>关系运算符（<code>==</code>、<code>!=</code>、<code>&lt;</code>、<code>&gt;</code>）</li>
+<li>赋值运算符（<code>=</code>）</li>
+<li>插入流和提取流运算符（<code>&lt;&lt;</code>、<code>&gt;&gt;</code>）</li>
+</ul>
+<p>等。</p>
+<h2 id="运算符重载实例"><a href="#运算符重载实例" class="headerlink" title="运算符重载实例"></a>运算符重载实例</h2><h3 id="1-算术运算符（-、-、-、-）"><a href="#1-算术运算符（-、-、-、-）" class="headerlink" title="1. 算术运算符（+、-、*、/）"></a>1. 算术运算符（<code>+</code>、<code>-</code>、<code>*</code>、<code>/</code>）</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span>​</span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;​<br>​<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Complex</span> &#123;​<br><span class="hljs-keyword">private</span>:​<br>    <span class="hljs-type">double</span> real;​<br>    <span class="hljs-type">double</span> imag;​<br>​<br><span class="hljs-keyword">public</span>:​<br>    <span class="hljs-comment">// 这里仅是为了举例，实际项目中不建议使用默认参数​</span><br>    <span class="hljs-built_in">Complex</span>(<span class="hljs-type">double</span> r = <span class="hljs-number">0.0</span>, <span class="hljs-type">double</span> i = <span class="hljs-number">0.0</span>) : <span class="hljs-built_in">real</span>(r), <span class="hljs-built_in">imag</span>(i) &#123;&#125;​<br>​<br>    <span class="hljs-comment">// 成员函数形式重载+​</span><br>    Complex <span class="hljs-keyword">operator</span>+(<span class="hljs-type">const</span> Complex&amp; other) &#123;​<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Complex</span>(real + other.real, imag + other.imag);​<br>    &#125;​<br>​<br>    <span class="hljs-comment">// 成员函数形式重载-​</span><br>    Complex <span class="hljs-keyword">operator</span>-(<span class="hljs-type">const</span> Complex&amp; other) &#123;​<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Complex</span>(real - other.real, imag - other.imag);​<br>    &#125;​<br>​<br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">display</span><span class="hljs-params">()</span> </span>&#123;​<br>        cout &lt;&lt; real &lt;&lt; <span class="hljs-string">&quot; + &quot;</span> &lt;&lt; imag &lt;&lt; <span class="hljs-string">&quot;i&quot;</span> &lt;&lt; endl;​<br>    &#125;​<br>&#125;;​<br>​<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;​<br>    <span class="hljs-function">Complex <span class="hljs-title">c1</span><span class="hljs-params">(<span class="hljs-number">3.0</span>, <span class="hljs-number">4.0</span>)</span></span>;​<br>    <span class="hljs-function">Complex <span class="hljs-title">c2</span><span class="hljs-params">(<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>)</span></span>;​<br>​<br>    Complex c3 = c1 + c2; <span class="hljs-comment">// 使用重载的+运算符​</span><br>    c<span class="hljs-number">3.</span><span class="hljs-built_in">display</span>(); <span class="hljs-comment">// 输出：4 + 6i​</span><br>​<br>    Complex c4 = c1 - c2; <span class="hljs-comment">// 使用重载的-运算符​</span><br>    c<span class="hljs-number">4.</span><span class="hljs-built_in">display</span>(); <span class="hljs-comment">// 输出：2 + 2i​</span><br>​<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;​<br>&#125;​<br></code></pre></td></tr></table></figure>
+<p>算符运算符重载的返回值是同类型的对象</p>
+<ul>
+<li>因为算术运算符本身就不修改操作符，返回同类型的对象符合语义</li>
+<li>算术运算符本身就要在操作符函数内产生新的对象，这个对象的作用域局限在函数内部，如果返回引用的话，这个引用所绑定的对象在函数结束后会被释放，返回引用会出现段错误<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs C++">Complex&amp; <span class="hljs-keyword">operator</span>+(<span class="hljs-type">const</span> Complex&amp; other) <span class="hljs-type">const</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Complex</span>(real + other.real, imag + other.imag);<span class="hljs-comment">//error,cannot bind non-const lvalue reference of type ‘Complex&amp;’ to an rvalue of type ‘Complex’</span><br>&#125;<br></code></pre></td></tr></table></figure>
+如果返回引用，就不能向上面这样写了，因为这样写的返回值是一个<strong>不具名的右值</strong>，不能绑定到左值引用。<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Complex</span> &#123;<br><span class="hljs-keyword">private</span>:<br>    <span class="hljs-type">double</span> real;<br>    <span class="hljs-type">double</span> imag;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-built_in">Complex</span>(<span class="hljs-type">int</span> r, <span class="hljs-type">int</span> i):<span class="hljs-built_in">real</span>(r),<span class="hljs-built_in">imag</span>(i) &#123;<br>        std::cout &lt;&lt; <span class="hljs-string">&quot;Complex(int, int) constructor called&quot;</span> &lt;&lt; std::endl;<br>    &#125;<br>    Complex&amp; <span class="hljs-keyword">operator</span>+(<span class="hljs-type">const</span> Complex&amp; other) <span class="hljs-type">const</span> &#123;<br>        <span class="hljs-function">Complex <span class="hljs-title">result</span><span class="hljs-params">(real + other.real, imag + other.imag)</span></span>;<br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">print</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>&#123;<br>        std::cout &lt;&lt; real &lt;&lt; <span class="hljs-string">&quot; + &quot;</span> &lt;&lt; imag &lt;&lt; <span class="hljs-string">&quot;i&quot;</span> &lt;&lt; std::endl;<br>    &#125;<br>    ~<span class="hljs-built_in">Complex</span>() &#123;<br>        std::cout &lt;&lt; <span class="hljs-string">&quot;Complex destructor called&quot;</span> &lt;&lt; std::endl;<br>    &#125;   <br>&#125;;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-function">Complex <span class="hljs-title">num1</span><span class="hljs-params">(<span class="hljs-number">3</span>, <span class="hljs-number">4</span>)</span></span>;<br>    <span class="hljs-function">Complex <span class="hljs-title">num2</span><span class="hljs-params">(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)</span></span>;<br>    Complex result = num1 + num2;<br>    std::cout &lt;&lt; <span class="hljs-string">&quot;num1 = :&quot;</span>;<br>    num<span class="hljs-number">1.</span><span class="hljs-built_in">print</span>();<br>    std::cout &lt;&lt; <span class="hljs-string">&quot;num2 = :&quot;</span>;<br>    num<span class="hljs-number">2.</span><span class="hljs-built_in">print</span>();<br>    std::cout &lt;&lt; <span class="hljs-string">&quot;num1 + num2 = :&quot;</span>;<br>    result.<span class="hljs-built_in">print</span>();<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+上代码的输出是<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs txt">Complex(int, int) constructor called<br>Complex(int, int) constructor called<br>Complex(int, int) constructor called<br>Complex destructor called<br></code></pre></td></tr></table></figure>
+并且在运行到<code>Complex result = num1 + num2;</code>出现了段错误<code>Segmentation fault</code>,说明<code>result</code>在函数结束时就已经析构，因此<code>Complex&amp;</code>找不到要绑定的对象。</li>
+</ul>
+<h3 id="2-关系运算符（-、-、）"><a href="#2-关系运算符（-、-、）" class="headerlink" title="2. 关系运算符（==、!=、&lt;、&gt;）"></a>2. 关系运算符（<code>==</code>、<code>!=</code>、<code>&lt;</code>、<code>&gt;</code>）</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span>​</span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;​<br>​<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Complex</span> &#123;​<br><span class="hljs-keyword">private</span>:​<br>    <span class="hljs-type">double</span> real;​<br>    <span class="hljs-type">double</span> imag;​<br>​<br><span class="hljs-keyword">public</span>:​<br>    <span class="hljs-comment">// 同上，这里仅是为了举例，实际项目中不建议使用默认参数​</span><br>    <span class="hljs-built_in">Complex</span>(<span class="hljs-type">double</span> r = <span class="hljs-number">0.0</span>, <span class="hljs-type">double</span> i = <span class="hljs-number">0.0</span>) : <span class="hljs-built_in">real</span>(r), <span class="hljs-built_in">imag</span>(i) &#123;&#125;​<br>​<br>    <span class="hljs-comment">// 成员函数形式重载==​</span><br>    <span class="hljs-type">bool</span> <span class="hljs-keyword">operator</span>==(<span class="hljs-type">const</span> Complex&amp; other) &#123;​<br>        <span class="hljs-built_in">return</span> (real == other.real) &amp;&amp; (imag == other.imag);​<br>    &#125;​<br>​<br>    <span class="hljs-comment">// 成员函数形式重载!=​</span><br>    <span class="hljs-type">bool</span> <span class="hljs-keyword">operator</span>!=(<span class="hljs-type">const</span> Complex&amp; other) &#123;​<br>        <span class="hljs-keyword">return</span> !(*<span class="hljs-keyword">this</span> == other);​<br>    &#125;​<br>​<br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">display</span><span class="hljs-params">()</span> </span>&#123;​<br>        cout &lt;&lt; real &lt;&lt; <span class="hljs-string">&quot; + &quot;</span> &lt;&lt; imag &lt;&lt; <span class="hljs-string">&quot;i&quot;</span> &lt;&lt; endl;​<br>    &#125;​<br>&#125;;​<br>​<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;​<br>    <span class="hljs-function">Complex <span class="hljs-title">c1</span><span class="hljs-params">(<span class="hljs-number">3.0</span>, <span class="hljs-number">4.0</span>)</span></span>;​<br>    <span class="hljs-function">Complex <span class="hljs-title">c2</span><span class="hljs-params">(<span class="hljs-number">3.0</span>, <span class="hljs-number">4.0</span>)</span></span>;​<br>    <span class="hljs-function">Complex <span class="hljs-title">c3</span><span class="hljs-params">(<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>)</span></span>;​<br>​<br>    <span class="hljs-keyword">if</span> (c1 == c2) &#123;​<br>        cout &lt;&lt; <span class="hljs-string">&quot;c1 and c2 are equal.&quot;</span> &lt;&lt; endl;​<br>    &#125; <span class="hljs-keyword">else</span> &#123;​<br>        cout &lt;&lt; <span class="hljs-string">&quot;c1 and c2 are not equal.&quot;</span> &lt;&lt; endl;​<br>    &#125;​<br>​<br>    <span class="hljs-keyword">if</span> (c1 != c3) &#123;​<br>        cout &lt;&lt; <span class="hljs-string">&quot;c1 and c3 are not equal.&quot;</span> &lt;&lt; endl;​<br>    &#125; <span class="hljs-keyword">else</span> &#123;​<br>        cout &lt;&lt; <span class="hljs-string">&quot;c1 and c3 are equal.&quot;</span> &lt;&lt; endl;​<br>    &#125;​<br>​<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;​<br>&#125;​<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-赋值运算符（-）"><a href="#3-赋值运算符（-）" class="headerlink" title="3. 赋值运算符（=）"></a>3. 赋值运算符（<code>=</code>）</h3><p>需要注意的是</p>
+<ul>
+<li>返回值应该是对象的引用<ul>
+<li>允许进行连续赋值 <code>obj3 = obj2 = obj1</code></li>
+<li>防止返回对象时调用拷贝构造函数和析构函数，造成不必要的开销</li>
+</ul>
+</li>
+<li>需要注意自赋值问题</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs C++"><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span>​</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;cstring&gt;</span>​</span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;​<br>​<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyString</span> &#123;​<br><span class="hljs-keyword">private</span>:​<br>    <span class="hljs-type">char</span>* str;​<br>​<br><span class="hljs-keyword">public</span>:​<br>    <span class="hljs-built_in">MyString</span>(<span class="hljs-type">const</span> <span class="hljs-type">char</span>* s = <span class="hljs-string">&quot;&quot;</span>) &#123;​<br>        str = <span class="hljs-keyword">new</span> <span class="hljs-type">char</span>[<span class="hljs-built_in">strlen</span>(s) + <span class="hljs-number">1</span>];​<br>        <span class="hljs-built_in">strcpy</span>(str, s);​<br>    &#125;​<br>​<br>    <span class="hljs-comment">// 析构函数​</span><br>    ~<span class="hljs-built_in">MyString</span>() &#123;​<br>        <span class="hljs-keyword">delete</span>[] str;​<br>    &#125;​<br>​<br>    <span class="hljs-comment">// 赋值运算符重载​</span><br>    MyString&amp; <span class="hljs-keyword">operator</span>=(<span class="hljs-type">const</span> MyString&amp; other) &#123;​<br>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span> == &amp;other) &#123;​<br>            <span class="hljs-keyword">return</span> *<span class="hljs-keyword">this</span>; <span class="hljs-comment">// 处理自我赋值​</span><br>        &#125;​<br>        <span class="hljs-keyword">delete</span>[] str; <span class="hljs-comment">// 释放原有内存​</span><br>        str = <span class="hljs-keyword">new</span> <span class="hljs-type">char</span>[<span class="hljs-built_in">strlen</span>(other.str) + <span class="hljs-number">1</span>];​<br>        <span class="hljs-built_in">strcpy</span>(str, other.str);​<br>        <span class="hljs-keyword">return</span> *<span class="hljs-keyword">this</span>;​<br>    &#125;​<br>​<br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">display</span><span class="hljs-params">()</span> </span>&#123;​<br>        cout &lt;&lt; str &lt;&lt; endl;​<br>    &#125;​<br>&#125;;​<br>​<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;​<br>    <span class="hljs-function">MyString <span class="hljs-title">s1</span><span class="hljs-params">(<span class="hljs-string">&quot;Hello&quot;</span>)</span></span>;​<br>    <span class="hljs-function">MyString <span class="hljs-title">s2</span><span class="hljs-params">(<span class="hljs-string">&quot;World&quot;</span>)</span></span>;​<br>​<br>    s<span class="hljs-number">1.</span><span class="hljs-built_in">display</span>(); <span class="hljs-comment">// 输出：Hello​</span><br>    s<span class="hljs-number">2.</span><span class="hljs-built_in">display</span>(); <span class="hljs-comment">// 输出：World​</span><br>​<br>    s2 = s1; <span class="hljs-comment">// 使用重载的=运算符​</span><br>    s<span class="hljs-number">2.</span><span class="hljs-built_in">display</span>(); <span class="hljs-comment">// 输出：Hello​</span><br>​<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;​<br>&#125;​<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-插入流和提取流运算符（）"><a href="#4-插入流和提取流运算符（）" class="headerlink" title="4. 插入流和提取流运算符（&lt;&lt;、&gt;&gt;）"></a>4. 插入流和提取流运算符（<code>&lt;&lt;</code>、<code>&gt;&gt;</code>）</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span>​</span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;​<br>​<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Complex</span> &#123;​<br><span class="hljs-keyword">private</span>:​<br>    <span class="hljs-type">double</span> real;​<br>    <span class="hljs-type">double</span> imag;​<br>​<br><span class="hljs-keyword">public</span>:​<br>    <span class="hljs-built_in">Complex</span>(<span class="hljs-type">double</span> r = <span class="hljs-number">0.0</span>, <span class="hljs-type">double</span> i = <span class="hljs-number">0.0</span>) : <span class="hljs-built_in">real</span>(r), <span class="hljs-built_in">imag</span>(i) &#123;&#125;​<br>​<br>    <span class="hljs-comment">// 友元函数形式重载&lt;&lt;​</span><br>    <span class="hljs-keyword">friend</span> ostream&amp; <span class="hljs-keyword">operator</span>&lt;&lt;(ostream&amp; os, <span class="hljs-type">const</span> Complex&amp; c);​<br>&#125;;​<br>​<br>ostream&amp; <span class="hljs-keyword">operator</span>&lt;&lt;(ostream&amp; os, <span class="hljs-type">const</span> Complex&amp; c) &#123;​<br>    os &lt;&lt; c.real &lt;&lt; <span class="hljs-string">&quot; + &quot;</span> &lt;&lt; c.imag &lt;&lt; <span class="hljs-string">&quot;i&quot;</span>;​<br>    <span class="hljs-keyword">return</span> os;​<br>&#125;​<br>​<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;​<br>    Complex c;​<br>    cout &lt;&lt; c &lt;&lt; endl; <span class="hljs-comment">// 使用重载的&lt;&lt;运算符​</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;​<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ul>
+<li>以下的运算符不能重载<ul>
+<li>成员访问运算符 <code>.</code></li>
+<li>成员指针访问 <code>.*</code></li>
+<li>作用域解析运算符 <code>::</code></li>
+<li>条件运算符 <code>?:</code></li>
+<li><code>sizeof</code>运算符</li>
+</ul>
+</li>
+<li>运算符重载不能改变运算符的优先级和结合性</li>
+<li>基本数据类型的运算符不能重载，如果运算符有2个及以上操作数，则至少一个操作数是自定义类型</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/C/" class="category-chain-item">C++</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>cpp_operator_overload</div>
+      <div>https://guts.homes/2025/06/13/cpp-operator-overload/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>guts</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年6月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/06/14/cpp-inheritance/" title="C++中的继承与多态">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">C++中的继承与多态</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/06/13/cpp-static/" title="C++中的static关键字">
+                        <span class="hidden-mobile">C++中的static关键字</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"FkNpNoCOCKAFaE0xepwfi5bb-gzGzoHsz","appKey":"5g5TFpe1p9FCDfz4G0CPPxx2","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

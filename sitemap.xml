@@ -2,9 +2,45 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://guts.homes/2025/06/12/cpp-constructor/</loc>
+    <loc>https://guts.homes/2025/06/14/cpp-inheritance/</loc>
     
-    <lastmod>2025-06-12</lastmod>
+    <lastmod>2025-06-14</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://guts.homes/2025/06/13/cpp-operator-overload/</loc>
+    
+    <lastmod>2025-06-14</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://guts.homes/2025/06/13/cpp-static/</loc>
+    
+    <lastmod>2025-06-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://guts.homes/2025/06/13/cpp-type-conversion/</loc>
+    
+    <lastmod>2025-06-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://guts.homes/2025/06/13/cpp-list-initialization/</loc>
+    
+    <lastmod>2025-06-13</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -13,7 +49,16 @@
   <url>
     <loc>https://guts.homes/2025/06/12/cpp-auto-decltype/</loc>
     
-    <lastmod>2025-06-12</lastmod>
+    <lastmod>2025-06-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://guts.homes/2025/06/12/cpp-constructor/</loc>
+    
+    <lastmod>2025-06-13</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -94,7 +139,7 @@
 
   <url>
     <loc>https://guts.homes/</loc>
-    <lastmod>2025-06-13</lastmod>
+    <lastmod>2025-06-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -104,7 +149,7 @@
   
   <url>
     <loc>https://guts.homes/categories/C/</loc>
-    <lastmod>2025-06-13</lastmod>
+    <lastmod>2025-06-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
