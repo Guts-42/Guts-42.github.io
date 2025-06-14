@@ -19,15 +19,15 @@
   <meta name="author" content="guts">
   <meta name="keywords" content="">
   
-    <meta name="description" content="继承C++中的类可以通过继承别的类来定义，这能够大幅提高代码的复用效率。继承的语法为 1class newClass : 访问修饰符 baseClass&#123;&#125;; 根据访问修饰符，类的继承分为  公有继承  不改变基类中成员的访问属性 保护继承 将基类的public和protected成员都变成protected 私有继承 将基类的public和protected成员都变成priv">
+    <meta name="description" content="继承基本概念C++中的类可以通过继承别的类来定义，这能够大幅提高代码的复用效率。继承的语法为 1class newClass : 访问修饰符 baseClass&#123;&#125;; 根据访问修饰符，类的继承分为  公有继承  不改变基类中成员的访问属性 保护继承 将基类的public和protected成员都变成protected 私有继承 将基类的public和protected成员都变成">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C++中的继承与多态">
 <meta property="og:url" content="https://guts.homes/2025/06/14/cpp-inheritance/index.html">
 <meta property="og:site_name" content="guts的小屋">
-<meta property="og:description" content="继承C++中的类可以通过继承别的类来定义，这能够大幅提高代码的复用效率。继承的语法为 1class newClass : 访问修饰符 baseClass&#123;&#125;; 根据访问修饰符，类的继承分为  公有继承  不改变基类中成员的访问属性 保护继承 将基类的public和protected成员都变成protected 私有继承 将基类的public和protected成员都变成priv">
+<meta property="og:description" content="继承基本概念C++中的类可以通过继承别的类来定义，这能够大幅提高代码的复用效率。继承的语法为 1class newClass : 访问修饰符 baseClass&#123;&#125;; 根据访问修饰符，类的继承分为  公有继承  不改变基类中成员的访问属性 保护继承 将基类的public和protected成员都变成protected 私有继承 将基类的public和protected成员都变成">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-14T08:24:29.000Z">
-<meta property="article:modified_time" content="2025-06-14T08:36:10.128Z">
+<meta property="article:modified_time" content="2025-06-14T11:56:58.207Z">
 <meta property="article:author" content="guts">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          284 字
+          2.4k 字
         
       </span>
     
@@ -236,7 +236,7 @@
         
         
         
-          3 分钟
+          20 分钟
         
       </span>
     
@@ -287,7 +287,7 @@
             
               <div class="markdown-body">
                 
-                <h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><p>C++中的类可以通过继承别的类来定义，这能够大幅提高代码的复用效率。继承的语法为</p>
+                <h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>C++中的类可以通过继承别的类来定义，这能够大幅提高代码的复用效率。继承的语法为</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">newClass</span> : 访问修饰符 baseClass&#123;&#125;;<br></code></pre></td></tr></table></figure>
 <p>根据访问修饰符，类的继承分为</p>
 <ul>
@@ -295,10 +295,13 @@
 <li>保护继承 将基类的<code>public</code>和<code>protected</code>成员都变成<code>protected</code></li>
 <li>私有继承 将基类的<code>public</code>和<code>protected</code>成员都变成<code>private</code></li>
 </ul>
+<h3 id="构造函数和析构函数的调用顺序"><a href="#构造函数和析构函数的调用顺序" class="headerlink" title="构造函数和析构函数的调用顺序"></a>构造函数和析构函数的调用顺序</h3><ul>
+<li>构造函数的调用顺序：<strong>自上而下</strong><br>当建立一个对象时，<strong>首先调用基类</strong>的构造函数，然后调用下一个派生类的构造函数，依次类推，直至到达最底层目标派生类的构造函数</li>
+<li>析构函数的调用顺序：<strong>自下而上</strong><br>当删除一个对象时，<strong>首先调用该派生类</strong>的析构函数，然后调用上一层基类的析构函数，依次类推，直到到达最顶层的基类析构函数</li>
+</ul>
 <h3 id="多继承"><a href="#多继承" class="headerlink" title="多继承"></a>多继承</h3><p>C++中一个子类可以继承多个父类。比如一个男子篮球运动员，那就可以定义两个父类，一个<code>MalePeople</code>类，一个<code>BasketballPlayer</code>类，那如果想要定义男子篮球运动员类，可以定义一个<code>MaleBasketballPlayer</code>类，继承<code>MalePeople</code>和<code>BaskeballPlayer</code>，代码如下：​</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MalePeople</span> &#123;​<br><span class="hljs-keyword">public</span>:​<br>  <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">Speak</span><span class="hljs-params">()</span> </span>&#123; std::cout &lt;&lt; <span class="hljs-string">&quot;MalePeople Speak \n&quot;</span>; &#125;​<br>&#125;;​<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">BasketBallPlayer</span> &#123;​<br><span class="hljs-keyword">public</span>:​<br>  <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">Play</span><span class="hljs-params">()</span> </span>&#123; std::cout &lt;&lt; <span class="hljs-string">&quot;Play Basketball \n&quot;</span>; &#125;​<br>&#125;;​<br>​<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MaleBasketBallPlayer</span> : <span class="hljs-keyword">public</span> MalePeople, <span class="hljs-keyword">public</span> BasketBallPlayer &#123;&#125;;​<br></code></pre></td></tr></table></figure>
-<h3 id="虚继承"><a href="#虚继承" class="headerlink" title="虚继承"></a>虚继承</h3><p>当一个类继承两个父类，而这两个父类存在一样的父类</p>
-<pre><code class=" mermaid">graph TB
+<h3 id="虚继承"><a href="#虚继承" class="headerlink" title="虚继承"></a>虚继承</h3><pre><code class=" mermaid">graph TB
   A1[&quot;A&quot;]
   A2[&quot;A&quot;]
 
@@ -311,6 +314,85 @@
   C  --&gt; D
 
 </code></pre>
+<p>当一个类使用普通的继承来继承两个父类，而这两个父类存在一样的父类,如上图所示，那么D中就会存储两份A的数据，造成内存的浪费。此外，还会导致二义性，当D调用A的方法时，由于有两个A，编译器也无法判断调用哪个方法。为了解决这个问题，可以采用<strong>虚继承</strong>。</p>
+<pre><code class=" mermaid">graph TB
+
+  A --&gt; B[&quot;B&quot;]
+  A --&gt; C[&quot;C&quot;]
+
+  %% 最后合并到 D
+  B  --&gt; D[&quot;D&quot;]
+  C  --&gt; D
+
+</code></pre>
+<p>使用虚继承时，只有一个共享的基类被继承了。<br>使用虚继承只需要在继承时添加<code>virtual</code>进行修饰即可,注意是在<code>B</code>和<code>C</code>继承<code>A</code>时用<code>virtual</code>进行修饰而不是<code>D</code>继承<code>B</code>和<code>C</code>时。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Base</span> &#123;​<br>  <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">Func</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Base Func\n&quot;</span>); &#125;​<br>&#125;;​<br>​<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">BaseA</span> : <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">public</span> Base &#123;​<br>  <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">Func</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;BaseA Func\n&quot;</span>); &#125;​<br>&#125;;​<br>​<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">BaseB</span> : <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">public</span> Base &#123;​<br>  <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">Func</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;BaseB Func\n&quot;</span>); &#125;​<br>&#125;;​<br>​<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Derive</span> : <span class="hljs-keyword">public</span> BaseB, <span class="hljs-keyword">public</span> BaseA &#123;​<br>  <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">Func</span><span class="hljs-params">()</span> <span class="hljs-keyword">override</span> </span>&#123; <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Derive Func \n&quot;</span>); &#125;​<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h2><p>多态是指同一个接口，在不同的对象调用时，根据对象的类型来执行不同的内容，产生不同的行为。例如男人和女人都能调用<code>说话</code>这一接口，但是他们说话的音色语调等特性都不相同。</p>
+<h3 id="虚函数与多态"><a href="#虚函数与多态" class="headerlink" title="虚函数与多态"></a>虚函数与多态</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">People</span> &#123;​<br><span class="hljs-keyword">public</span>:​<br>  <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">Speak</span><span class="hljs-params">()</span> </span>&#123; std::cout &lt;&lt; <span class="hljs-string">&quot;People Speak \n&quot;</span>; &#125;​<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>上面的代码中<code>Speak()</code>用<code>virtual</code>进行修饰，表示这是一个虚函数，虚函数可以被派生类所覆盖。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MalePeople</span> : <span class="hljs-keyword">public</span> People &#123;​<br><span class="hljs-keyword">public</span>:​<br>  <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">Speak</span><span class="hljs-params">()</span> </span>&#123; std::cout &lt;&lt; <span class="hljs-string">&quot;MalePeople Speak \n&quot;</span>; &#125;​<br>&#125;;​<br>​<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">FemalePeople</span> : <span class="hljs-keyword">public</span> People &#123;​<br><span class="hljs-keyword">public</span>:​<br>  <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">Speak</span><span class="hljs-params">()</span> </span>&#123; std::cout &lt;&lt; <span class="hljs-string">&quot;FemalePeople Speak \n&quot;</span>; &#125;​<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p><code>MalePeople</code>和<code>FemalePeople</code>继承了<code>People</code>类并将虚函数覆盖</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;​<br>    People *p1 = <span class="hljs-keyword">new</span> <span class="hljs-built_in">People</span>();​<br>    People *p2 = <span class="hljs-built_in">static_cast</span>&lt;People *&gt;(<span class="hljs-keyword">new</span> <span class="hljs-built_in">MalePeople</span>());​<br>    People *p3 = <span class="hljs-built_in">static_cast</span>&lt;People *&gt;(<span class="hljs-keyword">new</span> <span class="hljs-built_in">FemalePeople</span>());​<br>    <br>    p1-&gt;<span class="hljs-built_in">Speak</span>(); <span class="hljs-comment">// People Speak​</span><br>    p2-&gt;<span class="hljs-built_in">Speak</span>(); <span class="hljs-comment">// MalePeople Speak​</span><br>    p3-&gt;<span class="hljs-built_in">Speak</span>(); <span class="hljs-comment">// FemalePeople Speak​</span><br>    <span class="hljs-keyword">delete</span> p3;​<br>    <span class="hljs-keyword">delete</span> p2;​<br>    <span class="hljs-keyword">delete</span> p1;​<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><code>p1</code>,<code>p2</code>和<code>p3</code>都是<code>People</code>类的指针，调用的也都是相同的函数<code>Speak()</code>,但是由于指向的具体实例不同，产生了不同的行为，这就是多态。<br>多态同样可以通过基类的引用来实现。<br>需要注意的是</p>
+<ul>
+<li>虚函数的重写要求函数名、函数参数与返回值都相同</li>
+<li>重写只对虚函数的函数体有效，返回值类型、函数名、参数列表和缺省参数都不能修改</li>
+<li>多态必须要满足两个条件<ul>
+<li>虚函数的重写</li>
+<li>用父类类型的指针或引用(接收父类对象或子类对象)的对象去调用虚函数</li>
+</ul>
+</li>
+</ul>
+<h3 id="多态的原理"><a href="#多态的原理" class="headerlink" title="多态的原理"></a>多态的原理</h3><p>多态的关键在于通过基类指针或引用调用一个虚函数时，编译时不能确定到底调用的是基类还是派生类的函数，运行时才能确定。</p>
+<h4 id="1-虚函数表指针（vptr）"><a href="#1-虚函数表指针（vptr）" class="headerlink" title="1. 虚函数表指针（vptr）"></a>1. 虚函数表指针（vptr）</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> <br>&#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-type">int</span> i;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">Print</span><span class="hljs-params">()</span> </span>&#123; &#125; <span class="hljs-comment">// 虚函数</span><br>&#125;;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">B</span><br>&#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-type">int</span> n;<br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">Print</span><span class="hljs-params">()</span> </span>&#123; &#125; <br>&#125;;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span><br><span class="hljs-function"></span>&#123;<br>    cout &lt;&lt; <span class="hljs-built_in">sizeof</span>(A) &lt;&lt; <span class="hljs-string">&quot;,&quot;</span>&lt;&lt; <span class="hljs-built_in">sizeof</span>(B);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>在64位的设备上运行上面的代码，结果是</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">16</span>,<span class="hljs-number">4</span><br></code></pre></td></tr></table></figure>
+<p>说明包含虚函数的类会多出8个字节的大小，实际上这8个字节存放的就是指向虚函数表的指针，也就是虚函数表的地址。</p>
+<h4 id="2-虚函数表（vtable）"><a href="#2-虚函数表（vtable）" class="headerlink" title="2. 虚函数表（vtable）"></a>2. 虚函数表（vtable）</h4><p>每一个包含虚函数的<strong>类</strong>，都有一个<strong>虚函数表（vtable）</strong>，虚函数表会列出这个类中虚函数的地址。这个类的所有<strong>实例</strong>中都存放着<strong>指向这个虚函数表的指针</strong>。</p>
+<p><strong>虚函数表</strong>本质上一是一个虚函数指针数组，元素的顺序取决于虚函数声明的顺序。它有以下性质</p>
+<ul>
+<li>虚函数表在编译期间生成，构造对象时初始化的是虚函数表指针</li>
+<li>虚函数继承体系中,基类先生成一份虚表,之后派生类自己的虚表都是基于从父类继承下来的虚表</li>
+<li>如果派生类重写了基类中某个虚函数，会在虚函数表内用派生类自己的虚函数地址覆盖虚表中基类的虚函数地址,如果子类没有重写,则虚函数表和父类的虚函数表的元素完全一样</li>
+<li>派生类自己新增加的虚函数,从继承的虚表的最后一个元素开始,按其在派生类中的声明次序增加到派生类虚表的最后。</li>
+<li>虚函数和普通函数一样的，都是存在代码段的，只是他的指针又存到了虚表中</li>
+<li>同一类的对象共享一个虚函数表</li>
+</ul>
+<h4 id="3-多态的实现机制"><a href="#3-多态的实现机制" class="headerlink" title="3. 多态的实现机制"></a>3. 多态的实现机制</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;​<br>    People *p1 = <span class="hljs-keyword">new</span> <span class="hljs-built_in">People</span>();​<br>    People *p2 = <span class="hljs-built_in">static_cast</span>&lt;People *&gt;(<span class="hljs-keyword">new</span> <span class="hljs-built_in">MalePeople</span>());​<br>    People *p3 = <span class="hljs-built_in">static_cast</span>&lt;People *&gt;(<span class="hljs-keyword">new</span> <span class="hljs-built_in">FemalePeople</span>());​<br>    <br>    p1-&gt;<span class="hljs-built_in">Speak</span>(); <span class="hljs-comment">// People Speak​</span><br>    p2-&gt;<span class="hljs-built_in">Speak</span>(); <span class="hljs-comment">// MalePeople Speak​</span><br>    p3-&gt;<span class="hljs-built_in">Speak</span>(); <span class="hljs-comment">// FemalePeople Speak​</span><br>    <span class="hljs-keyword">delete</span> p3;​<br>    <span class="hljs-keyword">delete</span> p2;​<br>    <span class="hljs-keyword">delete</span> p1;​<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>在编译时，如果<code>Speak()</code>不是虚函数，那么编译器会直接将其绑定到固定的函数地址，但由于<code>Speak()</code>被声明为<code>virtual</code>，那么编译器会将基类指针对其的调用编译为两步</p>
+<ol>
+<li>通过基类指针读取虚函数表指针，如果此时基类指针指向的是派生类，那么读取的就是指向派生类虚函数表的指针</li>
+<li>根据<code>Speak()</code>声明的顺序（也就是其在虚函数表中的偏移），用虚函数表指针读取它真正的函数地址</li>
+<li>通过第2步读取的函数地址，调用对应的函数</li>
+</ol>
+<p>根据上面的内容，我们发现通过虚函数实现多态时，函数的地址是在运行时才被绑定的，因此这种多态的实现也叫做<strong>运行时多态</strong>和<strong>动态多态</strong></p>
+<!-- #### 早绑定
+
+### 运行时多态和编译时多态
+我们称通过虚函数实现的多态为**运行时多态**，也叫动态多态，这是因为 -->
+
+<h3 id="纯虚函数与抽象类"><a href="#纯虚函数与抽象类" class="headerlink" title="纯虚函数与抽象类"></a>纯虚函数与抽象类</h3><p>纯虚函数是在虚函数的基础上用<code>=0</code>修饰</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">People</span> &#123;​<br><span class="hljs-keyword">public</span>:​<br>  <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">Speak</span><span class="hljs-params">()</span> </span>= <span class="hljs-number">0</span>;<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>含有纯虚函数的类叫做抽象类，抽象类不允许被实例化，只能通过派生来来实例化。</p>
+<h3 id="虚析构函数"><a href="#虚析构函数" class="headerlink" title="虚析构函数"></a>虚析构函数</h3><p>在多态的情景下，如果析构函数不是虚函数，那么通过基类的指针删除派生类对象时，只会调用基类的析构函数，而不会调用派生类的析构函数，那么可能会导致派生类的资源没有释放，造成内存泄漏。</p>
+<p>因此在实现多态时，需要将基类的析构函数设置为虚函数。</p>
+<p>需要注意的是，<strong>构造函数不能声明为虚函数</strong>，因为虚函数机制依赖于对象的 <code>vtable</code> 指针，而 <code>vtable</code> 指针是在基类构造完成之后才会被设置的。在调用构造函数的过程中，对象还未完全构建，虚表还未就绪，因此无法调用“动态绑定”的虚函数。</p>
+<h3 id="final关键字"><a href="#final关键字" class="headerlink" title="final关键字"></a><code>final</code>关键字</h3><p><code>final</code>是C++11中引入的关键字，用于修饰类和类中的虚函数。</p>
+<ul>
+<li>用<code>final</code>修饰类时，禁止该类被继承，继承该类会导致编译错误。  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> <span class="hljs-keyword">final</span><br>&#123;&#125;;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">B</span> : <span class="hljs-keyword">public</span> A <span class="hljs-comment">//编译错误</span><br>&#123;&#125;;<br></code></pre></td></tr></table></figure></li>
+<li><code>final</code>关键字还可以标记虚函数，从而禁止子类中重写该函数  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">func</span><span class="hljs-params">()</span> <span class="hljs-keyword">final</span> </span>&#123;&#125;<br>&#125;;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">B</span> : <span class="hljs-keyword">public</span> A &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">func</span><span class="hljs-params">()</span> </span>&#123;&#125;    <span class="hljs-comment">//编译错误</span><br>&#125;;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="override关键字"><a href="#override关键字" class="headerlink" title="override关键字"></a><code>override</code>关键字</h3><p>如果某些情况因为疏忽而导致函数没有进行重写,这种情况在编译期间是不会报错的,只有程序运行时没有得到预期结果才可能意识到出现了问题,等到这时再debug已经得不偿失了。</p>
+<p>因此C++11引入了<code>override</code>关键字，如果被<code>override</code>关键字修饰的派生类虚函数没有重写，则无法通过编译。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br><span class="hljs-keyword">public</span>:<br>     <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">func</span><span class="hljs-params">()</span>  </span>&#123;&#125;<br>&#125;;<br> <br><span class="hljs-keyword">class</span> <span class="hljs-title class_">B</span> : <span class="hljs-keyword">public</span> A &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">func</span><span class="hljs-params">(<span class="hljs-type">int</span> i)</span> <span class="hljs-keyword">override</span></span>&#123; &#125; <span class="hljs-comment">//error</span><br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/DSCL-ing/p/18240152">[cnblog.com] 深入剖析C++多态的实现与原理-详解 </a></li>
+</ul>
+
                 
               </div>
             
@@ -466,6 +548,21 @@
 
   
 
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
 
 
 
