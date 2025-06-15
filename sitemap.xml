@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://guts.homes/2025/06/13/cpp-RAII/</loc>
+    
+    <lastmod>2025-06-15</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://guts.homes/2025/06/12/cpp-auto-decltype/</loc>
     
     <lastmod>2025-06-15</lastmod>

@@ -17,6 +17,25 @@
   
   
   <entry>
+    <title>RAII</title>
+    <link href="/2025/06/13/cpp-RAII/"/>
+    <url>/2025/06/13/cpp-RAII/</url>
+    
+    <content type="html"><![CDATA[<h2 id="什么是RAII"><a href="#什么是RAII" class="headerlink" title="什么是RAII"></a>什么是<code>RAII</code></h2><p><code>RAII</code>，<code>Resource Acquisition Is Initialization</code>,资源获取即初始化，是C++中很重要的编程思想，它将资源的声明周期和对象的生命周期绑定到一起，在构造函数请求资源，在析构函数释放资源并且绝不抛出异常。<br><code>C++</code>中的<code>STL</code>基本都遵循<code>RAII</code>规范，例如<code>vector</code>, <code>string</code>, <code>lock_guard</code>, <code>unique_lock</code>, <code>shared_ptr</code>, <code>unique_ptr</code>等。</p><h2 id="ScopeExit"><a href="#ScopeExit" class="headerlink" title="ScopeExit"></a><code>ScopeExit</code></h2><p><code>ScopeExit</code>可以在绑定多行代码，在程序离开<code>ScopeExit</code>所在的作用域时，会执行<code>ScopeExit</code>绑定的代码。一般用于绑定资源的清理代码。<br>例如</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">test</span><span class="hljs-params">()</span> </span>&#123;​<br>    <span class="hljs-type">char</span> *test = <span class="hljs-keyword">new</span> <span class="hljs-type">char</span>[<span class="hljs-number">100</span>];​<br>    <span class="hljs-keyword">if</span> (a) &#123;​<br>        <span class="hljs-keyword">delete</span>[] test; <span class="hljs-comment">// count 1​</span><br>        <span class="hljs-keyword">return</span>;​<br>    &#125;​<br>    xxx;​<br>    <span class="hljs-keyword">if</span> (b) &#123;​<br>        <span class="hljs-keyword">delete</span>[] test; <span class="hljs-comment">// count 2​</span><br>        <span class="hljs-keyword">return</span>;​<br>    &#125;​<br>    ... <span class="hljs-keyword">delete</span>[] test; <span class="hljs-comment">// count 3​</span><br>&#125;<br></code></pre></td></tr></table></figure><p>没有<code>ScopeExit</code>时，我们需要多次手动释放资源，但有了<code>ScopeExit</code>后</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">test</span><span class="hljs-params">()</span> </span>&#123;​<br>    <span class="hljs-type">char</span> *test = <span class="hljs-keyword">new</span> <span class="hljs-type">char</span>[<span class="hljs-number">100</span>];​<br>    <span class="hljs-function">std::ofstream <span class="hljs-title">ofs</span><span class="hljs-params">(<span class="hljs-string">&quot;test.txt&quot;</span>)</span></span>;​<br>    ScopeExit &#123;​<br>        <span class="hljs-keyword">delete</span>[] test; <span class="hljs-comment">// 在test函数生命周期结束后自动执行delete[]操作​</span><br>        ofs.<span class="hljs-built_in">close</span>(); <span class="hljs-comment">// 在生命周期结束后自动关闭文件，这里只是举个不恰当例子，ofstream自动生命周期结束后就会关闭​</span><br>    &#125;;​<br>    <span class="hljs-keyword">if</span> (a) &#123;​<br>        <span class="hljs-keyword">return</span>;​<br>    &#125;​<br>    xxx;​<br>    <span class="hljs-keyword">if</span> (b) &#123;​<br>        <span class="hljs-keyword">return</span>;​<br>    &#125;​<br>    ...​<br>&#125;​<br></code></pre></td></tr></table></figure><p>我们只需要用<code>ScopeExit</code>绑定一次资源的清理代码即可。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>C++</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>C++中运算符的重载</title>
     <link href="/2025/06/13/cpp-operator-overload/"/>
     <url>/2025/06/13/cpp-operator-overload/</url>
