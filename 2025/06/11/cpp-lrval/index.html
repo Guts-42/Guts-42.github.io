@@ -27,7 +27,7 @@
 <meta property="og:description" content="C++中表达式的结果有两个属性：类型和值类别（value categories），类型影响值的表示范围和所占的存储空间，值类别则影响  能否取地址和修改 引用的绑定规则 生命周期  等特性。分为以下几类 1. 左值 lvalue具有存储位置的对象，可以被修改和获取，且在表达式结束后依然存在。简单地说，能够用&amp;取地址的就是左值。包括  函数名当我们将一个函数名作为值来使用时，它会自动转换成">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-11T09:45:41.000Z">
-<meta property="article:modified_time" content="2025-06-12T06:56:48.486Z">
+<meta property="article:modified_time" content="2025-06-15T11:35:29.490Z">
 <meta property="article:author" content="guts">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.8k 字
+          2k 字
         
       </span>
     
@@ -236,7 +236,7 @@
         
         
         
-          16 分钟
+          17 分钟
         
       </span>
     
@@ -353,6 +353,7 @@
 <ul>
 <li>万能引用是参数绑定的入口，负责接收任意的值类别。​</li>
 <li>而<code>std::forward</code>是转发的出口，负责恢复原始值的类别。以上面的代码为例，<code>wrapper</code>中的<code>t</code>无论接受的是左值还是右值，在<code>wrapper</code>内部都是左值，因为它是<strong>具名</strong>的，且在栈上分配了空间。而<code>std::forward&lt;T&gt;(t)</code>则能根据<code>T</code>是<code>int</code>(<code>t</code>传入的是右值)还是<code>int &amp;</code>（<code>t</code>传入的是左值）来将<code>t</code>恢复成它原来的值类型。</li>
+<li>之所以需要万能转发，是因为不管你传入的是右值还是左值，在函数内部，参数都是具名的，也就是说，在函数内部参数都是左值。如果这个函数需要调用其他的函数，而那个被调用的函数根据参数是左值还是右值，会有不同的行为的话，这个时候就需要用完美转发来恢复参数的值类型。</li>
 </ul>
 <h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><ul>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zpcdbky/p/5275959.html">[cnblog] 话说C++中的左值、纯右值、将亡值</a></li>
