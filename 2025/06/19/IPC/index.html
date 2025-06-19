@@ -1,0 +1,954 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/guts.png">
+  <link rel="icon" href="/guts.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="guts">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="基本概念进程间通信（IPC，InterProcess Communication）指的是在不同进程之间传播信息的过程，常见的IPC方式有  管道 匿名管道 命名管道   消息队列 信号量 共享内存 Socket  传输模式 单工 Simplex只允许一方向另一方传输信息，而另一方不能向一方传输 全双工 Full Duplex发送数据的同时也能够接受数据，二者可以同步进行。 半双工 Half Dup">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进程间通信">
+<meta property="og:url" content="https://guts.homes/2025/06/19/IPC/index.html">
+<meta property="og:site_name" content="guts的小屋">
+<meta property="og:description" content="基本概念进程间通信（IPC，InterProcess Communication）指的是在不同进程之间传播信息的过程，常见的IPC方式有  管道 匿名管道 命名管道   消息队列 信号量 共享内存 Socket  传输模式 单工 Simplex只允许一方向另一方传输信息，而另一方不能向一方传输 全双工 Full Duplex发送数据的同时也能够接受数据，二者可以同步进行。 半双工 Half Dup">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-19T05:03:37.000Z">
+<meta property="article:modified_time" content="2025-06-19T09:38:58.081Z">
+<meta property="article:author" content="guts">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>进程间通信 - guts的小屋</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"guts.homes","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"FkNpNoCOCKAFaE0xepwfi5bb-gzGzoHsz","app_key":"5g5TFpe1p9FCDfz4G0CPPxx2","server_url":"https://fknpnoco.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>guts的小屋</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="进程间通信"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-06-19 13:03" pubdate>
+          2025年6月19日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          40 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">进程间通信</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>进程间通信（IPC，InterProcess Communication）指的是在不同进程之间传播信息的过程，常见的IPC方式有</p>
+<ul>
+<li>管道<ul>
+<li>匿名管道</li>
+<li>命名管道</li>
+</ul>
+</li>
+<li>消息队列</li>
+<li>信号量</li>
+<li>共享内存</li>
+<li>Socket</li>
+</ul>
+<h3 id="传输模式"><a href="#传输模式" class="headerlink" title="传输模式"></a>传输模式</h3><ul>
+<li>单工 Simplex<br>只允许一方向另一方传输信息，而另一方不能向一方传输</li>
+<li>全双工 Full Duplex<br>发送数据的同时也能够接受数据，二者可以同步进行。</li>
+<li>半双工 Half Duplex<br>数据可以在一个信号载体的两个方向上传输，但是不能同时传输</li>
+</ul>
+<h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><h3 id="匿名管道-pipe"><a href="#匿名管道-pipe" class="headerlink" title="匿名管道 pipe"></a>匿名管道 pipe</h3><ul>
+<li>属于半双工通信，数据只能在一个方向上流动<ul>
+<li>尽管读端和写端可以同时打开，但每个描述符只能用于读或写中的一种操作，不能同时双向通信</li>
+<li>从管道本身的角度看，信息只能从写端进入，从读端离开</li>
+</ul>
+</li>
+<li>只能在父子进程之间通信</li>
+<li>是一种特殊的文件，对于它的读写也可以使用普通的<code>read</code>、<code>write</code>等函数。</li>
+<li>但是它不是普通的文件，并不属于其他任何文件系统，并且<strong>只存在于进程的内核对象中，无法持久化</strong></li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-type">int</span> _pipe[<span class="hljs-number">2</span>];<br>    <span class="hljs-type">int</span> ret = <span class="hljs-built_in">pipe</span>(_pipe); <span class="hljs-comment">// 创建一个匿名管道，将读端文件描述符写入_pipe[0]，写端文件描述符写入_pipe[1]，成功返回0，否则返回-1</span><br>    <span class="hljs-keyword">if</span> (ret &lt; <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-built_in">perror</span>(<span class="hljs-string">&quot;pipe\n&quot;</span>);<br>    &#125;<br>    <span class="hljs-type">pid_t</span> id = fork(); <span class="hljs-comment">// 创建子进程</span><br>    <span class="hljs-keyword">if</span> (id &lt; <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-built_in">perror</span>(<span class="hljs-string">&quot;fork\n&quot;</span>);<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (id == <span class="hljs-number">0</span>) &#123;  <span class="hljs-comment">// 子进程</span><br>        <span class="hljs-built_in">close</span>(_pipe[<span class="hljs-number">1</span>]); <span class="hljs-comment">//关闭写端，避免子进程误写</span><br>        <span class="hljs-type">int</span> j = <span class="hljs-number">0</span>;<br>        <span class="hljs-type">char</span> _mesg[<span class="hljs-number">100</span>];<br>        <span class="hljs-keyword">while</span> (j &lt; <span class="hljs-number">100</span>) &#123;<br>            <span class="hljs-built_in">memset</span>(_mesg, <span class="hljs-string">&#x27;\0&#x27;</span>, <span class="hljs-built_in">sizeof</span>(_mesg));<br>            <span class="hljs-built_in">read</span>(_pipe[<span class="hljs-number">0</span>], _mesg, <span class="hljs-built_in">sizeof</span>(_mesg));<br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s\n&quot;</span>, _mesg);<br>            j++;<br>        &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123;  <span class="hljs-comment">// 父进程</span><br>        <span class="hljs-built_in">close</span>(_pipe[<span class="hljs-number">0</span>]);<br>        <span class="hljs-type">int</span> i = <span class="hljs-number">0</span>;<br>        <span class="hljs-type">char</span> *mesg = <span class="hljs-literal">NULL</span>;<br>        <span class="hljs-keyword">while</span> (i &lt; <span class="hljs-number">100</span>) &#123;<br>            mesg = <span class="hljs-string">&quot;父进程来写消息了&quot;</span>;<br>            <span class="hljs-built_in">write</span>(_pipe[<span class="hljs-number">1</span>], mesg, <span class="hljs-built_in">strlen</span>(mesg) + <span class="hljs-number">1</span>);<br>            <span class="hljs-built_in">sleep</span>(<span class="hljs-number">1</span>);<br>            ++i;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>上述的代码会一直输出</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs txt">父进程来写消息了<br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>pid_t id = fork();</code>创建子进程时会返回两次<ul>
+<li>在父进程中，返回子进程的 PID（&gt;0）</li>
+<li>在子进程中，返回 0</li>
+<li>出错时返回 -1</li>
+</ul>
+</li>
+</ul>
+<h3 id="高级管道-popen"><a href="#高级管道-popen" class="headerlink" title="高级管道 popen"></a>高级管道 <code>popen</code></h3><p><code>popen</code>的功能是打开一个进程，并创建一个管道与其通信，且这个打开的进程是当前进程的子进程。可以通过它来执行任何程序，包括 shell 命令。</p>
+<ul>
+<li>它接受以下两个参数：<ol>
+<li><strong>命令字符串</strong>： 可以是任何可执行文件的路径或者shell命令</li>
+<li><strong>模式</strong>：指定如何与该进程交互，常用的模式有：<ul>
+<li><code>&quot;r&quot;</code>：从进程读取输出（读模式），即进程的标准输出被重定向到管道。</li>
+<li><code>&quot;w&quot;</code>：向进程写入输入（写模式），即进程的标准输入被重定向到管道。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><code>popen</code>创建的管道必须由<code>pclose</code>关闭<br>下面的代码就是用于执行<code>shell</code>命令并返回命令执行的输出</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function">std::string <span class="hljs-title">GetCmdResult</span><span class="hljs-params">(<span class="hljs-type">const</span> std::string &amp;cmd, <span class="hljs-type">int</span> max_size = <span class="hljs-number">10240</span>)</span> </span>&#123;<br>    <span class="hljs-type">char</span> *data = (<span class="hljs-type">char</span> *)<span class="hljs-built_in">malloc</span>(max_size);<br>    <span class="hljs-keyword">if</span> (data == <span class="hljs-literal">NULL</span>) &#123;<br>        <span class="hljs-keyword">return</span> std::<span class="hljs-built_in">string</span>(<span class="hljs-string">&quot;malloc fail&quot;</span>);<br>    &#125;<br>    <span class="hljs-built_in">memset</span>(data, <span class="hljs-number">0</span>, max_size);<br>    <span class="hljs-type">const</span> <span class="hljs-type">int</span> max_buffer = <span class="hljs-number">256</span>;<br>    <span class="hljs-type">char</span> buffer[max_buffer];<br>    <span class="hljs-comment">// 命令末尾加上 2&gt;&amp;1，将标准错误重定向到标准输出，这样无论是 stdout 还是 stderr 都能被 popen 捕获。</span><br>    FILE *fdp = <span class="hljs-built_in">popen</span>((cmd + <span class="hljs-string">&quot; 2&gt;&amp;1&quot;</span>).<span class="hljs-built_in">c_str</span>(), <span class="hljs-string">&quot;r&quot;</span>);<br>    <span class="hljs-type">int</span> data_len = <span class="hljs-number">0</span>;<br><br>    <span class="hljs-keyword">if</span> (fdp) &#123;<br>        <span class="hljs-keyword">while</span> (!<span class="hljs-built_in">feof</span>(fdp)) &#123;<br>            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">fgets</span>(buffer, max_buffer, fdp)) &#123;<br>                <span class="hljs-type">int</span> len = <span class="hljs-built_in">strlen</span>(buffer);<br>                <span class="hljs-keyword">if</span> (data_len + len &gt; max_size) &#123;<br>                    cout &lt;&lt; <span class="hljs-string">&quot;data size larger than &quot;</span> &lt;&lt; max_size;<br>                    <span class="hljs-keyword">break</span>;<br>                &#125;<br>                <span class="hljs-built_in">memcpy</span>(data + data_len, buffer, len);<br>                data_len += len;<br>            &#125;<br>        &#125;<br>        <span class="hljs-built_in">pclose</span>(fdp);<span class="hljs-comment">//关闭管道</span><br>    &#125;<br>    <span class="hljs-function">std::string <span class="hljs-title">ret</span><span class="hljs-params">(data, data_len)</span></span>;<br>    <span class="hljs-built_in">free</span>(data);<br>    <span class="hljs-keyword">return</span> ret;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="命名管道-FIFO"><a href="#命名管道-FIFO" class="headerlink" title="命名管道 FIFO"></a>命名管道 FIFO</h3><p>与匿名管道的区别在于</p>
+<ul>
+<li>有名字</li>
+<li>可以双向通信</li>
+<li>可以在没有亲缘关系的进程间传输</li>
+<li>会在文件系统中创建一个特殊文件，这个特殊的文件会一直以文件的形式存在，而不是仅存在于进程的内核对象中，是<strong>持久化</strong>的。<br>命名管道通过<code>mkfifo</code>创建用于通信的文件</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">mkfifo</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span>* filename, <span class="hljs-type">mode_t</span> mode)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>并通过读写这个文件的方式进行进程间的通信</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/stat.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;fcntl.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;cstdlib&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;cstring&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><br><span class="hljs-type">static</span> <span class="hljs-keyword">constexpr</span> <span class="hljs-type">char</span> * FIFO_PATH = (<span class="hljs-type">char</span>*)<span class="hljs-string">&quot;/tmp/my_fifo&quot;</span>;<br><br><span class="hljs-comment">// 错误处理宏</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> CHECK(x,msg) \</span><br><span class="hljs-meta">    <span class="hljs-keyword">if</span> ((x) == -1) &#123; perror(msg); exit(EXIT_FAILURE); &#125;</span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-comment">// 1. 创建 FIFO 文件（如果已存在则忽略错误）</span><br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">mkfifo</span>(FIFO_PATH, <span class="hljs-number">0666</span>) == <span class="hljs-number">-1</span> &amp;&amp; errno != EEXIST) &#123;<br>        <span class="hljs-built_in">perror</span>(<span class="hljs-string">&quot;mkfifo&quot;</span>);<br>        <span class="hljs-keyword">return</span> EXIT_FAILURE;<br>    &#125;<br><br>    <span class="hljs-type">pid_t</span> pid = fork();<br>    <span class="hljs-built_in">CHECK</span>(pid, <span class="hljs-string">&quot;fork&quot;</span>);<br><br>    <span class="hljs-keyword">if</span> (pid == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-comment">// —— 子进程：读者 —— </span><br>        <span class="hljs-comment">// 2. 打开 FIFO 读端（阻塞，直到有写端打开）</span><br>        <span class="hljs-type">int</span> fd = <span class="hljs-built_in">open</span>(FIFO_PATH, O_RDONLY);<br>        <span class="hljs-built_in">CHECK</span>(fd, <span class="hljs-string">&quot;open for read&quot;</span>);<br><br>        <span class="hljs-type">char</span> buf[<span class="hljs-number">128</span>];<br>        <span class="hljs-type">ssize_t</span> n = <span class="hljs-built_in">read</span>(fd, buf, <span class="hljs-built_in">sizeof</span>(buf)<span class="hljs-number">-1</span>);<br>        <span class="hljs-keyword">if</span> (n &gt; <span class="hljs-number">0</span>) &#123;<br>            buf[n] = <span class="hljs-string">&#x27;\0&#x27;</span>;<br>            std::cout &lt;&lt; <span class="hljs-string">&quot;Child read: &quot;</span> &lt;&lt; buf &lt;&lt; std::endl;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            std::cerr &lt;&lt; <span class="hljs-string">&quot;Child: read returned &quot;</span> &lt;&lt; n &lt;&lt; std::endl;<br>        &#125;<br><br>        <span class="hljs-built_in">close</span>(fd);<br>        <span class="hljs-comment">// 子进程结束后，可自行删除 FIFO：</span><br>        <span class="hljs-built_in">unlink</span>(FIFO_PATH);<br>        <span class="hljs-built_in">exit</span>(EXIT_SUCCESS);<br><br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">// —— 父进程：写 —— </span><br>        <span class="hljs-comment">// 3. 打开 FIFO 写端（阻塞，直到有读端打开）</span><br>        <span class="hljs-type">int</span> fd = <span class="hljs-built_in">open</span>(FIFO_PATH, O_WRONLY);<br>        <span class="hljs-built_in">CHECK</span>(fd, <span class="hljs-string">&quot;open for write&quot;</span>);<br><br>        <span class="hljs-type">const</span> <span class="hljs-type">char</span> * msg = <span class="hljs-string">&quot;Hello from parent via FIFO!&quot;</span>;<br>        <span class="hljs-type">ssize_t</span> n = <span class="hljs-built_in">write</span>(fd, msg, std::<span class="hljs-built_in">strlen</span>(msg));<br>        <span class="hljs-keyword">if</span> (n == <span class="hljs-number">-1</span>) &#123;<br>            <span class="hljs-built_in">perror</span>(<span class="hljs-string">&quot;write&quot;</span>);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            std::cout &lt;&lt; <span class="hljs-string">&quot;Parent wrote &quot;</span> &lt;&lt; n &lt;&lt; <span class="hljs-string">&quot; bytes.&quot;</span> &lt;&lt; std::endl;<br>        &#125;<br><br>        <span class="hljs-built_in">close</span>(fd);<br>        <span class="hljs-built_in">wait</span>(<span class="hljs-literal">nullptr</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<h3 id="管道的优劣"><a href="#管道的优劣" class="headerlink" title="管道的优劣"></a>管道的优劣</h3><ul>
+<li>方便，可以传输大量数据</li>
+<li>效率相对于共享内存来说较低</li>
+</ul>
+<h2 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h2><ul>
+<li>消息队列的信息传递并不遵循先进先出的规则，而是会对每一条消息都赋予类型，根据消息的类型进行读取。</li>
+<li>可以同时存在多个线程对消息队列进行读写</li>
+</ul>
+<h3 id="msgget"><a href="#msgget" class="headerlink" title="msgget"></a><code>msgget</code></h3><p>用来打开一个现存的消息队列（当该消息队列存在时）或者创建一个消息队列。它的原型为：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">msgget</span><span class="hljs-params">(<span class="hljs-type">key_t</span> key, <span class="hljs-type">int</span> msgflg)</span></span>;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>key</code> <ul>
+<li>标识一组消息队列的键。可以理解为队列名，不同的进程只要使用相同的 <code>key</code>，就能访问到同一个消息队列。</li>
+<li>取值方式<ol>
+<li><code>IPC_PRIVATE</code>：<ul>
+<li>特殊常量，数值通常为 0。</li>
+<li>每次调用 <code>msgget(IPC_PRIVATE, …)</code> 总是创建一个新队列，且<strong>其他进程无法通过该值直接访问</strong>。</li>
+</ul>
+</li>
+<li><code>ftok()</code> 生成：<ul>
+<li>常见做法是先调用 <code>ftok(pathname, proj_id)</code> 生成一个 <code>key_t</code>。</li>
+<li><code>pathname</code> 通常指向一个已存在的文件，<code>proj_id</code> 是一个小整数。<ul>
+<li><code>pathname</code> 并不会在运行时被打开或读取，它的作用仅在于提供一组“文件元数据”来帮助生成一个系统范围内唯一（或至少冲突概率很低）的 <code>key_t</code> 值。</li>
+</ul>
+</li>
+<li>这样不同进程只要给出相同的 <code>pathname</code> 和 <code>proj_id</code>，就能获得相同的 <code>key</code>。</li>
+</ul>
+</li>
+<li>直接指定整数：<br>也可以直接写成常量（如 1234），但要保证不会与系统中其它队列冲突。</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><code>msgflg</code><ul>
+<li>用于指定消息队列的权限</li>
+<li>常用标志位<ul>
+<li><code>IPC_CREAT</code><br>如果指定 <code>key</code> 的消息队列不存在，则创建一个新队列。</li>
+<li><code>IPC_EXCL</code><br>与 <code>IPC_CREAT</code> 一起使用时，如果队列已存在，则调用失败并返回 <code>-1</code>，同时 <code>errno = EEXIST</code>。</li>
+<li>权限掩码（如 <code>0666</code>）<br>用八进制表示所有者、组、其他用户的读写权限<br>共有4位，第1位一般为为0，第二位表示所有者权限，第三位表示同组用户的权限，第四位表示其他用户的权限。具体的权限通过<code>4（读）+2（写）+1（执行）</code>的形式表示。例如<code>0674</code>表示所有者、同组用户的权限分别为可读可写(4+2)、可读可写可执行(4+2+1)和可读(4)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>返回一个标识符 <code>msgid</code><ul>
+<li>是非零整数</li>
+<li><code>key</code>只是用于查找或创建队列，并不是队列的内部编号，而<code>msgid</code>则是内核给队列分配的内部编号</li>
+<li>是后序对队列进行操作所用的句柄的操作句柄</li>
+<li>失败时返回<code>-1</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="msgsend"><a href="#msgsend" class="headerlink" title="msgsend"></a><code>msgsend</code></h3><p>用来把消息添加到消息队列中</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">msgsend</span><span class="hljs-params">(<span class="hljs-type">int</span> msgid, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *msg_ptr, <span class="hljs-type">size_t</span> msg_sz, <span class="hljs-type">int</span> msgflg)</span></span>;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>msgid</code> 即<a target="_blank" rel="noopener" href="https://blog.guts.homes/2025/06/19/IPC/#msgget"><code>msgget</code></a>返回的标识符</li>
+<li><code>msg_ptr</code><ul>
+<li>指向准备发送的消息的指针</li>
+<li>对消息的数据结构有要求，必须是以一个<code>long int</code>成员开始的结构体，该成员用于确定消息类型<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">my_message</span>&#123;<br>    <span class="hljs-type">long</span> <span class="hljs-type">int</span> message_type;<br>    <span class="hljs-comment">/* The data you wish to transfer*/</span><br>　　<span class="hljs-type">char</span> mtext[<span class="hljs-number">512</span>]; <span class="hljs-comment">/*message data,of length msg_sz*/</span><br>&#125;;<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><code>msg_sz</code> <ul>
+<li>所要发送的消息的长度</li>
+<li>消息的长度不包括类型标识符</li>
+</ul>
+</li>
+<li><code>msgflg</code><ul>
+<li><code>0</code><br>默认行为：如果消息队列已满，调用该函数的进程将<strong>阻塞</strong>，直到有足够空间或发生错误。</li>
+<li><code>IPC_NOWAIT</code><br><strong>不阻塞</strong>：如果此时队列已满，调用立即返回 <code>-1</code>，并将 <code>errno</code> 设为 <code>EAGAIN</code>（发送失败）。</li>
+</ul>
+</li>
+<li>函数调用成功时返回0，否则返回-1</li>
+</ul>
+<h3 id="msgrcv"><a href="#msgrcv" class="headerlink" title="msgrcv"></a><code>msgrcv</code></h3><p>用来从一个消息队列获取消息</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">msgrcv</span><span class="hljs-params">(<span class="hljs-type">int</span> msgid, <span class="hljs-type">void</span> *msg_ptr, <span class="hljs-type">size_t</span> msg_sz, <span class="hljs-type">long</span> <span class="hljs-type">int</span> msgtype, <span class="hljs-type">int</span> msgflg)</span></span>;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>msg_ptr</code> 指向用于接收消息的缓存区</li>
+<li><code>msgtype</code> 可以用于实现简单的优先级队列<ul>
+<li><code>msgtype == 0</code><br>接收队列中最先到达的那条消息（FIFO），<strong>不做类型匹配</strong>。</li>
+<li><code>msgtype &gt; 0</code><br>接收队列中第一个类型匹配的消息（找到后就返回）</li>
+<li><code>msgtype &lt; 0</code><br>接收队列中 <code>msg.message_type ≤ |msgtype|</code> 的消息，且总是返回<code>msg.message_type</code>最小的那条消息，如果有多条<code>msg.message_type</code>最小且相等的消息，则返回先到达的消息。</li>
+</ul>
+</li>
+<li><code>msgflg</code><ul>
+<li><code>0</code><br>默认行为：如果没有匹配的消息，调用进程<strong>阻塞</strong>直到有消息到达或队列被删除</li>
+<li><code>IPC_NOWAIT</code><br>不阻塞：如果没有匹配的消息，立即返回 <code>-1</code>，并将 <code>errno</code> 设为 <code>ENOMSG</code>（接收失败）。</li>
+<li><code>MSG_NOERROR</code><br>如果队列头消息的长度大于用户提供的 <code>msg_sz</code>，则<strong>截断</strong>多余部分并返回，不报错；否则（<strong>无此标志且消息过长</strong>）返回 <code>-1</code> 并将 <code>errno</code> 设为 <code>E2BIG</code> </li>
+<li><code>MSG_EXCEPT</code><br>仅与<strong>正数</strong> <code>msgtype</code> 一起使用，匹配 所有 <code>mtype != msgtype</code> 的消息（即取“类型<strong>不等于</strong> <code>msgtype</code>”的第一条消息）</li>
+<li><code>MSG_COPY</code><br>(Linux 特有，需内核开启 <code>CONFIG_CHECKPOINT_RESTORE</code>)<br>不删除队列中的消息，仅将其内容 复制 到用户缓冲区，用于检查点&#x2F;恢复机制。</li>
+</ul>
+</li>
+<li>调用成功时，该函数返回放到接收缓存区中的字节数，消息被复制到由<code>msg_ptr</code>指向的用户分配的缓存区中，然后<strong>删除消息队列中的对应消息</strong>。失败时返回-1.</li>
+</ul>
+<h3 id="msgctl"><a href="#msgctl" class="headerlink" title="msgctl"></a><code>msgctl</code></h3><p>用来控制消息队列</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">msgctl</span><span class="hljs-params">(<span class="hljs-type">int</span> msgid, <span class="hljs-type">int</span> command, <span class="hljs-keyword">struct</span> msgid_ds *buf)</span></span>;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><p><code>command</code> 要执行的控制命令</p>
+<ul>
+<li><code>IPC_STAT</code><br>将内核中该消息队列的状态信息拷贝到用户提供的 <code>buf</code> 中。</li>
+<li><code>IPC_SET</code><br>将用户在 <code>buf</code> 中设置的新权限（<code>uid</code>&#x2F;<code>gid</code>、<code>mode</code>）写入内核的消息队列数据结构中（只能修改权限和 <code>ctime</code>）。</li>
+<li><code>IPC_RMID</code><br>删除该消息队列；内核会在消息队列被删除后立即释放其所有资源。</li>
+<li><code>MSG_STAT</code><br>（Linux 特有）,类似于 <code>IPC_STAT</code>，但如果 <code>msgid</code> 已被删除，则返回最新的 <code>msqid</code> 而不是失败。</li>
+<li><code>MSG_INFO</code><br>（Linux 特有）,不需要 <code>msgid</code> 有效，将系统范围内所有消息队列使用情况写入 <code>buf</code>，并返回系统中消息队列的最大索引。</li>
+</ul>
+</li>
+<li><p><code>buf</code><br>指向 <code>struct msqid_ds</code> 的指针，用于传递或接收消息队列的元数据信息；其结构体定义通常如下：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">ipc_perm</span> &#123;<br>    <span class="hljs-type">key_t</span>   __key;    <span class="hljs-comment">/* 键值 */</span><br>    <span class="hljs-type">uid_t</span>   uid;      <span class="hljs-comment">/* 所有者的用户ID */</span><br>    <span class="hljs-type">gid_t</span>   gid;      <span class="hljs-comment">/* 所有者的组ID */</span><br>    <span class="hljs-type">uid_t</span>   cuid;     <span class="hljs-comment">/* 创建者的用户ID */</span><br>    <span class="hljs-type">gid_t</span>   cgid;     <span class="hljs-comment">/* 创建者的组ID */</span><br>    <span class="hljs-type">mode_t</span>  mode;     <span class="hljs-comment">/* 访问权限 */</span><br>    <span class="hljs-type">unsigned</span> <span class="hljs-type">short</span> __seq; <span class="hljs-comment">/* 序列号 */</span><br>&#125;;<br><br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">msqid_ds</span> &#123;<br>    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">ipc_perm</span> msg_perm;   <span class="hljs-comment">/* 操作权限和身份 */</span><br>    <span class="hljs-type">time_t</span>          msg_stime;  <span class="hljs-comment">/* 最后一次发送时间 */</span><br>    <span class="hljs-type">time_t</span>          msg_rtime;  <span class="hljs-comment">/* 最后一次接收时间 */</span><br>    <span class="hljs-type">time_t</span>          msg_ctime;  <span class="hljs-comment">/* 最后一次变更时间 */</span><br>    <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span>   __msg_cbytes; <span class="hljs-comment">/* 当前队列中字节数（Linux 特有）*/</span><br>    <span class="hljs-type">msgqnum_t</span>       msg_qnum;   <span class="hljs-comment">/* 队列中消息数 */</span><br>    <span class="hljs-type">msglen_t</span>        msg_qbytes; <span class="hljs-comment">/* 队列允许的最大字节数 */</span><br>    <span class="hljs-type">pid_t</span>           msg_lspid;  <span class="hljs-comment">/* 最后发送者的PID */</span><br>    <span class="hljs-type">pid_t</span>           msg_lrpid;  <span class="hljs-comment">/* 最后接收者的PID */</span><br>&#125;;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>返回值</strong></p>
+<ul>
+<li><p>成功时返回 <code>0</code>（除 <code>MSG_STAT</code>&#x2F;<code>MSG_INFO</code> 可能返回其他非负值）。</p>
+</li>
+<li><p>失败时返回 <code>-1</code>，并设置 <code>errno</code>，常见错误原因：</p>
+<ul>
+<li><code>EINVAL</code>：<code>msgid</code> 或 <code>command</code> 无效，或 <code>mode</code> 越界。</li>
+<li><code>EACCES</code>：对消息队列的权限不足。</li>
+<li><code>EFAULT</code>：<code>buf</code> 指针无效。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="消息队列-vs-命名管道"><a href="#消息队列-vs-命名管道" class="headerlink" title="消息队列 vs 命名管道"></a>消息队列 vs 命名管道</h3><ol>
+<li>消息队列可以独立于发送和接收的进程而存在，从而消除了在同步命名管道的打开和关闭时可能产生的困难<ul>
+<li>例如<code>open(FIFO_PATH, O_RDONLY)</code>打开<code>FIFO</code>读端时，会阻塞直到有写端打开</li>
+</ul>
+</li>
+<li>过发送消息还可以避免命名管道的同步和阻塞问题，不需要由进程自己来提供同步方法</li>
+<li>接收程序可以通过消息类型有选择地接收数据，而不是像命名管道中那样，只能默认地接收</li>
+<li>但是消息队列发送的每条消息都有最大长度限制</li>
+</ol>
+<h2 id="共享内存"><a href="#共享内存" class="headerlink" title="共享内存"></a>共享内存</h2><p>通过多个进程共同使用同一块逻辑内存实现通信，实现时一般把由不同进程之间共享的内存安排为同一段物理内存。</p>
+<p>我们执行的每一个程序，它看到的内存其实都是虚拟内存，虚拟内存需要进行页表的映射将进程地址映射到物理内存，那么让两个进程地址通过页表映射到同一片物理地址，就可以进行通信。</p>
+<p>具体的实现方式包括</p>
+<ol>
+<li><code>mmap</code>系统调用</li>
+<li><code>Posix</code>共享内存</li>
+<li><code>System V</code>共享内存</li>
+</ol>
+<p>共享内存是最快的IPC方式，但是没有同步机制，对开发者的能力要求也很高。</p>
+<h2 id="信号量-Semaphore"><a href="#信号量-Semaphore" class="headerlink" title="信号量 Semaphore"></a>信号量 Semaphore</h2><p>信号量是一种用于对多个进程访问共享资源进行控制的机制。共享资源通常可以分为两大类：</p>
+<ul>
+<li>互斥共享资源，即任一时刻只允许一个进程访问该资源</li>
+<li>同步共享资源，即同一时刻允许多个进程访问该资源<br>信号量是为了解决互斥共享资源的同步问题引入的机制，其本质是整数计数器，记录可供访问的共享资源的单元个数。</li>
+</ul>
+<p>最常见的信号量是二值信号量，只能取0或1。对于二值信号量</p>
+<ul>
+<li>当有进程要求使用某一资源时，系统首先要检测该资源的信号量<ul>
+<li>如果该资源的信号量的值大于 0，则进程可以使用这一资源，同时信号量的值减 1。进程对资源访问结束时，信号量的值加 1。</li>
+<li>如果该资源信号量的值等于 0，则进程休眠，直至信号量的值大于 0 时进程被唤醒，访问该资源。</li>
+</ul>
+</li>
+</ul>
+<h2 id="信号-Signal"><a href="#信号-Signal" class="headerlink" title="信号 Signal"></a>信号 Signal</h2><ul>
+<li>信号是在软件上对中断机制的一种模拟，在原理上，一个进程收到一个信号与处理器收到一个中断请求可以说是一样的。</li>
+<li>它是IPC中的唯一一种异步通信方式。信号可以在任何时候发送给进程。</li>
+<li>进程对于信号有三种响应方式<ol>
+<li>忽略，即不做任何处理（<code>SIGKILL</code>和<code>SIGSTOP</code>这两个信号不能忽略）</li>
+<li>捕捉信号。定义信号处理函数，当信号发生时，执行相应的处理函数；</li>
+<li>执行缺省操作，Linux 对每种信号都规定了默认操作。</li>
+</ol>
+</li>
+<li>信号只能发挥通知的作用，无法传输数据</li>
+</ul>
+<h2 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h2><p>进程之间可以通过操作同一个文件来进行通信</p>
+<h2 id="套接字-socket"><a href="#套接字-socket" class="headerlink" title="套接字 socket"></a>套接字 <code>socket</code></h2><p>套接字是网络编程和IPC中最常用的一种抽象，可以在同一台主机上的不同线程之间通信，也可以通过网络在不同的主机间进行通信。它本身并不和具体的协议绑定，按照协议类型可以分为</p>
+<ul>
+<li>流套接字 <code>SOCK_STREAM</code> 基于 TCP 协议，提供面向连接的、可靠的、字节流服务。</li>
+<li>数据报套接字 <code>SOCK_DGRAM</code> 基于 UDP 协议，提供无连接的、不可靠的数据报服务。</li>
+</ul>
+<h3 id="socket的基本操作"><a href="#socket的基本操作" class="headerlink" title="socket的基本操作"></a><code>socket</code>的基本操作</h3><p><code>socket</code>本身也是一种特殊的文件，是Unix“一切皆是文件”思想指导下“open—write&#x2F;read—close”模式的一种实现。</p>
+<h4 id="socket"><a href="#socket" class="headerlink" title="socket()"></a><code>socket()</code></h4><p>用于创建一个<code>socket</code>并返回对应的描述符<code>sockfd</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">socket</span><span class="hljs-params">(<span class="hljs-type">int</span> domain, <span class="hljs-type">int</span> type, <span class="hljs-type">int</span> protocol)</span></span>;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>domain</code><br>即协议域，又称为协议族（family）,决定了<code>socket</code>的<strong>地址类型</strong>，在通信中必须采用对应的地址。常用的协议族有，<code>AF_INET</code>、<code>AF_INET6</code>、<code>AF_LOCAL</code>（或称<code>AF_UNIX</code>，Unix域socket）、<code>AF_ROUTE</code>等等。例如<code>AF_INET</code>决定了要用ipv4地址（32位的）与端口号（16位的）的组合、<code>AF_UNIX</code>决定了要用一个绝对路径名作为地址。</li>
+<li><code>type</code><br>指定<code>socket</code>类型。常用的<code>socket</code>类型有，<code>SOCK_STREAM</code>、<code>SOCK_DGRAM</code>、<code>SOCK_RAW</code>、<code>SOCK_PACKET</code>、<code>SOCK_SEQPACKET</code>等等</li>
+<li><code>protocol</code><br>指定协议。常用的协议有，<code>IPPROTO_TCP</code>、<code>IPPTOTO_UDP</code>、<code>IPPROTO_SCTP</code>、<code>IPPROTO_TIPC</code>等，它们分别对应TCP传输协议、UDP传输协议、STCP传输协议、TIPC传输协议。当<code>protocol</code>为0时，会根据<code>type</code>自动选择协议</li>
+</ul>
+<h4 id="bind"><a href="#bind" class="headerlink" title="bind()"></a><code>bind()</code></h4><p>当我们调用<code>socket()</code>创建一个<code>socket</code>时，返回的<code>socket</code>描述符<code>sockfd</code>存在于协议族（address family，AF_XXX）空间中，但<strong>没有一个具体的地址</strong>。如果想要给它赋值一个地址，就必须调用<code>bind()</code>函数。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">bind</span><span class="hljs-params">(<span class="hljs-type">int</span> sockfd, <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> sockaddr *addr, <span class="hljs-type">socklen_t</span> addrlen)</span></span>;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>sockfd</code></li>
+<li><code>addr</code><br><code>一个const struct sockaddr *</code>指针，指向要绑定给<code>sockfd</code>的协议地址对象，其根据协议族的不同有不同的结构</li>
+<li><code>addrlen</code><br>地址的长度</li>
+<li>如果没有调用<code>bind()</code>为<code>sockfd</code>分配地址的话，当调用<code>connect()</code>、<code>listen()</code>时系统会自动随机分配一个端口</li>
+<li>一般情况下，<code>socket</code>服务器的地址和端口是通过<code>bind()</code>手动绑定的，而客户端则使用在调用<code>listen()</code>时分配的即可</li>
+</ul>
+<h4 id="listen-、connect"><a href="#listen-、connect" class="headerlink" title="listen()、connect()"></a><code>listen()</code>、<code>connect()</code></h4><p>服务器会在建立<code>socket</code>并绑定地址后调用<code>listen()</code>来监听这个<code>socket</code>，如果客户端调用<code>connect()</code>,服务器就能接收到客户端的连接请求</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">listen</span><span class="hljs-params">(<span class="hljs-type">int</span> sockfd, <span class="hljs-type">int</span> backlog)</span></span>;<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">connect</span><span class="hljs-params">(<span class="hljs-type">int</span> sockfd, <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> sockaddr *addr, <span class="hljs-type">socklen_t</span> addrlen)</span></span>;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>backlog</code><br>这个<code>socket</code>可以排队的最大连接个数</li>
+<li><code>sockfd</code><br>需要注意的是，服务器和客户端各自都是一个单独的<code>socket</code>，<code>listen()</code>和<code>connect()</code>中的<code>sockfd</code>参数都是<strong>各自</strong>的<code>sockfd</code></li>
+<li><code>sockaddr</code><br><code>sockaddr.sin_addr</code>是服务器的地址，<code>sockaddr.sin_port</code>是服务器的端口</li>
+</ul>
+<h4 id="accept"><a href="#accept" class="headerlink" title="accept()"></a><code>accept()</code></h4><p>服务器监听到客户端的连接请求后，就会调用<code>accept()</code>函数接受请求，从而建立连接</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">accept</span><span class="hljs-params">(<span class="hljs-type">int</span> sockfd, <span class="hljs-keyword">struct</span> sockaddr *addr, <span class="hljs-type">socklen_t</span> *addrlen)</span></span>;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>sockfd</code><br>服务器的<code>sockfd</code></li>
+<li><code>addr</code><br>指向<code>struct sockaddr *</code>的指针，用于<strong>返回客户端的协议地址</strong></li>
+<li>返回值为客户端的<code>sockfd</code></li>
+</ul>
+<h4 id="read-、write-等"><a href="#read-、write-等" class="headerlink" title="read()、write()等"></a><code>read()</code>、<code>write()</code>等</h4><p>客户端和服务器之间的网络I&#x2F;O操作可以由下面的几组函数实现</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-comment">//泛用的文件描述符 I/O 接口，既能操作普通文件，也能操作套接字。</span><br><span class="hljs-function"><span class="hljs-type">ssize_t</span> <span class="hljs-title">read</span><span class="hljs-params">(<span class="hljs-type">int</span> fd, <span class="hljs-type">void</span> *buf, <span class="hljs-type">size_t</span> count)</span></span>;<br><span class="hljs-function"><span class="hljs-type">ssize_t</span> <span class="hljs-title">write</span><span class="hljs-params">(<span class="hljs-type">int</span> fd, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *buf, <span class="hljs-type">size_t</span> count)</span></span>;<br><br><span class="hljs-comment">//专为套接字设计，只有对 socket 描述符才有意义。</span><br><span class="hljs-function"><span class="hljs-type">ssize_t</span> <span class="hljs-title">send</span><span class="hljs-params">(<span class="hljs-type">int</span> sockfd, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *buf, <span class="hljs-type">size_t</span> len, <span class="hljs-type">int</span> flags)</span></span>;<br><span class="hljs-function"><span class="hljs-type">ssize_t</span> <span class="hljs-title">recv</span><span class="hljs-params">(<span class="hljs-type">int</span> sockfd, <span class="hljs-type">void</span> *buf, <span class="hljs-type">size_t</span> len, <span class="hljs-type">int</span> flags)</span></span>;<br><br><span class="hljs-comment">//每次调用可指定或获取对端地址，适用于 UDP</span><br><span class="hljs-function"><span class="hljs-type">ssize_t</span> <span class="hljs-title">sendto</span><span class="hljs-params">(<span class="hljs-type">int</span> sockfd, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *buf, <span class="hljs-type">size_t</span> len, <span class="hljs-type">int</span> flags, <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> sockaddr *dest_addr, <span class="hljs-type">socklen_t</span> addrlen)</span></span>;<br><span class="hljs-function"><span class="hljs-type">ssize_t</span> <span class="hljs-title">recvfrom</span><span class="hljs-params">(<span class="hljs-type">int</span> sockfd, <span class="hljs-type">void</span> *buf, <span class="hljs-type">size_t</span> len, <span class="hljs-type">int</span> flags, <span class="hljs-keyword">struct</span> sockaddr *src_addr, <span class="hljs-type">socklen_t</span> *addrlen)</span></span>;<br><br><span class="hljs-comment">//更通用，支持 scatter/gather I/O（即一次调用操作多个缓冲区），并能携带或接收控制消息（如 ancillary data）。</span><br><span class="hljs-function"><span class="hljs-type">ssize_t</span> <span class="hljs-title">sendmsg</span><span class="hljs-params">(<span class="hljs-type">int</span> sockfd, <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> msghdr *msg, <span class="hljs-type">int</span> flags)</span></span>;<br><span class="hljs-function"><span class="hljs-type">ssize_t</span> <span class="hljs-title">recvmsg</span><span class="hljs-params">(<span class="hljs-type">int</span> sockfd, <span class="hljs-keyword">struct</span> msghdr *msg, <span class="hljs-type">int</span> flags)</span></span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="close"><a href="#close" class="headerlink" title="close()"></a><code>close()</code></h4><p>用于在完成通信后关闭相应的<code>socket</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">close</span><span class="hljs-params">(<span class="hljs-type">int</span> fd)</span></span>;<br></code></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/297029">[阿里云开发者社区] IPC——消息队列</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/tp-16b/p/8987697.html">[cnblogs.com]进程间通信——IPC之共享内存</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/sparkdev/p/8692567.html">[cnblogs.com]System V IPC 之信号量</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wangcq/p/3520400.html">[cnblogs.com]Socket通信原理</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="category-chain-item">操作系统</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>进程间通信</div>
+      <div>https://guts.homes/2025/06/19/IPC/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>guts</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年6月19日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/06/16/cpp-SFINAE/" title="SFINAE">
+                        <span class="hidden-mobile">SFINAE</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"FkNpNoCOCKAFaE0xepwfi5bb-gzGzoHsz","appKey":"5g5TFpe1p9FCDfz4G0CPPxx2","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
