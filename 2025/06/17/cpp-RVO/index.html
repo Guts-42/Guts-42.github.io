@@ -19,15 +19,15 @@
   <meta name="author" content="guts">
   <meta name="keywords" content="">
   
-    <meta name="description" content="SFINAE，即替换失败不是错误（Substitution Failure Is Not An Error）。​它指的是在模板实例化过程中，如果某个替换导致了无效代码，这种情况不会被视为编译错误，编译器会忽略这个候选项，继续寻找其他的模板重载或特化版本。 基本原理当编译器尝试实例化一个模板时，它会进行参数替换。如果这个替换过程失败了（比如因为某个类型不支持某个操作），这种失败并不会直接导致编译错误">
+    <meta name="description" content="拷贝消除在广义上，指满足一定条件时，编译期允许省略对临时对象的拷贝或移动操作。在C++17之前，对于这一特性都是“允许但不要求”，但绝大多数主流的编译器都会启用。从C++17开始，只要满足条件，对prvalue的拷贝&#x2F;移动省略都是必选的。 一般来说，拷贝消除包含  返回值优化 RVO（Return Value Optimization） 具名返回值优化（Named Return Valu">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SFINAE">
-<meta property="og:url" content="https://guts.homes/2025/06/16/cpp-SFINAE/index.html">
+<meta property="og:title" content="C++拷贝消除 Copy Elision">
+<meta property="og:url" content="https://guts.homes/2025/06/17/cpp-RVO/index.html">
 <meta property="og:site_name" content="guts的小屋">
-<meta property="og:description" content="SFINAE，即替换失败不是错误（Substitution Failure Is Not An Error）。​它指的是在模板实例化过程中，如果某个替换导致了无效代码，这种情况不会被视为编译错误，编译器会忽略这个候选项，继续寻找其他的模板重载或特化版本。 基本原理当编译器尝试实例化一个模板时，它会进行参数替换。如果这个替换过程失败了（比如因为某个类型不支持某个操作），这种失败并不会直接导致编译错误">
+<meta property="og:description" content="拷贝消除在广义上，指满足一定条件时，编译期允许省略对临时对象的拷贝或移动操作。在C++17之前，对于这一特性都是“允许但不要求”，但绝大多数主流的编译器都会启用。从C++17开始，只要满足条件，对prvalue的拷贝&#x2F;移动省略都是必选的。 一般来说，拷贝消除包含  返回值优化 RVO（Return Value Optimization） 具名返回值优化（Named Return Valu">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-06-16T02:52:46.000Z">
-<meta property="article:modified_time" content="2025-06-16T02:52:46.815Z">
+<meta property="article:published_time" content="2025-06-17T07:14:59.000Z">
+<meta property="article:modified_time" content="2025-06-17T07:38:01.436Z">
 <meta property="article:author" content="guts">
 <meta property="article:tag" content="语言特性">
 <meta name="twitter:card" content="summary_large_image">
@@ -36,7 +36,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>SFINAE - guts的小屋</title>
+  <title>C++拷贝消除 Copy Elision - guts的小屋</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -203,7 +203,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="SFINAE"></span>
+            <span id="subtitle" data-typed-text="C++拷贝消除 Copy Elision"></span>
           
         </div>
 
@@ -214,8 +214,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-06-16 10:52" pubdate>
-          2025年6月16日 上午
+        <time datetime="2025-06-17 15:14" pubdate>
+          2025年6月17日 下午
         </time>
       </span>
     
@@ -226,7 +226,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          729 字
+          767 字
         
       </span>
     
@@ -283,25 +283,38 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">SFINAE</h1>
+            <h1 id="seo-header">C++拷贝消除 Copy Elision</h1>
             
             
               <div class="markdown-body">
                 
-                <p><code>SFINAE</code>，即<strong>替换失败不是错误</strong>（Substitution Failure Is Not An Error）。​<br>它指的是在模板实例化过程中，如果某个替换导致了无效代码，这种情况不会被视为编译错误，编译器会忽略这个候选项，继续寻找其他的模板重载或特化版本。</p>
-<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><p>当编译器尝试实例化一个模板时，它会进行参数替换。如果这个替换过程失败了（比如因为某个类型不支持某个操作），这种失败并不会直接导致编译错误。相反，编译器会将这个模板实例从候选列表中移除。这就是SFINAE的基本原理。</p>
-<p>最常见的应用场景是函数模板的重载解析和类模板的特化选择。</p>
-<h3 id="模板函数重载"><a href="#模板函数重载" class="headerlink" title="模板函数重载"></a>模板函数重载</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span>​</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;type_traits&gt;</span>​</span><br>​<br><span class="hljs-comment">// 支持+操作的版本​</span><br><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;​<br><span class="hljs-function"><span class="hljs-keyword">auto</span> <span class="hljs-title">add</span><span class="hljs-params">(T a, T b)</span> -&gt; <span class="hljs-title">decltype</span><span class="hljs-params">(a + b)</span> </span>&#123;​<br>    <span class="hljs-keyword">return</span> a + b;​<br>&#125;​<br>​<br><span class="hljs-comment">// 不支持+操作的备选版本​</span><br><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;​<br><span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">add</span><span class="hljs-params">(...)</span> </span>&#123;​<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;​<br>&#125;​<br>​<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;​<br>    std::cout &lt;&lt; <span class="hljs-built_in">add</span>(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>) &lt;&lt; std::endl; <span class="hljs-comment">// 输出3​</span><br>    std::cout &lt;&lt; std::boolalpha &lt;&lt; <span class="hljs-built_in">add</span>(std::<span class="hljs-built_in">string</span>(<span class="hljs-string">&quot;a&quot;</span>), std::<span class="hljs-built_in">string</span>(<span class="hljs-string">&quot;b&quot;</span>)) &lt;&lt; std::endl; <span class="hljs-comment">// 输出&quot;ab&quot;​</span><br>    <span class="hljs-comment">// std::cout &lt;&lt; add(std::vector&lt;int&gt;&#123;&#125;, std::vector&lt;int&gt;&#123;&#125;) &lt;&lt; std::endl; // 编译错误，改为返回false​</span><br>&#125;<br></code></pre></td></tr></table></figure>
-<p>如果传入的参数类型<code>T</code>不支持<code>+</code>操作，当编译器用这些参数类型替换第一个<code>add</code>函数时就会失败，触发SFINAE，转而去尝试其他的重载或模板。</p>
-<h3 id="类模板特化"><a href="#类模板特化" class="headerlink" title="类模板特化"></a>类模板特化</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span>​</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;type_traits&gt;</span>​</span><br>​<br><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">typename</span> Enable = <span class="hljs-type">void</span>&gt;​<br><span class="hljs-keyword">class</span> MyClass;​<br>​<br><span class="hljs-comment">// 对于支持+操作的类型特化版本​</span><br><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;​<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyClass</span>&lt;T, <span class="hljs-keyword">typename</span> std::enable_if&lt;std::is_arithmetic&lt;T&gt;::value&gt;::type&gt; &#123;​<br><span class="hljs-keyword">public</span>:​<br>    <span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">print</span><span class="hljs-params">(T a, T b)</span> </span>&#123;​<br>        std::cout &lt;&lt; <span class="hljs-string">&quot;Arithmetic type: &quot;</span> &lt;&lt; a + b &lt;&lt; std::endl;​<br>    &#125;​<br>&#125;;​<br>​<br><span class="hljs-comment">// 对于不支持+操作的类型特化版本​</span><br><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;​<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyClass</span>&lt;T, <span class="hljs-keyword">typename</span> std::enable_if&lt;!std::is_arithmetic&lt;T&gt;::value&gt;::type&gt; &#123;​<br><span class="hljs-keyword">public</span>:​<br>    <span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">print</span><span class="hljs-params">(...)</span> </span>&#123;​<br>        std::cout &lt;&lt; <span class="hljs-string">&quot;Not an arithmetic type.&quot;</span> &lt;&lt; std::endl;​<br>    &#125;​<br>&#125;;​<br>​<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;​<br>    MyClass&lt;<span class="hljs-type">int</span>&gt;::<span class="hljs-built_in">print</span>(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>); <span class="hljs-comment">// 输出: Arithmetic type: 3​</span><br>    MyClass&lt;std::string&gt;::<span class="hljs-built_in">print</span>(); <span class="hljs-comment">// 输出: Not an arithmetic type.​</span><br>&#125;​<br></code></pre></td></tr></table></figure>
-<p>这里则是对类模板进行了特化，根据类型是否是算数类型来选择不同的模板。</p>
-<h2 id="模板匹配规则"><a href="#模板匹配规则" class="headerlink" title="模板匹配规则"></a>模板匹配规则</h2><p>当存在多个匹配的模板时，编译器会根据几个基本规则来选择最优匹配：</p>
-<ol>
-<li>更特化的模板优先：如果一个模板是另一个模板的更特化版本，那么选择更特化的模板。​</li>
-<li>非模板函数优先于模板函数：如果有一个非模板函数和一个模板函数都可以匹配，那么优先选择非模板函数。​</li>
-<li>最少转换优先：如果两个模板或重载函数都可以匹配，但是一个需要更少的参数转换，那么优先选择这个。</li>
-</ol>
-
+                <h2 id="拷贝消除"><a href="#拷贝消除" class="headerlink" title="拷贝消除"></a>拷贝消除</h2><p>在广义上，指满足一定条件时，编译期允许省略对临时对象的拷贝或移动操作。在C++17之前，对于这一特性都是“允许但不要求”，但绝大多数主流的编译器都会启用。从C++17开始，只要满足条件，对<code>prvalue</code>的拷贝&#x2F;移动省略都是必选的。</p>
+<p>一般来说，拷贝消除包含</p>
+<ul>
+<li>返回值优化 RVO（Return Value Optimization）</li>
+<li>具名返回值优化（Named Return Value Optimization）</li>
+</ul>
+<h2 id="返回值优化-RVO（Return-Value-Optimization）"><a href="#返回值优化-RVO（Return-Value-Optimization）" class="headerlink" title="返回值优化 RVO（Return Value Optimization）"></a>返回值优化 RVO（Return Value Optimization）</h2><p>函数直接返回一个匿名临时对象时，编译器可以将这个临时对象直接构造在调用者的目标空间中，省掉拷贝。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">RVOTest</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-built_in">RVOTest</span>() &#123;<br>        std::cout &lt;&lt; <span class="hljs-string">&quot;默认构造&quot;</span> &lt;&lt; std::endl;<br>    &#125;<br>    <span class="hljs-built_in">RVOTest</span>(<span class="hljs-type">const</span> RVOTest &amp; other) &#123;<br>        std::cout &lt;&lt; <span class="hljs-string">&quot;拷贝构造&quot;</span> &lt;&lt; std::endl;<br>    &#125;<br><br>    ~<span class="hljs-built_in">RVOTest</span>() &#123;<br>        std::cout &lt;&lt; <span class="hljs-string">&quot;析构&quot;</span> &lt;&lt; std::endl;<br>    &#125;<br>&#125;;<br><br><span class="hljs-function">RVOTest <span class="hljs-title">get</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">RVOTest</span>();<br>&#125;<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-comment">// RVOTest a = RVOTest(); //如果拷贝构造函数的参数没有const的话，error: 类 &quot;RVOTest&quot; 没有适当的复制构造函数 (这里的RVOTest()是个临时对象是个右值，而const左值引用也可以绑定右值)</span><br>    RVOTest b = <span class="hljs-built_in">get</span>();<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>运行上面的代码，会输出</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs txt">默认构造<br>析构<br></code></pre></td></tr></table></figure>
+<p>也就是说，当用<code>get()</code>返回的<code>RVOTest</code>对象来初始化<code>b</code>时，并没有调用拷贝构造函数用临时对象<code>RVOTest()</code>来初始化<code>b</code>，而是直接在调用者，也就是<code>b</code>的存储区就地构造。</p>
+<h2 id="具名返回值优化（Named-Return-Value-Optimization）"><a href="#具名返回值优化（Named-Return-Value-Optimization）" class="headerlink" title="具名返回值优化（Named Return Value Optimization）"></a>具名返回值优化（Named Return Value Optimization）</h2><p>当返回的对象有名字（即局部变量）时，也可能进行省略拷贝。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function">RVOTest <span class="hljs-title">getNamed</span><span class="hljs-params">()</span> </span>&#123;<br>    RVOTest obj;<br>    <span class="hljs-keyword">return</span> obj;<br>&#125;<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    RVOTest b = <span class="hljs-built_in">getNamed</span>();<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>运行上面的代码，会输出</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs txt">默认构造<br>析构<br></code></pre></td></tr></table></figure>
+<p>与RVO不同，NRVO的触发条件更加严苛，例如下面的情况就不会触发NRVO</p>
+<h3 id="1-返回不同分支的不同命名局部对象"><a href="#1-返回不同分支的不同命名局部对象" class="headerlink" title="1. 返回不同分支的不同命名局部对象"></a>1. 返回不同分支的不同命名局部对象</h3><p>在某些编译器里可能无法决定统一的内存位置，从而放弃 NRVO。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function">RVOTest <span class="hljs-title">flag</span><span class="hljs-params">(<span class="hljs-type">bool</span> flag)</span> </span>&#123;<br>    RVOTest a, b;<br>    <span class="hljs-keyword">if</span> (flag) <span class="hljs-keyword">return</span> a; <br>    <span class="hljs-keyword">else</span>      <span class="hljs-keyword">return</span> b; <br>&#125;<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    RVOTest c = <span class="hljs-built_in">flag</span>(<span class="hljs-literal">false</span>); <br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>运行上面的代码，会输出</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs txt">默认构造<br>默认构造<br>~~~~~~<br>拷贝构造<br>析构<br>析构<br>析构<br></code></pre></td></tr></table></figure>
+<h3 id="2-返回函数参数"><a href="#2-返回函数参数" class="headerlink" title="2. 返回函数参数"></a>2. 返回函数参数</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function">RVOTest <span class="hljs-title">rParam</span><span class="hljs-params">(RVOTest param)</span> </span>&#123; <span class="hljs-comment">//这里也会调用一次拷贝构造函数</span><br>    std::cout &lt;&lt; <span class="hljs-string">&quot;~~~~~~&quot;</span>  &lt;&lt; std::endl;<br>    <span class="hljs-keyword">return</span> param;  <span class="hljs-comment">// param 不是本地新建对象，无法 NRVO</span><br>&#125;<br><span class="hljs-function">RVOTest <span class="hljs-title">rParamR</span><span class="hljs-params">(RVOTest&amp; param)</span> </span>&#123;<br>    std::cout &lt;&lt; <span class="hljs-string">&quot;~~~~~~&quot;</span>  &lt;&lt; std::endl;<br>    <span class="hljs-keyword">return</span> param;  <span class="hljs-comment">// param 不是本地新建对象，无法 NRVO</span><br>&#125;<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    RVOTest b = <span class="hljs-built_in">get</span>();<br>    RVOTest d = <span class="hljs-built_in">rParam</span>(b);<br>    std::cout &lt;&lt; <span class="hljs-string">&quot;======&quot;</span>  &lt;&lt; std::endl;<br>    RVOTest e = <span class="hljs-built_in">rParamR</span>(b);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>运行上面的代码，会输出</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs txt">默认构造<br>拷贝构造<br>~~~~~~<br>拷贝构造<br>析构<br>======<br>~~~~~~<br>拷贝构造<br>析构<br>析构<br>析构<br></code></pre></td></tr></table></figure>
+<h3 id="3-复杂表达式"><a href="#3-复杂表达式" class="headerlink" title="3. 复杂表达式"></a>3. 复杂表达式</h3><p>返回复杂表达式，例如某个函数调用、三目表达式等，也可能不会触发NRVO</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function">RVOTest <span class="hljs-title">tri</span><span class="hljs-params">()</span> </span>&#123;<br>    RVOTest a, b;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> &gt; <span class="hljs-number">2</span> ? a : b;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    RVOTest f = <span class="hljs-built_in">tri</span>();<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>运行上面的代码，会输出</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs txt">默认构造<br>默认构造<br>拷贝构造<br>析构<br>析构<br>析构<br></code></pre></td></tr></table></figure>
                 
               </div>
             
@@ -346,8 +359,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>SFINAE</div>
-      <div>https://guts.homes/2025/06/16/cpp-SFINAE/</div>
+      <div>C++拷贝消除 Copy Elision</div>
+      <div>https://guts.homes/2025/06/17/cpp-RVO/</div>
     </div>
     <div class="license-meta">
       
@@ -359,7 +372,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年6月16日</div>
+          <div>2025年6月17日</div>
         </div>
       
       
@@ -391,9 +404,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/06/17/cpp-RVO/" title="C++拷贝消除 Copy Elision">
+                      <a href="/2025/06/19/IPC/" title="进程间通信">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">C++拷贝消除 Copy Elision</span>
+                        <span class="hidden-mobile">进程间通信</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -401,8 +414,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/06/14/cpp-inheritance/" title="C++中的继承与多态">
-                        <span class="hidden-mobile">C++中的继承与多态</span>
+                      <a href="/2025/06/16/cpp-SFINAE/" title="SFINAE">
+                        <span class="hidden-mobile">SFINAE</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
