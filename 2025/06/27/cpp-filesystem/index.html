@@ -19,15 +19,15 @@
   <meta name="author" content="guts">
   <meta name="keywords" content="">
   
-    <meta name="description" content="在C++17之前，C++并没有跨平台的统一文件操作解决方案，不同的平台需要依赖不同的API或者第三方库来处理文件操作。C++17引入的std::filesystem就解决了这个痛点。 常用操作路径处理 path类12345678910111213#include &lt;filesystem&gt;​​namespace fs &#x3D; std::filesystem;​fs::path p1 &#x3D; &amp;q">
+    <meta name="description" content="在C++17之前，C++并没有跨平台的统一文件操作解决方案，不同的平台需要依赖不同的API或者第三方库来处理文件操作。C++17引入的std::filesystem就解决了这个痛点。 常见函数以下按与你之前相似的格式，列出并详解 &lt;filesystem&gt; 中日常最常见的函数及其关键点：  fs::exists(p)  判断路径 p 是否存在（文件、目录或符号链接）。 返回true 或">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C++文件操作">
 <meta property="og:url" content="https://guts.homes/2025/06/27/cpp-filesystem/index.html">
 <meta property="og:site_name" content="guts的小屋">
-<meta property="og:description" content="在C++17之前，C++并没有跨平台的统一文件操作解决方案，不同的平台需要依赖不同的API或者第三方库来处理文件操作。C++17引入的std::filesystem就解决了这个痛点。 常用操作路径处理 path类12345678910111213#include &lt;filesystem&gt;​​namespace fs &#x3D; std::filesystem;​fs::path p1 &#x3D; &amp;q">
+<meta property="og:description" content="在C++17之前，C++并没有跨平台的统一文件操作解决方案，不同的平台需要依赖不同的API或者第三方库来处理文件操作。C++17引入的std::filesystem就解决了这个痛点。 常见函数以下按与你之前相似的格式，列出并详解 &lt;filesystem&gt; 中日常最常见的函数及其关键点：  fs::exists(p)  判断路径 p 是否存在（文件、目录或符号链接）。 返回true 或">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-27T10:42:02.000Z">
-<meta property="article:modified_time" content="2025-06-27T11:54:43.334Z">
+<meta property="article:modified_time" content="2025-06-27T12:36:32.866Z">
 <meta property="article:author" content="guts">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k 字
+          2.3k 字
         
       </span>
     
@@ -236,7 +236,7 @@
         
         
         
-          14 分钟
+          20 分钟
         
       </span>
     
@@ -288,12 +288,6 @@
               <div class="markdown-body">
                 
                 <p>在C++17之前，C++并没有跨平台的统一文件操作解决方案，不同的平台需要依赖不同的API或者第三方库来处理文件操作。C++17引入的<code>std::filesystem</code>就解决了这个痛点。</p>
-<h2 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h2><h3 id="路径处理-path类"><a href="#路径处理-path类" class="headerlink" title="路径处理 path类"></a>路径处理 <code>path</code>类</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;filesystem&gt;</span>​</span><br>​<br><span class="hljs-keyword">namespace</span> fs = std::filesystem;​<br><br>fs::path p1 = <span class="hljs-string">&quot;data&quot;</span>;          <span class="hljs-comment">// 当前平台路径风格​</span><br>fs::path p2 = <span class="hljs-string">R&quot;(D:\logs\)&quot;</span>;   <span class="hljs-comment">// 原生字符串处理特殊字符​</span><br>fs::path full_path = p1 / <span class="hljs-string">&quot;2023&quot;</span> / <span class="hljs-string">&quot;report.csv&quot;</span>; <span class="hljs-comment">// 自动处理分隔符​</span><br>std::cout &lt;&lt; full_path &lt;&lt; <span class="hljs-string">&quot;\n&quot;</span>;           <span class="hljs-comment">// 输出：data/2023/report.csv​</span><br>​<br>std::cout &lt;&lt; full_path.<span class="hljs-built_in">extension</span>() &lt;&lt; <span class="hljs-string">&quot;\n&quot;</span>; <span class="hljs-comment">// 获取文件扩展名，输出：.csv​</span><br><span class="hljs-comment">// 路径标准化​</span><br>fs::path messy = <span class="hljs-string">&quot;data//./tmp/../config.ini&quot;</span>;​<br>std::cout &lt;&lt; messy.<span class="hljs-built_in">lexically_normal</span>(); <span class="hljs-comment">// 输出：data/config.ini</span><br></code></pre></td></tr></table></figure>
-
-<h3 id="获取文件状态与元数据"><a href="#获取文件状态与元数据" class="headerlink" title="获取文件状态与元数据"></a>获取文件状态与元数据</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">auto</span> check_file = [](<span class="hljs-type">const</span> fs::path&amp; p) &#123;​<br>    <span class="hljs-keyword">if</span> (!fs::<span class="hljs-built_in">exists</span>(p)) <span class="hljs-keyword">return</span>;​<br>    ​<br>    fs::file_status s = fs::<span class="hljs-built_in">status</span>(p);​<span class="hljs-comment">//获取文件状态</span><br>    <span class="hljs-keyword">switch</span>(s.<span class="hljs-built_in">type</span>()) &#123;​<br>        <span class="hljs-keyword">case</span> fs::file_type::regular: ​<br>            std::cout &lt;&lt; <span class="hljs-string">&quot;文件大小：&quot;</span> &lt;&lt; fs::<span class="hljs-built_in">file_size</span>(p) &lt;&lt; <span class="hljs-string">&quot;字节\n&quot;</span>;​<br>            <span class="hljs-keyword">break</span>;​<br>        <span class="hljs-keyword">case</span> fs::file_type::directory:​<br>            std::cout &lt;&lt; <span class="hljs-string">&quot;目录最后修改时间：&quot;</span> ​<br>                      &lt;&lt; fs::<span class="hljs-built_in">last_write_time</span>(p).<span class="hljs-built_in">time_since_epoch</span>().<span class="hljs-built_in">count</span>();​<br>            <span class="hljs-keyword">break</span>;​<br>    &#125;​<br>&#125;;​<br><br></code></pre></td></tr></table></figure>
-
-<h3 id="目录遍历"><a href="#目录遍历" class="headerlink" title="目录遍历"></a>目录遍历</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-type">uintmax_t</span> total_size = <span class="hljs-number">0</span>;​<br><span class="hljs-keyword">for</span> (<span class="hljs-type">const</span> <span class="hljs-keyword">auto</span>&amp; entry : fs::<span class="hljs-built_in">recursive_directory_iterator</span>(<span class="hljs-string">&quot;logs&quot;</span>)) &#123;​<br>    <span class="hljs-keyword">if</span> (entry.<span class="hljs-built_in">is_regular_file</span>()) &#123;​<br>        total_size += entry.<span class="hljs-built_in">file_size</span>();​<br>    &#125;​<br>&#125;​<br>std::cout &lt;&lt; <span class="hljs-string">&quot;总日志大小：&quot;</span> &lt;&lt; total_size &lt;&lt; <span class="hljs-string">&quot;字节&quot;</span>;​<br></code></pre></td></tr></table></figure>
-
 <h2 id="常见函数"><a href="#常见函数" class="headerlink" title="常见函数"></a>常见函数</h2><p>以下按与你之前相似的格式，列出并详解 <code>&lt;filesystem&gt;</code> 中日常最常见的函数及其关键点：</p>
 <ul>
 <li><p><code>fs::exists(p)</code></p>
@@ -489,6 +483,115 @@
 </ul>
 </li>
 </ul>
+<h2 id="std-filesystem-path类"><a href="#std-filesystem-path类" class="headerlink" title="std::filesystem::path类"></a><code>std::filesystem::path</code>类</h2><p>以下是基于你给出的结构，使用统一格式，详细介绍 <code>std::filesystem::path</code> 类的常见操作，包括构造、拼接、分解、遍历、比较等功能：</p>
+<h3 id="类的构造和成员函数"><a href="#类的构造和成员函数" class="headerlink" title="类的构造和成员函数"></a>类的构造和成员函数</h3><ul>
+<li><p><code>path p1(&quot;dir/file.txt&quot;)</code> &#x2F; <code>path p2 = u8&quot;目录/文件.txt&quot;</code></p>
+<ul>
+<li>使用字符串、<code>std::string</code>, <code>std::wstring</code>, UTF-8 字面量等构造路径对象。</li>
+<li>跨平台封装路径表示，自动处理分隔符（如 Windows 用 <code>\</code>，Unix 用 <code>/</code>）。</li>
+<li>构造仅仅是对字符串的封装，不会检查路径是否存在。</li>
+</ul>
+</li>
+<li><p><code>p.string()</code>, <code>p.u8string()</code></p>
+<ul>
+<li>将路径对象转换为 <code>std::string</code> 或 UTF-8 编码的字符串。</li>
+</ul>
+</li>
+</ul>
+<h3 id="路径的拼接"><a href="#路径的拼接" class="headerlink" title="路径的拼接"></a>路径的拼接</h3><ul>
+<li><p><code>p1 / p2</code></p>
+<ul>
+<li>拼接路径，自动加上或去掉分隔符。例如：<code>path(&quot;dir&quot;) / &quot;file.txt&quot;</code> → <code>&quot;dir/file.txt&quot;</code></li>
+<li>右侧参数若为绝对路径则会“替换”左侧路径</li>
+</ul>
+</li>
+<li><p><code>p.append(&quot;subdir&quot;)</code></p>
+<ul>
+<li>与 <code>/</code> 类似，但是是<code>path</code>类的成员函数。</li>
+<li>等价于 <code>p /= &quot;subdir&quot;</code>，使用场景偏向链式操作。</li>
+</ul>
+</li>
+<li><p><code>p.concat(&quot;file.txt&quot;)</code></p>
+<ul>
+<li>直接字符串拼接，<strong>不添加路径分隔符</strong>。</li>
+<li><code>path(&quot;dir/&quot;).concat(&quot;file.txt&quot;)</code> → <code>&quot;dir/file.txt&quot;</code></li>
+<li>关键点：用于修改文件名或扩展名部分，不用于路径层级拼接。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="路径的分解"><a href="#路径的分解" class="headerlink" title="路径的分解"></a>路径的分解</h3><ul>
+<li><p><code>p.parent_path()</code></p>
+<ul>
+<li>获取父目录路径。例如<code>path(&quot;a/b/c.txt&quot;).parent_path()</code> → <code>&quot;a/b&quot;</code></li>
+<li><strong>若路径为根目录或文件名，则返回空路径</strong>。</li>
+</ul>
+</li>
+<li><p><code>p.filename()</code></p>
+<ul>
+<li>获取最后一级（文件名或最后目录名）。例如<code>path(&quot;a/b/c.txt&quot;).filename()</code> → <code>&quot;c.txt&quot;</code></li>
+<li>路径以分隔符结尾时，返回空路径。</li>
+</ul>
+</li>
+<li><p><code>p.extension()</code></p>
+<ul>
+<li>获取文件扩展名（含“.”）。例如<code>path(&quot;c.txt&quot;).extension()</code> → <code>&quot;.txt&quot;</code></li>
+<li>若文件名无扩展名，返回空路径。</li>
+</ul>
+</li>
+<li><p><code>p.stem()</code></p>
+<ul>
+<li>去除扩展名后的主文件名。例如<code>&quot;c.txt&quot;</code> → <code>&quot;c&quot;</code></li>
+<li>可结合 <code>stem()</code> + <code>extension()</code> 修改或重构文件名。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="路径的遍历"><a href="#路径的遍历" class="headerlink" title="路径的遍历"></a>路径的遍历</h3><ul>
+<li><p><code>for (auto&amp; part : path(&quot;a/b/c.txt&quot;))</code></p>
+<ul>
+<li>遍历路径的<strong>每一级</strong>组件（如 <code>a</code>, <code>b</code>, <code>c.txt</code>）。</li>
+<li>根目录和空路径也会被视为组件；</li>
+<li>可以用 <code>*begin()</code> 判断路径是否以 <code>/</code> 开头。</li>
+</ul>
+</li>
+<li><p><code>path::iterator</code></p>
+<ul>
+<li><p>是<strong>双向迭代器</strong>。</p>
+</li>
+<li><p>示例：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">path <span class="hljs-title">p</span><span class="hljs-params">(<span class="hljs-string">&quot;a/b/c.txt&quot;</span>)</span></span>;<br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> it = p.<span class="hljs-built_in">begin</span>(); it != p.<span class="hljs-built_in">end</span>(); ++it)<br>    std::cout &lt;&lt; *it &lt;&lt; <span class="hljs-string">&#x27;\n&#x27;</span>;<br><span class="hljs-comment">/*</span><br><span class="hljs-comment">输出：</span><br><span class="hljs-comment">&quot;a&quot;</span><br><span class="hljs-comment">&quot;b&quot;</span><br><span class="hljs-comment">&quot;c.txt&quot;</span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure></li>
+<li><p>用于逐层分析路径结构</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="路径的比较"><a href="#路径的比较" class="headerlink" title="路径的比较"></a>路径的比较</h3><ul>
+<li><p><code>==</code>, <code>!=</code></p>
+<ul>
+<li>比较路径字符串是否完全相等（字节级别，不解析符号链接）。</li>
+<li>对路径的格式敏感，<code>&quot;a/b&quot;</code> 与 <code>&quot;a//b&quot;</code> 不等。</li>
+</ul>
+</li>
+<li><p><code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code></p>
+<ul>
+<li>按字典序比较路径，常用于排序或存入有序容器（如 <code>std::set&lt;path&gt;</code>）。</li>
+<li>不是基于路径深度或文件存在与否，仅按字面比较。</li>
+</ul>
+</li>
+<li><p><code>p.lexically_normal()</code></p>
+<ul>
+<li>返回语义上等价但简化的路径（处理“.”、“..”、“重复分隔符”等）。例如<code>&quot;a/./b/../c&quot;</code> → <code>&quot;a/c&quot;</code></li>
+<li><strong>不访问文件系统，仅字符串逻辑变换</strong></li>
+<li>用于规范化路径前的预处理。</li>
+</ul>
+</li>
+</ul>
+<h2 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h2><h3 id="路径处理"><a href="#路径处理" class="headerlink" title="路径处理"></a>路径处理</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;filesystem&gt;</span>​</span><br>​<br><span class="hljs-keyword">namespace</span> fs = std::filesystem;​<br><br>fs::path p1 = <span class="hljs-string">&quot;data&quot;</span>;          <span class="hljs-comment">// 当前平台路径风格​</span><br>fs::path p2 = <span class="hljs-string">R&quot;(D:\logs\)&quot;</span>;   <span class="hljs-comment">// 原生字符串处理特殊字符​</span><br>fs::path full_path = p1 / <span class="hljs-string">&quot;2023&quot;</span> / <span class="hljs-string">&quot;report.csv&quot;</span>; <span class="hljs-comment">// 自动处理分隔符​</span><br>std::cout &lt;&lt; full_path &lt;&lt; <span class="hljs-string">&quot;\n&quot;</span>;           <span class="hljs-comment">// 输出：data/2023/report.csv​</span><br>​<br>std::cout &lt;&lt; full_path.<span class="hljs-built_in">extension</span>() &lt;&lt; <span class="hljs-string">&quot;\n&quot;</span>; <span class="hljs-comment">// 获取文件扩展名，输出：.csv​</span><br><span class="hljs-comment">// 路径标准化​</span><br>fs::path messy = <span class="hljs-string">&quot;data//./tmp/../config.ini&quot;</span>;​<br>std::cout &lt;&lt; messy.<span class="hljs-built_in">lexically_normal</span>(); <span class="hljs-comment">// 输出：data/config.ini</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="获取文件状态与元数据"><a href="#获取文件状态与元数据" class="headerlink" title="获取文件状态与元数据"></a>获取文件状态与元数据</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">auto</span> check_file = [](<span class="hljs-type">const</span> fs::path&amp; p) &#123;​<br>    <span class="hljs-keyword">if</span> (!fs::<span class="hljs-built_in">exists</span>(p)) <span class="hljs-keyword">return</span>;​<br>    ​<br>    fs::file_status s = fs::<span class="hljs-built_in">status</span>(p);​<span class="hljs-comment">//获取文件状态</span><br>    <span class="hljs-keyword">switch</span>(s.<span class="hljs-built_in">type</span>()) &#123;​<br>        <span class="hljs-keyword">case</span> fs::file_type::regular: ​<br>            std::cout &lt;&lt; <span class="hljs-string">&quot;文件大小：&quot;</span> &lt;&lt; fs::<span class="hljs-built_in">file_size</span>(p) &lt;&lt; <span class="hljs-string">&quot;字节\n&quot;</span>;​<br>            <span class="hljs-keyword">break</span>;​<br>        <span class="hljs-keyword">case</span> fs::file_type::directory:​<br>            std::cout &lt;&lt; <span class="hljs-string">&quot;目录最后修改时间：&quot;</span> ​<br>                      &lt;&lt; fs::<span class="hljs-built_in">last_write_time</span>(p).<span class="hljs-built_in">time_since_epoch</span>().<span class="hljs-built_in">count</span>();​<br>            <span class="hljs-keyword">break</span>;​<br>    &#125;​<br>&#125;;​<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="目录遍历"><a href="#目录遍历" class="headerlink" title="目录遍历"></a>目录遍历</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-type">uintmax_t</span> total_size = <span class="hljs-number">0</span>;​<br><span class="hljs-keyword">for</span> (<span class="hljs-type">const</span> <span class="hljs-keyword">auto</span>&amp; entry : fs::<span class="hljs-built_in">recursive_directory_iterator</span>(<span class="hljs-string">&quot;logs&quot;</span>)) &#123;​<br>    <span class="hljs-keyword">if</span> (entry.<span class="hljs-built_in">is_regular_file</span>()) &#123;​<br>        total_size += entry.<span class="hljs-built_in">file_size</span>();​<br>    &#125;​<br>&#125;​<br>std::cout &lt;&lt; <span class="hljs-string">&quot;总日志大小：&quot;</span> &lt;&lt; total_size &lt;&lt; <span class="hljs-string">&quot;字节&quot;</span>;​<br></code></pre></td></tr></table></figure>
 
                 
               </div>
