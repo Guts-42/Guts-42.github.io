@@ -1,0 +1,807 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/guts.png">
+  <link rel="icon" href="/guts.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="guts">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="同步与互斥同步调用指的是调用的对象在被调用后会阻塞调用方直到被调用方执行完成，而线程天然是异步调用的。但是不同线程的任务片段之间可能会存在严格的先后顺序，例如线程1负责任务A和C，线程2负责任务B，3个任务必须严格按照A-&gt;B-&gt;C的顺序执行，那么我们就需要在线程1执行任务A的时候阻塞线程2，任务A完成后解除线程2的阻塞并阻塞线程1直到任务B完成。这样维护和协调线程任务片段之间先后顺序">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ 多线程并发编程2 互斥与锁">
+<meta property="og:url" content="https://guts.homes/2025/06/24/cpp-multiThreading2/index.html">
+<meta property="og:site_name" content="guts的小屋">
+<meta property="og:description" content="同步与互斥同步调用指的是调用的对象在被调用后会阻塞调用方直到被调用方执行完成，而线程天然是异步调用的。但是不同线程的任务片段之间可能会存在严格的先后顺序，例如线程1负责任务A和C，线程2负责任务B，3个任务必须严格按照A-&gt;B-&gt;C的顺序执行，那么我们就需要在线程1执行任务A的时候阻塞线程2，任务A完成后解除线程2的阻塞并阻塞线程1直到任务B完成。这样维护和协调线程任务片段之间先后顺序">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-24T12:04:15.000Z">
+<meta property="article:modified_time" content="2025-06-24T12:15:56.552Z">
+<meta property="article:author" content="guts">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>C++ 多线程并发编程2 互斥与锁 - guts的小屋</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"guts.homes","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"FkNpNoCOCKAFaE0xepwfi5bb-gzGzoHsz","app_key":"5g5TFpe1p9FCDfz4G0CPPxx2","server_url":"https://fknpnoco.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>guts的小屋</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="C++ 多线程并发编程2 互斥与锁"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-06-24 20:04" pubdate>
+          2025年6月24日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          18 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">C++ 多线程并发编程2 互斥与锁</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="同步与互斥"><a href="#同步与互斥" class="headerlink" title="同步与互斥"></a>同步与互斥</h2><p>同步调用指的是调用的对象在被调用后会阻塞调用方直到被调用方执行完成，而线程天然是异步调用的。但是不同线程的任务片段之间可能会存在严格的先后顺序，例如线程1负责任务A和C，线程2负责任务B，3个任务必须严格按照A-&gt;B-&gt;C的顺序执行，那么我们就需要在线程1执行任务A的时候阻塞线程2，任务A完成后解除线程2的阻塞并阻塞线程1直到任务B完成。这样维护和协调线程任务片段之间先后顺序的操作，就叫做线程间的同步。</p>
+<p>而互斥就是保证资源在同一时刻只能被一个进程所使用，确保数据的一致性。</p>
+<h2 id="互斥量-mutex"><a href="#互斥量-mutex" class="headerlink" title="互斥量 mutex"></a>互斥量 mutex</h2><p>前面我们提到，同一个进程中不同的线程会共享这个进程的地址空间等资源，进程之间也可能存在共享的资源（例如共享内存），这就可能出现不同线程或进程同时使用同一共享资源的访问冲突，我们称之为<strong>竞态条件(data race)</strong>。为了解决这一冲突，我们引入互斥量，为资源加锁解锁以确保互斥。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;mutex&gt;</span></span><br></code></pre></td></tr></table></figure>
+<p>C++ 11中有4种<code>mutex</code>类</p>
+<ul>
+<li><code>std::mutex</code>，最基本的 Mutex 类。</li>
+<li><code>std::recursive_mutex</code>，递归 Mutex 类。</li>
+<li><code>std::time_mutex</code>，定时 Mutex 类。</li>
+<li><code>std::recursive_timed_mutex</code>，定时递归 Mutex 类。<br>除了<code>mutex</code>类外，头文件<code>&lt;mutex&gt;</code>中还包含</li>
+<li>两种<code>lock</code>类<ul>
+<li><code>std::lock_guard</code></li>
+<li><code>std::unique_lock</code></li>
+</ul>
+</li>
+<li>与互斥锁相关的函数<ul>
+<li><code>std::try_lock</code>，尝试同时对多个互斥量上锁。</li>
+<li><code>std::lock</code>，可以同时对多个互斥量上锁。</li>
+<li><code>std::call_once</code>，如果多个线程需要同时调用某个函数，call_once 可以保证多个线程对该函数只调用一次。</li>
+</ul>
+</li>
+</ul>
+<h3 id="std-mutex"><a href="#std-mutex" class="headerlink" title="std::mutex"></a><code>std::mutex</code></h3><p>是C++11中最基本的互斥量,包含下列成员函数</p>
+<ul>
+<li>构造函数<br><code>std::mutex</code>不允许拷贝构造和移动构造，只能无参地声明一个初始状态为<code>unlock</code>的<code>mutex</code>对象</li>
+<li><code>lock()</code><br>将该互斥锁锁住。线程调用该函数会发生下面 3 种情况：</li>
+</ul>
+<ol>
+<li>如果该互斥量当前没有被锁住，则调用线程将该互斥量锁住，直到调用 <code>unlock</code>之前，该线程一直拥有该锁。</li>
+<li>如果当前互斥量被其他线程锁住，则当前的调用线程被阻塞住。</li>
+<li>如果当前互斥量被当前调用线程锁住，则会产生死锁(deadlock)</li>
+</ol>
+<ul>
+<li><code>unlock()</code><br>将互斥锁解锁，并释放对互斥锁的所有权</li>
+<li><code>try_lock()</code><br>尝试锁住互斥锁，与<code>lock()</code>的区别在于，如果互斥量被其他线程占有，则当前线程也<strong>不会被阻塞</strong>，而是返回<code>false</code>。</li>
+</ul>
+<p><strong>示例</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span>      </span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;thread&gt;</span>        </span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;mutex&gt;</span>         </span><br><br><span class="hljs-function"><span class="hljs-keyword">volatile</span> <span class="hljs-type">int</span> <span class="hljs-title">counter</span><span class="hljs-params">(<span class="hljs-number">0</span>)</span></span>; <br>std::mutex mtx;           <br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">attempt_10k_increases</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>; i&lt;<span class="hljs-number">10000</span>; ++i) &#123;<br>        <span class="hljs-keyword">if</span> (mtx.<span class="hljs-built_in">try_lock</span>()) &#123;  <br>            counter++;<br>            mtx.<span class="hljs-built_in">unlock</span>();<br>        &#125;        <br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span> <span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">const</span> <span class="hljs-type">char</span>* argv[])</span> </span>&#123;<br>    std::thread threads[<span class="hljs-number">10</span>];<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>; i&lt;<span class="hljs-number">10</span>; ++i) &#123;<br>        threads[i] = std::<span class="hljs-built_in">thread</span>(attempt_10k_increases);<br>    &#125;<br>        <br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span>&amp; th : threads) &#123;<br>        th.<span class="hljs-built_in">join</span>();<br>    &#125;<br><br>    std::cout &lt;&lt; counter &lt;&lt; <span class="hljs-string">&quot; successful increases of the counter.\n&quot;</span>;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>运行上面的代码，会发现输出的值不是100000，这是因为函数<code>attempt_10k_increases</code>只有在线程拥有互斥锁的所有权时才会将<code>counter++</code>，如果不拥有所有权也<strong>不会阻塞</strong>而是继续运行for循环。如果我们将<code>attempt_10k_increases</code>改成</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">attempt_10k_increases</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>; i&lt;<span class="hljs-number">10000</span>; ++i) &#123;<br>        mtx.<span class="hljs-built_in">lock</span>();<br>        counter++;<br>        mtx.<span class="hljs-built_in">unlock</span>();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>那么最后的<code>counter</code>就会是100000。</p>
+<!-- 那么问题来了，为什么不直接把互斥锁去掉呢？虽然去掉互斥锁后最后的`counter`**可能**还是100000，但是在多个线程中对同一资源进行操作，会产生**竞态条件**， -->
+<h3 id="std-recursive-mutex"><a href="#std-recursive-mutex" class="headerlink" title="std::recursive_mutex"></a><code>std::recursive_mutex</code></h3><p><code>std::recursive_mutex</code>与<code>std::mutex</code>的不同之处在于</p>
+<ul>
+<li>允许同一个线程对互斥量多次上锁（即递归上锁），来获得对互斥量对象的多层所有权</li>
+<li>释放互斥量时需要调用与该锁层次深度相同次数的 <code>unlock()</code>，即调用<code>unlock</code>的次数需要与调用<code>lock</code>（或<code>try_lock</code>成功）的次数相等</li>
+</ul>
+<h3 id="std-time-mutex"><a href="#std-time-mutex" class="headerlink" title="std::time_mutex"></a><code>std::time_mutex</code></h3><p><code>std::time_mutex</code>比<code>std::mutex</code>多了下面两个函数</p>
+<ul>
+<li><code>try_lock_for</code><br>接受一个<strong>时间范围</strong>，表示在这一段时间范围之内线程如果没有获得锁则被<strong>阻塞</strong>住，如果在此期间其他线程释放了锁，则该线程可以获得对互斥量的锁，如果超时（即在指定时间内还是没有获得锁），则返回<code>false</code>。</li>
+<li><code>try_lock_until</code><br>作用与<code>try_lock_for</code>相同，区别在于接受一个<strong>时间点</strong>而非时间范围作为参数。</li>
+</ul>
+<h3 id="std-recursive-timed-mutex"><a href="#std-recursive-timed-mutex" class="headerlink" title="std::recursive_timed_mutex"></a><code>std::recursive_timed_mutex</code></h3><p>能够指定时间范围或时间节点的递归<code>mutex</code></p>
+<h2 id="互斥锁的RAII管理"><a href="#互斥锁的RAII管理" class="headerlink" title="互斥锁的RAII管理"></a>互斥锁的RAII管理</h2><h3 id="std-lock-guard"><a href="#std-lock-guard" class="headerlink" title="std::lock_guard"></a><code>std::lock_guard</code></h3><p>是C++中的互斥锁管理类，用RAII的方式自动管理互斥锁的加锁与解锁，避免忘记释放锁导致死锁或资源的泄露。</p>
+<ul>
+<li>构造时对给定的<code>std::mutex</code>加锁，析构时自动解锁</li>
+<li>不能手动加锁或解锁</li>
+<li>适用于作用域内始终保持锁定的场景</li>
+<li>禁用拷贝构造和移动构造</li>
+</ul>
+<h3 id="std-unique-lock"><a href="#std-unique-lock" class="headerlink" title="std::unique_lock"></a><code>std::unique_lock</code></h3><p>与<code>std::lock_guard</code>的区别在于更加灵活，提供了更多的功能。<br>下面以 <code>std::unique_lock&lt;std::mutex&gt;</code> 为例，使用无序列表结合代码块的形式来逐步介绍它的构造、状态查询、加解锁及所有权转移等主要成员函数。</p>
+<ul>
+<li><p><strong>构造函数</strong></p>
+<ul>
+<li><p><code>explicit unique_lock(Mutex&amp; m);</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp">std::mutex mtx;<br><span class="hljs-comment">// 构造时立即加锁，析构时自动解锁</span><br><span class="hljs-function">std::unique_lock&lt;std::mutex&gt; <span class="hljs-title">lk</span><span class="hljs-params">(mtx)</span></span>;<br></code></pre></td></tr></table></figure></li>
+<li><p><code>unique_lock(Mutex&amp; m, std::defer_lock_t);</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs cpp">std::mutex mtx;<br><span class="hljs-comment">// 构造时不加锁，可延迟到后面手动 lock()</span><br><span class="hljs-function">std::unique_lock&lt;std::mutex&gt; <span class="hljs-title">lk</span><span class="hljs-params">(mtx, std::defer_lock)</span></span>;<br><span class="hljs-comment">// … </span><br>lk.<span class="hljs-built_in">lock</span>();<br></code></pre></td></tr></table></figure></li>
+<li><p><code>unique_lock(Mutex&amp; m, std::try_to_lock_t);</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cpp">std::mutex mtx;<br><span class="hljs-comment">// 构造时尝试加锁，成功则 owns_lock()==true</span><br><span class="hljs-function">std::unique_lock&lt;std::mutex&gt; <span class="hljs-title">lk</span><span class="hljs-params">(mtx, std::try_to_lock)</span></span>;<br><span class="hljs-keyword">if</span> (lk.<span class="hljs-built_in">owns_lock</span>()) &#123; <span class="hljs-comment">/* 已加锁 */</span> &#125;<br></code></pre></td></tr></table></figure></li>
+<li><p><code>unique_lock(Mutex&amp; m, std::adopt_lock_t);</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs cpp">std::mutex mtx;<br>mtx.<span class="hljs-built_in">lock</span>();  <br><span class="hljs-comment">// 构造时假设锁已被外部加锁，仅管理解锁</span><br><span class="hljs-function">std::unique_lock&lt;std::mutex&gt; <span class="hljs-title">lk</span><span class="hljs-params">(mtx, std::adopt_lock)</span></span>;<br><span class="hljs-comment">// 析构时才会调用 mtx.unlock()</span><br></code></pre></td></tr></table></figure></li>
+<li><p><code>unique_lock(Mutex&amp; m, const std::chrono::duration&lt;Rep,Period&gt;&amp; rel_time);</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cpp">std::timed_mutex tmtx;<br><span class="hljs-comment">// 最多等待 100ms 进行加锁</span><br><span class="hljs-function">std::unique_lock&lt;std::timed_mutex&gt; <span class="hljs-title">lk</span><span class="hljs-params">(tmtx, std::chrono::milliseconds(<span class="hljs-number">100</span>))</span></span>;<br><span class="hljs-keyword">if</span> (lk.<span class="hljs-built_in">owns_lock</span>()) &#123; <span class="hljs-comment">/* 加锁成功 */</span> &#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>加锁与解锁</strong></p>
+<ul>
+<li><p><code>.lock()</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp">lk.<span class="hljs-built_in">lock</span>();  <span class="hljs-comment">// 阻塞直到加锁成功，否则抛 system_error</span><br></code></pre></td></tr></table></figure></li>
+<li><p><code>.try_lock()</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">if</span> (lk.<span class="hljs-built_in">try_lock</span>()) &#123;<br>    <span class="hljs-comment">// 立即返回，加锁成功或失败均不阻塞</span><br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p><code>.try_lock_for(...)</code> &#x2F; <code>.try_lock_until(...)</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">// 在给定时长或到达某时刻前尝试加锁</span><br><span class="hljs-keyword">if</span> (lk.<span class="hljs-built_in">try_lock_for</span>(std::chrono::<span class="hljs-built_in">milliseconds</span>(<span class="hljs-number">50</span>))) &#123; <span class="hljs-comment">/* 成功 */</span> &#125;<br></code></pre></td></tr></table></figure></li>
+<li><p><code>.unlock()</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp">lk.<span class="hljs-built_in">unlock</span>();  <span class="hljs-comment">// 释放锁，之后 owns_lock()==false</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>状态查询</strong></p>
+<ul>
+<li><p><code>.owns_lock()</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">if</span> (lk.<span class="hljs-built_in">owns_lock</span>()) &#123; <span class="hljs-comment">/* 当前持有锁 */</span> &#125;<br></code></pre></td></tr></table></figure></li>
+<li><p><code>operator bool()</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">if</span> (lk) &#123; <span class="hljs-comment">/* 等同于 owns_lock() */</span> &#125;<br></code></pre></td></tr></table></figure></li>
+<li><p><code>.mutex()</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp">std::mutex* p = lk.<span class="hljs-built_in">mutex</span>();  <span class="hljs-comment">// 获取绑定的互斥量指针</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>所有权转移与释放</strong></p>
+<ul>
+<li><p><strong>移动构造 &#x2F; 移动赋值</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">std::unique_lock&lt;std::mutex&gt; <span class="hljs-title">a</span><span class="hljs-params">(mtx)</span></span>;<br><span class="hljs-function">std::unique_lock&lt;std::mutex&gt; <span class="hljs-title">b</span><span class="hljs-params">(std::move(a))</span></span>;<br><span class="hljs-comment">// b 接管了 a 的锁，a.owns_lock()==false, a.mutex()==nullptr</span><br></code></pre></td></tr></table></figure></li>
+<li><p><code>.release()</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp">std::mutex* raw = lk.<span class="hljs-built_in">release</span>();<br><span class="hljs-comment">// 放弃对互斥量的管理但不解锁，后续需要手动 unlock(raw)</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>与条件变量<code>condition_variable</code>配合</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs cpp">std::mutex mtx;<br>std::condition_variable cv;<br><span class="hljs-type">bool</span> ready = <span class="hljs-literal">false</span>;<br><br><span class="hljs-comment">// 生产者</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">producer</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-function">std::unique_lock&lt;std::mutex&gt; <span class="hljs-title">lk</span><span class="hljs-params">(mtx)</span></span>;<br>    ready = <span class="hljs-literal">true</span>;<br>    lk.<span class="hljs-built_in">unlock</span>();         <span class="hljs-comment">// 手动解锁后再通知</span><br>    cv.<span class="hljs-built_in">notify_one</span>();<br>&#125;<br><br><span class="hljs-comment">// 消费者</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">consumer</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-function">std::unique_lock&lt;std::mutex&gt; <span class="hljs-title">lk</span><span class="hljs-params">(mtx)</span></span>;<br>    cv.<span class="hljs-built_in">wait</span>(lk, []&#123; <span class="hljs-keyword">return</span> ready; &#125;);<br>    <span class="hljs-comment">// 等待过程中会自动 unlock/lock</span><br>    <span class="hljs-comment">// 唤醒后持有锁，可安全访问共享数据</span><br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h2><p>死锁指的是多个线程争夺共享资源导致每个线程都不能取得自己所需的全部资源，从而导致程序无法向下执行。<br>死锁的产生有4个必要条件</p>
+<ol>
+<li><strong>互斥</strong> 即请求的资源同一时刻只能被一个进程或线程使用</li>
+<li><strong>请求并保持</strong> 进程在持有了至少一个资源的同时，又提出了对其它资源的请求，并在请求不到时一直处于等待状态，但不会释放已持有的资源。</li>
+<li><strong>不剥夺</strong> 已经分配给某进程的资源，只有当该进程自行释放时才会收回；系统不能强制地剥夺该进程的资源。</li>
+<li><strong>循环等待</strong> 存在一个进程集合 {P₁, P₂, …, Pₙ}，其中 P₁ 等待 P₂ 占有的资源，P₂ 等待 P₃ 占有的资源，…，Pₙ 等待 P₁ 占有的资源，形成一个闭环。</li>
+</ol>
+<p>只有当这4个条件全部成立时，才可能发生死锁。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/194198073">[知乎专栏]C++多线程并发基础入门教程</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/haippy/p/3284540.html">[cnblogs.com]C++11 并发指南系列</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/C/" class="category-chain-item">C++</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>C++ 多线程并发编程2 互斥与锁</div>
+      <div>https://guts.homes/2025/06/24/cpp-multiThreading2/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>guts</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年6月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/06/24/cpp-multiThreading3/" title="C++ 多线程并发编程3 条件变量">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">C++ 多线程并发编程3 条件变量</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/06/23/cpp-multiThreading1/" title="C++ 多线程并发编程 基础">
+                        <span class="hidden-mobile">C++ 多线程并发编程 基础</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"FkNpNoCOCKAFaE0xepwfi5bb-gzGzoHsz","appKey":"5g5TFpe1p9FCDfz4G0CPPxx2","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

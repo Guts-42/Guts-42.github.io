@@ -230,6 +230,222 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2025/06/26/cpp-multiThreading4/" target="_self">
+          C++ 多线程并发编程4 异步编程
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/06/26/cpp-multiThreading4/" target="_self">
+        <div>
+          引言std::thread对象在创建完成时，对应的线程就会开始异步执行，但是如果我们想要得知线程的执行结果，那么就需要手动设计和实现一套同步机制。为此C++引入std::future，提供了一个访问异步操作结果的机制。 1#include &lt;future&gt; std::future是一个“未来值”的代理，我们并不直接创建它，而是通过头文件&lt;future&gt;中的其他手段来获取
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-06-26 15:47" pubdate>
+              2025-06-26
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/C/" class="category-chain-item">C++</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/06/24/cpp-multiThreading3/" target="_self">
+          C++ 多线程并发编程3 条件变量
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/06/24/cpp-multiThreading3/" target="_self">
+        <div>
+          忙等待与阻塞等待互斥锁能够解决竞态条件的问题，但是它本不提供任何关于事件通知的机制。如果我们想利用mutex::try_unlock（或者另设一个全局标志位）+sleep()+死循环的忙等待(busy-waiting)方式，把是否能够解锁这一信息作为线程之间通信的机制，那么这种方式是相当低效的。  忙等待的线程会占用CPU核心来执行毫无意义的重复检查，消耗大量的资源，妨碍其他线程的任务调度 如果为
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-06-24 20:21" pubdate>
+              2025-06-24
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/C/" class="category-chain-item">C++</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/06/24/cpp-multiThreading2/" target="_self">
+          C++ 多线程并发编程2 互斥与锁
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/06/24/cpp-multiThreading2/" target="_self">
+        <div>
+          同步与互斥同步调用指的是调用的对象在被调用后会阻塞调用方直到被调用方执行完成，而线程天然是异步调用的。但是不同线程的任务片段之间可能会存在严格的先后顺序，例如线程1负责任务A和C，线程2负责任务B，3个任务必须严格按照A-&gt;B-&gt;C的顺序执行，那么我们就需要在线程1执行任务A的时候阻塞线程2，任务A完成后解除线程2的阻塞并阻塞线程1直到任务B完成。这样维护和协调线程任务片段之间先后顺序
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-06-24 20:04" pubdate>
+              2025-06-24
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/C/" class="category-chain-item">C++</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/06/23/cpp-multiThreading1/" target="_self">
+          C++ 多线程并发编程 基础
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/06/23/cpp-multiThreading1/" target="_self">
+        <div>
+          1. 进程与线程 进程是cpu资源分配的最小单位，线程是cpu调度的最小单位  我们可以将程序定义为对资源进行计算的过程。在早期的计算机中并没有线程的概念，进程就是最基本的运行单位，它在拥有资源所有权，负责对资源进行隔离的同时，也执行计算任务。这是因为早期的CPU只有一个物理核心，也没有逻辑核心和超线程的概念，在物理上只能同时执行一个计算任务。但是随着计算机技术的发展，CPU的核心数越来越多，单核
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-06-23 15:19" pubdate>
+              2025-06-23
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/C/" class="category-chain-item">C++</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2025/06/22/lambda/" target="_self">
           lambda表达式、std::function与std::bind
         </a>
@@ -535,222 +751,6 @@
             </time>
           </div>
         
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/06/13/cpp-RAII/" target="_self">
-          RAII
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/06/13/cpp-RAII/" target="_self">
-        <div>
-          什么是RAIIRAII，Resource Acquisition Is Initialization,资源获取即初始化，是C++中很重要的编程思想，它将资源的声明周期和对象的生命周期绑定到一起，在构造函数请求资源，在析构函数释放资源并且绝不抛出异常。C++中的STL基本都遵循RAII规范，例如vector, string, lock_guard, unique_lock, shared_ptr,
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-06-13 20:18" pubdate>
-              2025-06-13
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/C/" class="category-chain-item">C++</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/06/13/cpp-operator-overload/" target="_self">
-          C++中运算符的重载
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/06/13/cpp-operator-overload/" target="_self">
-        <div>
-          概念C++中运算符可以通过下面的方式重载，从而为自定义类型定义运算。 1返回类型 operator运算符(参数列表); 可以重载的运算符包括  算术运算符（+、-、*、/） 关系运算符（==、!=、&lt;、&gt;） 赋值运算符（=） 插入流和提取流运算符（&lt;&lt;、&gt;&gt;）  等。 运算符重载实例1. 算术运算符（+、-、*、/）12345678910111213141516
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-06-13 17:24" pubdate>
-              2025-06-13
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/C/" class="category-chain-item">C++</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/06/13/cpp-static/" target="_self">
-          C++中的static关键字
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/06/13/cpp-static/" target="_self">
-        <div>
-          static的引入static是C++中的修饰符，可以修饰变量和函数，用来控制变量的存储方式和可见性。 一般情况下，函数内部的变量，在程序运行到它的定义时，会在栈内为其分配内存，在函数执行结束后释放。如果我们想要某些变量（例如记录函数调用次数的变量）的生命周期不局限于函数执行期间，在执行结束后不释放而是继续保留，并且在同时确保将其作用域限制在函数内部，那么一般的变量和全局变量（虽然生命周期不局限于
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-06-13 15:58" pubdate>
-              2025-06-13
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/C/" class="category-chain-item">C++</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/06/13/cpp-type-conversion/" target="_self">
-          C++类型转换
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/06/13/cpp-type-conversion/" target="_self">
-        <div>
-          C风格强制类型转换C语言中强制类型转换的方式为 1(type_name) expression 例如 1234567891011#include &lt;stdio.h&gt; int main()&#123;   int sum = 17, count = 5;   double mean;    mean = (double) sum / count;   printf(&quot;Value
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-06-13 14:31" pubdate>
-              2025-06-13
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/C/" class="category-chain-item">C++</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
         
         
       </div>
