@@ -27,7 +27,7 @@
 <meta property="og:description" content="在C++17之前，C++并没有跨平台的统一文件操作解决方案，不同的平台需要依赖不同的API或者第三方库来处理文件操作。C++17引入的std::filesystem就解决了这个痛点。 常用操作路径处理 path类12345678910111213#include &lt;filesystem&gt;​​namespace fs &#x3D; std::filesystem;​fs::path p1 &#x3D; &amp;q">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-27T10:42:02.000Z">
-<meta property="article:modified_time" content="2025-06-27T11:23:13.217Z">
+<meta property="article:modified_time" content="2025-06-27T11:53:06.402Z">
 <meta property="article:author" content="guts">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.5k 字
+          1.6k 字
         
       </span>
     
@@ -236,7 +236,7 @@
         
         
         
-          13 分钟
+          14 分钟
         
       </span>
     
@@ -314,9 +314,16 @@
 <li>若出错会抛 <code>filesystem_error</code>。</li>
 </ul>
 </li>
-<li><p><code>fs::is_directory(p)</code> &#x2F; <code>fs::is_regular_file(p)</code> &#x2F; <code>fs::is_symlink(p)</code> 等</p>
+<li><p><code>fs::is_directory(p)</code> &#x2F; <code>fs::is_regular_file(p)</code> &#x2F; <code>fs::is_symlink(p)</code> &#x2F; <code>is_block_file()</code> &#x2F; <code>is_fifo()</code></p>
 <ul>
-<li>基于 <code>status()</code> 返回值判断是否为目录、普通文件或符号链接。</li>
+<li>基于 <code>status()</code> 返回值判断是否为目录、普通文件、符号链接、块设备（例如<code>/dev/sda</code>）和命名管道。分别对应下面的<code>file_type</code>枚举值<ul>
+<li><code>file_type::regular</code></li>
+<li><code>file_type::directory</code></li>
+<li><code>file_type::symlink</code></li>
+<li><code>file_type::block</code></li>
+<li><code>file_type::fifo</code></li>
+</ul>
+</li>
 <li>若 <code>p</code> 不存在或权限不足会抛异常，推荐先 <code>exists()</code> 再判类型。</li>
 </ul>
 </li>
