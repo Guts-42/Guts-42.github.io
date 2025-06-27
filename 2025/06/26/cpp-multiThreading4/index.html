@@ -27,7 +27,7 @@
 <meta property="og:description" content="引言std::thread对象在创建完成时，对应的线程就会开始异步执行，但是如果我们想要得知线程的执行结果，那么就需要手动设计和实现一套同步机制。为此C++引入std::future，提供了一个访问异步操作结果的机制。 1#include &lt;future&gt; std::future是一个“未来值”的代理，我们并不直接创建它，而是通过头文件&lt;future&gt;中的其他手段来获取">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-26T07:47:16.000Z">
-<meta property="article:modified_time" content="2025-06-27T07:12:08.248Z">
+<meta property="article:modified_time" content="2025-06-27T07:18:49.256Z">
 <meta property="article:author" content="guts">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -379,6 +379,7 @@
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/haippy/p/3239248.html">C++11 并发指南四(<future> 详解一 std::promise 介绍)</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/haippy/p/3279565.html">C++11 并发指南四(<future> 详解二 std::packaged_task 介绍)</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/haippy/p/3280643.html">C++11 并发指南四(<future> 详解三 std::future &amp; std::shared_future)</a></li>
 </ul>
 <!-- 1. 专利和论文
 2. 然后照着文档里学了一下git的用法
