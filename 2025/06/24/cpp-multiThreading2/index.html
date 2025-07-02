@@ -27,7 +27,7 @@
 <meta property="og:description" content="同步与互斥同步调用指的是调用的对象在被调用后会阻塞调用方直到被调用方执行完成，而线程天然是异步调用的。但是不同线程的任务片段之间可能会存在严格的先后顺序，例如线程1负责任务A和C，线程2负责任务B，3个任务必须严格按照A-&gt;B-&gt;C的顺序执行，那么我们就需要在线程1执行任务A的时候阻塞线程2，任务A完成后解除线程2的阻塞并阻塞线程1直到任务B完成。这样维护和协调线程任务片段之间先后顺序">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-24T12:04:15.000Z">
-<meta property="article:modified_time" content="2025-06-24T12:15:56.552Z">
+<meta property="article:modified_time" content="2025-07-02T07:21:02.827Z">
 <meta property="article:author" content="guts">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -296,7 +296,10 @@
 <li><code>std::mutex</code>，最基本的 Mutex 类。</li>
 <li><code>std::recursive_mutex</code>，递归 Mutex 类。</li>
 <li><code>std::time_mutex</code>，定时 Mutex 类。</li>
-<li><code>std::recursive_timed_mutex</code>，定时递归 Mutex 类。<br>除了<code>mutex</code>类外，头文件<code>&lt;mutex&gt;</code>中还包含</li>
+<li><code>std::recursive_timed_mutex</code>，定时递归 Mutex 类。</li>
+</ul>
+<p>除了<code>mutex</code>类外，头文件<code>&lt;mutex&gt;</code>中还包含</p>
+<ul>
 <li>两种<code>lock</code>类<ul>
 <li><code>std::lock_guard</code></li>
 <li><code>std::unique_lock</code></li>

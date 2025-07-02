@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://guts.homes/2025/06/24/cpp-multiThreading2/</loc>
+    <lastmod>2025-07-02</lastmod>
+  </url>
+  <url>
     <loc>https://guts.homes/2025/06/27/cpp-filesystem/</loc>
     <lastmod>2025-06-27</lastmod>
   </url>
@@ -15,10 +19,6 @@
   <url>
     <loc>https://guts.homes/2025/06/24/cpp-multiThreading3/</loc>
     <lastmod>2025-06-26</lastmod>
-  </url>
-  <url>
-    <loc>https://guts.homes/2025/06/24/cpp-multiThreading2/</loc>
-    <lastmod>2025-06-24</lastmod>
   </url>
   <url>
     <loc>https://guts.homes/2025/06/22/lambda/</loc>
