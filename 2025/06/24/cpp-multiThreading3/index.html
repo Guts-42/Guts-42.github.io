@@ -27,7 +27,7 @@
 <meta property="og:description" content="忙等待与阻塞等待互斥锁能够解决竞态条件的问题，但是它本不提供任何关于事件通知的机制。如果我们想利用mutex::try_unlock（或者另设一个全局标志位）+sleep()+死循环的忙等待(busy-waiting)方式，把是否能够解锁这一信息作为线程之间通信的机制，那么这种方式是相当低效的。  忙等待的线程会占用CPU核心来执行毫无意义的重复检查，消耗大量的资源，妨碍其他线程的任务调度 如果为">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-24T12:21:14.000Z">
-<meta property="article:modified_time" content="2025-06-26T07:45:34.615Z">
+<meta property="article:modified_time" content="2025-07-03T08:14:42.768Z">
 <meta property="article:author" content="guts">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.4k 字
+          1.6k 字
         
       </span>
     
@@ -236,7 +236,7 @@
         
         
         
-          12 分钟
+          14 分钟
         
       </span>
     
@@ -343,11 +343,13 @@
 <h3 id="std-condition-variable-any"><a href="#std-condition-variable-any" class="headerlink" title="std::condition_variable_any"></a><code>std::condition_variable_any</code></h3><p>与<code>std::condition_variable</code>的区别在与，<code>std::condition_variable_any</code>的<code>wait</code>函数可以接收任意的<code>lockable</code>参数，而<code>std::condition_variable</code>只能接受 <code>std::unique_lock&lt;std::mutex&gt;</code>类型的参数</p>
 <h3 id="std-notify-all-at-thread-exit"><a href="#std-notify-all-at-thread-exit" class="headerlink" title="std::notify_all_at_thread_exit"></a><code>std::notify_all_at_thread_exit</code></h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">notify_all_at_thread_exit</span> <span class="hljs-params">(condition_variable&amp; cond, unique_lock&lt;mutex&gt; lck)</span></span>;<br></code></pre></td></tr></table></figure>
 <p>当调用该函数的线程退出时，所有在 <code>cond</code> 条件变量上等待的线程都会收到通知。</p>
-<h2 id="虚假唤醒"><a href="#虚假唤醒" class="headerlink" title="虚假唤醒"></a>虚假唤醒</h2><p>虚假唤醒指的是，一个条件变量在被唤醒后得不到需要的数据。我们可以考虑这样的场景，有1个生产者线程不断生产数据放入一个容量为1的队列中，有多个消费者线程不断从这个列表中获取数据，没有数据时所有的消费者都调用<code>wait</code>函数阻塞线程，当生产者生产出数据后调用<code>notify_all</code>通知所有的线程，但是这些消费者线程苏醒后却只有一个线程可以抢夺到数据，这就导致其他线程明明已经被唤醒了，却得不到想要的数据。</p>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><h3 id="虚假唤醒"><a href="#虚假唤醒" class="headerlink" title="虚假唤醒"></a>虚假唤醒</h3><p>虚假唤醒指的是，一个条件变量在被唤醒后得不到需要的数据。我们可以考虑这样的场景，有1个生产者线程不断生产数据放入一个容量为1的队列中，有多个消费者线程不断从这个列表中获取数据，没有数据时所有的消费者都调用<code>wait</code>函数阻塞线程，当生产者生产出数据后调用<code>notify_all</code>通知所有的线程，但是这些消费者线程苏醒后却只有一个线程可以抢夺到数据，这就导致其他线程明明已经被唤醒了，却得不到想要的数据。</p>
 <p>虚假唤醒的解决方案也很简单，只需要在唤醒之间先判断是否满足线程唤醒所需的条件即可，即</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">while</span> (!<span class="hljs-built_in">pred</span>()) &#123;<br>    <span class="hljs-built_in">wait</span>(lock);<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>这也是<code>wait</code>函数带条件谓词的重载存在的原因</p>
+<h3 id="为什么条件变量一定要加锁"><a href="#为什么条件变量一定要加锁" class="headerlink" title="为什么条件变量一定要加锁"></a>为什么条件变量一定要加锁</h3><p>条件变量内部是通过判断和修改某个局部变量的值来决定线程的阻塞与唤醒状态,因此需要加锁防止数据竞争。</p>
+<p>此外，如果线程A调用了<code>wait</code>但是没有进入阻塞，此时线程B却调用了<code>notify</code>，那么线程A是无法接收到这个<code>notify</code>的。如果加了锁，那么让线程A在阻塞前获取锁，阻塞后释放锁，线程B就可以根据这个锁是否释放来判断是否可以调用<code>notify</code>。</p>
 
                 
               </div>
