@@ -27,7 +27,7 @@
 <meta property="og:description" content="C++ 中的可变参数模板 (Variadic Templates)是 C++11 引入的最重要和最强大的特性之一，是泛型编程的基石。它允许我们创建可以接受任意数量、任意类型参数的函数模板或类模板。它以一种完全类型安全、在编译期展开的方式，解决了传统 C 语言中可变参数（如 printf）的类型安全问题。 可变参数模板之前的可变参数编程在 C++11 引入可变参数模板之前，如果我们想实现一个接受可变">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-08-12T15:27:15.000Z">
-<meta property="article:modified_time" content="2025-08-12T15:27:15.918Z">
+<meta property="article:modified_time" content="2025-08-24T07:42:45.850Z">
 <meta property="article:author" content="guts">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -236,7 +236,7 @@
         
         
         
-          34 分钟
+          35 分钟
         
       </span>
     
@@ -352,7 +352,7 @@
 <p>包展开主要有三种主流的使用方式：递归函数模板、初始化列表展开，以及 C++17 引入的折叠表达式。</p>
 <h3 id="递归函数模板"><a href="#递归函数模板" class="headerlink" title="递归函数模板"></a>递归函数模板</h3><p>这是最基础、最经典的包展开方式。思路是：定义一个处理“一个参数”和“多个参数”的模板。在处理多个参数的版本中，我们先处理第一个参数，然后将剩余的参数包递归地传给自己，直到参数包为空。</p>
 <p>它巧妙地<strong>回避了单次展开所有元素</strong>, 只处理第一个元素，然后利用<strong>函数参数列表</strong>的包展开 <code>func(rest...)</code>，将剩余的包传递给下一次递归调用。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><br><span class="hljs-comment">// 递归的终止条件：当参数包中只剩最后一个参数时，调用此版本</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-type">const</span> T&amp; arg)</span> </span>&#123;<br>    std::cout &lt;&lt; arg &lt;&lt; std::endl; <span class="hljs-comment">// 打印最后一个参数并换行</span><br>&#125;<br><br><span class="hljs-comment">// 递归步骤：处理第一个参数，并将剩余参数包传给下一次调用</span><br><span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">typename</span>... Args&gt;</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-type">const</span> T&amp; firstArg, <span class="hljs-type">const</span> Args&amp;... args)</span> </span>&#123;<br>    std::cout &lt;&lt; firstArg &lt;&lt; <span class="hljs-string">&quot;, &quot;</span>; <span class="hljs-comment">// 打印当前参数</span><br>    <span class="hljs-built_in">print</span>(args...); <span class="hljs-comment">// 递归调用，参数包 `args` 被展开并传递</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">print</span>(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;hello&quot;</span>, <span class="hljs-number">3.14</span>, <span class="hljs-string">&#x27;a&#x27;</span>);<br>    <span class="hljs-comment">// 输出: 1, hello, 3.14, a</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><br><span class="hljs-comment">// 递归的终止条件：当参数包中只剩最后一个参数时，调用此版本</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-type">const</span> T&amp; arg)</span> </span>&#123;<br>    std::cout &lt;&lt; arg &lt;&lt; std::endl; <span class="hljs-comment">// 打印最后一个参数并换行</span><br>&#125;<br><br><span class="hljs-comment">// 递归步骤：处理第一个参数，并将剩余参数包传给下一次调用</span><br><span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">typename</span>... Args&gt;</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-type">const</span> T&amp; firstArg, <span class="hljs-type">const</span> Args&amp;... args)</span> </span>&#123;<br>    std::cout &lt;&lt; firstArg &lt;&lt; <span class="hljs-string">&quot;, &quot;</span>; <span class="hljs-comment">// 打印当前参数 输出 1，</span><br>    <span class="hljs-built_in">print</span>(args...); <span class="hljs-comment">// 递归调用，参数包 `args` 被展开并传递， 也就是print(&quot;hello&quot;,3.14,&#x27;a&#x27;)</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">print</span>(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;hello&quot;</span>, <span class="hljs-number">3.14</span>, <span class="hljs-string">&#x27;a&#x27;</span>);<br>    <span class="hljs-comment">// 输出: 1, hello, 3.14, a</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>当编译器看到 <code>print(1, &quot;hello&quot;, 3.14, &#39;a&#39;)</code> 时，它会进行如下的模板实例化：</p>
 <ol>
@@ -649,6 +649,21 @@
 
   
 
+
+
+  <script>
+  Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/mermaid@10.4.0/dist/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
 
 
 

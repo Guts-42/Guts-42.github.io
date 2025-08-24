@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://guts.homes/2025/08/12/cpp-Variadic-Templates/</loc>
-    <lastmod>2025-08-12</lastmod>
+    <lastmod>2025-08-24</lastmod>
   </url>
   <url>
     <loc>https://guts.homes/2025/06/13/cpp-static/</loc>
@@ -73,6 +73,10 @@
     <lastmod>2025-06-15</lastmod>
   </url>
   <url>
+    <loc>https://guts.homes/2025/06/06/cpp-pointer/</loc>
+    <lastmod>2025-06-14</lastmod>
+  </url>
+  <url>
     <loc>https://guts.homes/2025/06/13/cpp-type-conversion/</loc>
     <lastmod>2025-06-13</lastmod>
   </url>
@@ -85,16 +89,12 @@
     <lastmod>2025-06-13</lastmod>
   </url>
   <url>
+    <loc>https://guts.homes/2025/06/10/cpp-exception/</loc>
+    <lastmod>2025-06-12</lastmod>
+  </url>
+  <url>
     <loc>https://guts.homes/2025/06/08/cpp-const/</loc>
     <lastmod>2025-06-11</lastmod>
-  </url>
-  <url>
-    <loc>https://guts.homes/2025/06/06/cpp-pointer/</loc>
-    <lastmod>2025-06-11</lastmod>
-  </url>
-  <url>
-    <loc>https://guts.homes/2025/06/10/cpp-exception/</loc>
-    <lastmod>2025-06-10</lastmod>
   </url>
   <url>
     <loc>https://guts.homes/2025/06/09/cpp-reference/</loc>
