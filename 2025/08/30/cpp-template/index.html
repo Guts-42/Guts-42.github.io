@@ -1,0 +1,771 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/guts.png">
+  <link rel="icon" href="/guts.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="guts">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="笔者在学到template函数时，兴致勃勃地写了一个强大的模板函数，遵循着良好的编程习惯，将它的声明放在 .h 文件中，将实现放在 .cpp 文件里。然后，在编译的时候没有任何问题，却在链接时报错 “undefined reference”。百思不得其解下，费了半天功夫才查找资料填了这个坑。 问题就出在编译器编译的步骤上。 模板的实现首先需要明确的是，在编译的过程中，编译器是如何处理模板的，也就是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="为什么C++模板函数的实现需要放在头文件中">
+<meta property="og:url" content="https://guts.homes/2025/08/30/cpp-template/index.html">
+<meta property="og:site_name" content="guts的小屋">
+<meta property="og:description" content="笔者在学到template函数时，兴致勃勃地写了一个强大的模板函数，遵循着良好的编程习惯，将它的声明放在 .h 文件中，将实现放在 .cpp 文件里。然后，在编译的时候没有任何问题，却在链接时报错 “undefined reference”。百思不得其解下，费了半天功夫才查找资料填了这个坑。 问题就出在编译器编译的步骤上。 模板的实现首先需要明确的是，在编译的过程中，编译器是如何处理模板的，也就是">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-08-30T15:57:33.000Z">
+<meta property="article:modified_time" content="2025-08-30T15:59:14.487Z">
+<meta property="article:author" content="guts">
+<meta property="article:tag" content="编译原理">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>为什么C++模板函数的实现需要放在头文件中 - guts的小屋</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"guts.homes","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"FkNpNoCOCKAFaE0xepwfi5bb-gzGzoHsz","app_key":"5g5TFpe1p9FCDfz4G0CPPxx2","server_url":"https://fknpnoco.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>guts的小屋</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="为什么C++模板函数的实现需要放在头文件中"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-08-30 23:57" pubdate>
+          2025年8月30日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          17 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">为什么C++模板函数的实现需要放在头文件中</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>笔者在学到<code>template</code>函数时，兴致勃勃地写了一个强大的模板函数，遵循着良好的编程习惯，将它的声明放在 <code>.h</code> 文件中，将实现放在 <code>.cpp</code> 文件里。然后，在编译的时候没有任何问题，却在链接时报错 “undefined reference”。百思不得其解下，费了半天功夫才查找资料填了这个坑。</p>
+<p>问题就出在编译器编译的步骤上。</p>
+<h3 id="模板的实现"><a href="#模板的实现" class="headerlink" title="模板的实现"></a>模板的实现</h3><p>首先需要明确的是，在编译的过程中，编译器是如何处理模板的，也就是<strong>模板实例化 (Template Instantiation)</strong>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> T&gt;<br><span class="hljs-function">T <span class="hljs-title">max_val</span><span class="hljs-params">(T a, T b)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> a &gt; b ? a : b;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>当你调用上面的函数时</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-type">int</span> result = <span class="hljs-built_in">max_val</span>&lt;<span class="hljs-type">int</span>&gt;(<span class="hljs-number">5</span>, <span class="hljs-number">10</span>);<br></code></pre></td></tr></table></figure>
+
+<p>编译器会根据 <code>int</code> 类型，自动生成一个像下面这样的函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">// 这是编译器根据模板生成的实例</span><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">max_val</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> a &gt; b ? a : b;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>也就是说，模板本质上是一种<strong>编译时多态</strong>，<strong>模板的工作发生在编译时，编译器需要看到模板的完整实现，才能进行实例化。</strong></p>
+<h3 id="分离编译模型"><a href="#分离编译模型" class="headerlink" title="分离编译模型"></a>分离编译模型</h3><p>此外，我们还需要先理解 C++ 项目的构建过程。绝大部分的现代C++编译器采用的都是一种<strong>分离编译模型</strong>。</p>
+<ol>
+<li><p><strong>编译 (Compilation)</strong>: 编译器一次只处理一个 <code>.cpp</code> 文件（我们称之为“翻译单元”）。它会将 <code>.cpp</code> 文件和它包含的 <code>.h</code> 文件转换成一个目标文件（<code>.o</code> 或 <code>.obj</code>）。在这个阶段，如果编译器<strong>遇到一个当前文件没有定义的函数调用，它不会报错，而是假设这个函数的实现在别处，并创建一个标记，期望链接器去找到它</strong>。</p>
+</li>
+<li><p><strong>链接 (Linking)</strong>: 链接器会将所有编译好的目标文件以及所需的库文件“缝合”在一起，形成最终的可执行文件。它的核心任务之一，就是解析编译器留下的所有标记，找到函数的实际地址并连接起来。</p>
+</li>
+</ol>
+<p>对于普通函数，这个模型工作得天衣无缝。</p>
+<h3 id="当模板遇上分离编译"><a href="#当模板遇上分离编译" class="headerlink" title="当模板遇上分离编译"></a>当模板遇上分离编译</h3><p>现在，我们将模板和分离编译模型结合起来看，就很容易理解问题出在哪里了。</p>
+<p>当我们把模板函数的实现和声明分离在不同分文件中时：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">// utils.h</span><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> T&gt;<br><span class="hljs-function">T <span class="hljs-title">max_val</span><span class="hljs-params">(T a, T b)</span></span>; <span class="hljs-comment">// 只有声明</span><br><br><span class="hljs-comment">// utils.cpp</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;utils.h&quot;</span></span><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> T&gt;<br><span class="hljs-function">T <span class="hljs-title">max_val</span><span class="hljs-params">(T a, T b)</span> </span>&#123; <br>    <span class="hljs-keyword">return</span> a + b;<br>&#125;<br><br><span class="hljs-comment">// main.cpp</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;utils.h&quot;</span></span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-comment">// 编译器在这里处理 main.cpp</span><br>    <span class="hljs-comment">// 它看到了 max_val&lt;int&gt; 的调用</span><br>    std::cout &lt;&lt; <span class="hljs-built_in">max_val</span>(<span class="hljs-number">5</span>, <span class="hljs-number">10</span>) &lt;&lt; std::endl;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>让我们跟着编译器的视角走一遍：</p>
+<ol>
+<li><p><strong>编译 <code>main.cpp</code></strong>:</p>
+<ul>
+<li>编译器看到 <code>#include &quot;utils.h&quot;</code>，知道了有一个名为 <code>max_val</code> 的模板函数。</li>
+<li>接着它看到了 <code>max_val(5, 10)</code> 的调用，推断出需要一个 <code>max_val&lt;int&gt;</code> 的实例。</li>
+<li><strong>但问题来了</strong>：编译器此时只有 <code>max_val</code> 的<strong>声明</strong>，没有它的<strong>实现</strong>（具体实现在 <code>utils.cpp</code> 里，编译器现在看不到）。</li>
+<li>因为无法看到实现，编译器就<strong>无法进行模板实例化</strong>，也就无法生成 <code>max_val&lt;int&gt;</code> 的代码。</li>
+<li>编译器只能乐观地假设：“嗯，这个 <code>max_val&lt;int&gt;</code> 的代码肯定在别的地方已经生成好了，链接器会找到它的。” 于是它在 <code>main.o</code> 中留下一个指向 <code>max_val&lt;int&gt;</code> 的标记。</li>
+</ul>
+</li>
+<li><p><strong>编译 <code>utils.cpp</code></strong>:</p>
+<ul>
+<li>编译器处理 <code>utils.cpp</code>。它看到了 <code>max_val</code> 模板的完整实现。</li>
+<li>但是，在这个文件里，<code>max_val</code> <strong>从未被任何具体的类型调用过</strong>。</li>
+<li>因此，编译器不会（也没有理由）去实例化任何版本的 <code>max_val</code>。<code>utils.o</code> 文件里包含了模板的通用代码，但<strong>不包含任何具体实例</strong>（如 <code>max_val&lt;int&gt;</code> 或 <code>max_val&lt;double&gt;</code>）的二进制代码。</li>
+</ul>
+</li>
+<li><p><strong>链接阶段</strong>:</p>
+<ul>
+<li>链接器开始工作，它拿到了 <code>main.o</code> 和 <code>utils.o</code>。</li>
+<li>它看到 <code>main.o</code> 需要一个名为 <code>max_val&lt;int&gt;</code> 的函数。</li>
+<li>它翻遍了 <code>main.o</code> 和 <code>utils.o</code> 以及所有库文件，但哪里也找不到这个函数的二进制代码。</li>
+<li>最终，链接器只能放弃并报告错误：<strong>“undefined reference to <code>max_val&lt;int&gt;(int, int)</code>“</strong>。</li>
+</ul>
+</li>
+</ol>
+<p>所以一句话总结问题的根源，就是：<strong>模板函数是通过在编译时通过调用来实现实例化的，分离模板函数的实现和声明会导致编译器调用函数的时候看不到函数的具体实现，也就无法实例化对应的函数</strong></p>
+<p>所以<strong>我们必须在编译器需要进行模板实例化的时候，让它能看到模板的完整实现。</strong></p>
+<p>最简单直接的方法就是将模板的声明和实现都放在头文件中。</p>
+<p><strong>正确的做法：</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">// utils.h</span><br><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> UTILS_H</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> UTILS_H</span><br><br><span class="hljs-comment">// 声明和实现都在头文件中</span><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> T&gt;<br><span class="hljs-function">T <span class="hljs-title">max_val</span><span class="hljs-params">(T a, T b)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> a &gt; b ? a : b;<br>&#125;<br><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span> <span class="hljs-comment">// UTILS_H</span></span><br><br><span class="hljs-comment">// main.cpp</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;utils.h&quot;</span></span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-comment">// 编译器在处理 main.cpp 时，因为 include 了 utils.h，</span><br>    <span class="hljs-comment">// 它拥有了 max_val 模板的完整定义。</span><br>    <span class="hljs-comment">// 当看到 max_val(5, 10) 时，它可以当场生成 max_val&lt;int&gt; 的代码。</span><br>    std::cout &lt;&lt; <span class="hljs-built_in">max_val</span>(<span class="hljs-number">5</span>, <span class="hljs-number">10</span>) &lt;&lt; std::endl;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这样，当编译器处理 <code>main.cpp</code> 时，它拥有了实例化所需的一切信息，就可以成功生成 <code>max_val&lt;int&gt;</code> 的代码。链接器自然也能找到它所需要的东西。</p>
+<p>那么问题来了</p>
+<p><strong>“这不会导致代码重复吗？”</strong></p>
+<p>一个常见疑问是：如果 A.cpp 和 B.cpp 都包含了这个头文件并实例化了 <code>max_val&lt;int&gt;</code>，最终的可执行文件里会不会有两份 <code>max_val&lt;int&gt;</code> 的代码？</p>
+<p>答案是：通常不会。现代链接器足够聪明，它们使用一种叫做“弱符号”（weak symbols）的机制。多个文件中生成的相同模板实例会被标记为弱符号，链接器在合并时会丢弃所有重复的副本，只保留其中一个。</p>
+<h3 id="显式实例化"><a href="#显式实例化" class="headerlink" title="显式实例化"></a>显式实例化</h3><p>如果不希望暴露模板的实现细节，或者在一个大型项目中，你知道模板只会被少数几个固定的类型使用，从而想优化编译时间，也可以不把模板函数的实现放到头文件中，通过**显式实例化 (Explicit Instantiation)**一样可以成功构建项目。</p>
+<p>你可以在 <code>.cpp</code> 文件中，手动命令编译器去生成特定类型的实例。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">// utils.h</span><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> T&gt;<br><span class="hljs-function">T <span class="hljs-title">add</span><span class="hljs-params">(T a, T b)</span></span>; <span class="hljs-comment">// 声明</span><br><br><span class="hljs-comment">// utils.cpp</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;utils.h&quot;</span></span><br><br><span class="hljs-comment">// 模板实现</span><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> T&gt;<br><span class="hljs-function">T <span class="hljs-title">add</span><span class="hljs-params">(T a, T b)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> a + b;<br>&#125;<br><br><span class="hljs-comment">// 显式实例化：告诉编译器，请在这里为我生成 int 和 double 版本的代码</span><br><span class="hljs-keyword">template</span> <span class="hljs-type">int</span> <span class="hljs-built_in">add</span>&lt;<span class="hljs-type">int</span>&gt;(<span class="hljs-type">int</span>, <span class="hljs-type">int</span>);<br><span class="hljs-keyword">template</span> <span class="hljs-type">double</span> <span class="hljs-built_in">add</span>&lt;<span class="hljs-type">double</span>&gt;(<span class="hljs-type">double</span>, <span class="hljs-type">double</span>);<br><br><span class="hljs-comment">// main.cpp</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;utils.h&quot;</span></span><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">add</span>(<span class="hljs-number">3</span>, <span class="hljs-number">4</span>);       <span class="hljs-comment">// OK, 链接器会找到在 utils.o 中生成的 add&lt;int&gt;</span><br>    <span class="hljs-built_in">add</span>(<span class="hljs-number">3.5</span>, <span class="hljs-number">4.5</span>);   <span class="hljs-comment">// OK, 链接器会找到 add&lt;double&gt;</span><br>    <span class="hljs-comment">// add(short(1), short(2)); // 链接失败! 因为没有为 short 类型显式实例化</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这种方法的优点是保持了接口和实现的分离，但缺点是牺牲了模板的通用性，每次需要支持新类型时，都必须手动修改 <code>.cpp</code> 文件。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>总而言之，<strong>模板函数是通过在编译时通过调用来实现实例化的，分离模板函数的实现和声明会导致编译器调用函数的时候看不到函数的具体实现，也就无法实例化对应的函数</strong>，因此把模板函数的实现放到头文件中是最简单有效的方法，如果不希望暴露实现细节，也可以在<code>.cpp</code>文件中显示实例化。</p>
+<hr>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/C/" class="category-chain-item">C++</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" class="print-no-link">#编译原理</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>为什么C++模板函数的实现需要放在头文件中</div>
+      <div>https://guts.homes/2025/08/30/cpp-template/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>guts</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年8月30日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/08/28/cpp-string-view/" title="C++ string_view">
+                        <span class="hidden-mobile">C++ string_view</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"FkNpNoCOCKAFaE0xepwfi5bb-gzGzoHsz","appKey":"5g5TFpe1p9FCDfz4G0CPPxx2","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  <script>
+  Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/mermaid@10.4.0/dist/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
