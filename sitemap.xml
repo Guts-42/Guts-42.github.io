@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://guts.homes/2025/10/07/cpp-Circular-Reference/</loc>
+    
+    <lastmod>2025-10-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://guts.homes/2025/09/01/zlib/</loc>
     
     <lastmod>2025-09-03</lastmod>
@@ -274,7 +283,7 @@
 
   <url>
     <loc>https://guts.homes/</loc>
-    <lastmod>2025-09-03</lastmod>
+    <lastmod>2025-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -282,21 +291,21 @@
   
   <url>
     <loc>https://guts.homes/tags/%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7/</loc>
-    <lastmod>2025-09-03</lastmod>
+    <lastmod>2025-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://guts.homes/tags/C-17/</loc>
-    <lastmod>2025-09-03</lastmod>
+    <lastmod>2025-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://guts.homes/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/</loc>
-    <lastmod>2025-09-03</lastmod>
+    <lastmod>2025-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -305,21 +314,21 @@
   
   <url>
     <loc>https://guts.homes/categories/%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2025-09-03</lastmod>
+    <lastmod>2025-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://guts.homes/categories/C/</loc>
-    <lastmod>2025-09-03</lastmod>
+    <lastmod>2025-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://guts.homes/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
-    <lastmod>2025-09-03</lastmod>
+    <lastmod>2025-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>

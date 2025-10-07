@@ -230,6 +230,39 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2025/10/07/cpp-Circular-Reference/" target="_self">
+          图解C++智能指针的循环引用
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/10/07/cpp-Circular-Reference/" target="_self">
+        <div>
+          循环引用是学习智能指针过程中的一个小难点，笔者愚钝，明明知道是两个指针互相引用导致了内存泄漏，但看各种文字资料时，脑子里总是一团浆糊，感觉似懂非懂，于是自己绘制了几张图片，思路和概念才清晰起来，希望这篇博客能帮助有同样困惑的同学解惑。 shared_ptr 的实现要明白循环引用，我们首先需要知道shared_ptr是如何实现的，它内部包含两个指针，一个指向我们要管理的资源对象，另一个指向则指向这个
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-10-07 17:06" pubdate>
+              2025-10-07
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2025/09/01/zlib/" target="_self">
           zlib的原理与使用
         </a>
@@ -661,65 +694,11 @@
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/06/22/lambda/" target="_self">
-          lambda表达式、std::function与std::bind
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/06/22/lambda/" target="_self">
-        <div>
-          lambda表达式lambda表达式是C++11引入的特性，允许定义匿名函数，简化参数的传递 1auto func = [capture](params) opt -&gt; ret &#123; func_body; &#125;  capture 捕获列表用于捕获lambda表达式所处的作用域中的外部变量 [] 不捕获任何变量 [] 按引用所有外部捕获变量 [=] 按值捕获所有外部变量 [=,
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-06-22 15:17" pubdate>
-              2025-06-22
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/C/" class="category-chain-item">C++</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="page-number" href="/page/3/#board">3</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="page-number" href="/page/3/#board">3</a><a class="page-number" href="/page/4/#board">4</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 
